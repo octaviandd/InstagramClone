@@ -29,7 +29,7 @@ const startServer = async () => {
   });
 
   await mongoose.connect(
-    "mongodb+srv://instagram:instagram@cluster0.8fql2.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    process.env.MONGO_URI,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
