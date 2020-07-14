@@ -3,14 +3,66 @@
 import React from "react";
 import styled from "styled-components";
 import image from "../assets/loginpage.png";
+import carousel1 from "../assets/carousel1.jpg";
+import carousel2 from "../assets/carousel2.jpg";
+import carousel3 from "../assets/carousel3.jpg";
+import carousel4 from "../assets/carousel4.jpg";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper.scss";
 
 export default function Login() {
   return (
     <MainContainer>
-      <MainContainerCol_1>
-        <div></div>
-      </MainContainerCol_1>
-      <MainContainerCol_2>
+      <MainContainerColOne>
+        <div id="background"></div>
+        <div id="carousel">
+          <Swiper
+            spaceBetween={0}
+            slidesPerView={1}
+            loop={true}
+            updateOnWindowResize={true}
+            roundLengths={true}
+            autoplay={(true, { delay: 3000, disableOnInteraction: false })}
+            lazy={true}
+            fadeEffect={(true, { crossFade: true })}
+            effect="slide"
+          >
+            <SwiperSlide>
+              <img
+                src={carousel1}
+                alt="carousel1"
+                width="300"
+                height="426"
+              ></img>
+            </SwiperSlide>
+            <SwiperSlide>
+              <img
+                src={carousel2}
+                alt="carousel2"
+                width="300"
+                height="426"
+              ></img>
+            </SwiperSlide>
+            <SwiperSlide>
+              <img
+                src={carousel3}
+                alt="carousel3"
+                width="300"
+                height="426"
+              ></img>
+            </SwiperSlide>
+            <SwiperSlide>
+              <img
+                src={carousel4}
+                alt="carousel4"
+                width="300"
+                height="426"
+              ></img>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </MainContainerColOne>
+      <MainContainerColTwo>
         <div>
           <form>
             <h1>Instagram</h1>
@@ -44,8 +96,13 @@ export default function Login() {
             Don't have an account? <a>Sign up</a>
           </p>
         </div>
-        <div></div>
-      </MainContainerCol_2>
+        <div>
+          <p>Made by Octavian David</p>
+          <a href="http://github.com/octaviandd">
+            <i className="fab fa-github"></i>
+          </a>
+        </div>
+      </MainContainerColTwo>
     </MainContainer>
   );
 }
@@ -60,7 +117,40 @@ const MainContainer = styled.div`
   width: 100%;
 `;
 
-const MainContainerCol_2 = styled.div`
+const MainContainerColOne = styled.div`
+  display: flex;
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+  align-self: center;
+  align-items: stretch;
+  flex-direction: column;
+  flex-basis: 454px;
+  position: relative;
+
+  #carousel {
+    position: absolute;
+    width: 240px;
+    overflow: hidden;
+    top: 100px;
+    right: 63px;
+  }
+
+  #background {
+    background-image: url(${image});
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 454px 618px;
+    width: 100%;
+    height: 618px;
+  }
+
+  @media (max-width: 875px) {
+    display: none;
+  }
+`;
+
+const MainContainerColTwo = styled.div`
   display: flex;
   flex-direction: column;
   height: 618px;
@@ -128,6 +218,7 @@ const MainContainerCol_2 = styled.div`
         margin-bottom: 1rem;
       }
       div:nth-of-type(3) {
+        margin-top: 0;
         input {
           background-color: #b2dffc;
           font-size: 14px;
@@ -195,27 +286,19 @@ const MainContainerCol_2 = styled.div`
       }
     }
   }
-`;
-
-const MainContainerCol_1 = styled.div`
-  display: flex;
-  width: 100%;
-  height: auto;
-  flex-shrink: 0;
-  align-self: center;
-  align-items: stretch;
-  flex-direction: column;
-  flex-basis: 454px;
-  div {
-    background-image: url(${image});
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    background-size: 454px 618px;
-    width: 100%;
-    height: 618px;
-  }
-
-  @media (max-width: 875px) {
-    display: none;
+  div:nth-of-type(3) {
+    background-color: #fafafa;
+    display: flex;
+    margin-top: 3rem;
+    flex-direction: column;
+    align-items: center;
+    p {
+      text-align: center;
+    }
+    a {
+      margin-top: 1rem;
+      color: black;
+      font-size: 20px;
+    }
   }
 `;
