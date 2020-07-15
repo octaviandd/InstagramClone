@@ -1,81 +1,61 @@
 /** @format */
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import image from "../assets/loginpage.png";
-import carousel1 from "../assets/carousel1.jpg";
-import carousel2 from "../assets/carousel2.jpg";
-import carousel3 from "../assets/carousel3.jpg";
-import carousel4 from "../assets/carousel4.jpg";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper.scss";
+import Carousel from "../components/carousel";
+import { Link } from "react-router-dom";
 
 export default function Login() {
+  const [isActive, activate] = useState(false);
+  const [value, setValue] = useState("");
+  const ref1 = useRef();
+  const ref2 = useRef();
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value !== "") {
+      activate(true);
+    } else {
+      activate(false);
+    }
+  }, [value]);
+
   return (
     <MainContainer>
       <MainContainerColOne>
         <div id="background"></div>
         <div id="carousel">
-          <Swiper
-            spaceBetween={0}
-            slidesPerView={1}
-            loop={true}
-            updateOnWindowResize={true}
-            roundLengths={true}
-            autoplay={(true, { delay: 3000, disableOnInteraction: false })}
-            lazy={true}
-            fadeEffect={(true, { crossFade: true })}
-            effect="slide"
-          >
-            <SwiperSlide>
-              <img
-                src={carousel1}
-                alt="carousel1"
-                width="300"
-                height="426"
-              ></img>
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src={carousel2}
-                alt="carousel2"
-                width="300"
-                height="426"
-              ></img>
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src={carousel3}
-                alt="carousel3"
-                width="300"
-                height="426"
-              ></img>
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src={carousel4}
-                alt="carousel4"
-                width="300"
-                height="426"
-              ></img>
-            </SwiperSlide>
-          </Swiper>
+          <Carousel></Carousel>
         </div>
       </MainContainerColOne>
-      <MainContainerColTwo>
+      <MainContainerColTwo active={isActive}>
         <div>
           <form>
             <h1>Instagram</h1>
             <div>
               <label>
-                <span>Phone number, username or e-mail</span>
-                <input type="email" id="nameInput" />
+                <input
+                  onChange={(e) => handleInput(e)}
+                  type="email"
+                  id="nameInput"
+                  ref={ref1}
+                />
+                <span className="text-legend">Username or e-mail</span>
               </label>
             </div>
             <div>
               <label>
-                <span>Password</span>
-                <input type="password" id="passwordInput" />
+                <input
+                  onChange={(e) => handleInput(e)}
+                  type="password"
+                  id="passwordInput"
+                  ref={ref2}
+                />
+                <span className="text-legend">Password</span>
               </label>
             </div>
             <div>
@@ -93,7 +73,7 @@ export default function Login() {
         </div>
         <div>
           <p>
-            Don't have an account? <a>Sign up</a>
+            Don't have an account? <Link to="/register">Sign up</Link>
           </p>
         </div>
         <div>
@@ -167,16 +147,14 @@ const MainContainerColTwo = styled.div`
     border: 1px solid #dbdbdb;
     margin-bottom: 0.3rem;
     form {
-      h1 {
-        font-size: 40px;
-        margin-bottom: 2rem;
-      }
-
       padding: 2rem 2.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-
+      h1 {
+        font-size: 40px;
+        margin-bottom: 2rem;
+      }
       div {
         position: relative;
         border: none;
@@ -186,7 +164,7 @@ const MainContainerColTwo = styled.div`
           cursor: auto;
           padding: 15px 0px;
         }
-        span {
+        .text-legend {
           position: absolute;
           font-size: 14px;
           height: 40px;
@@ -195,6 +173,15 @@ const MainContainerColTwo = styled.div`
           right: 0;
           left: 8px;
           cursor: auto;
+          transition: all 0.3s ease-in-out;
+          ${({ active }) =>
+            active &&
+            `
+              left: 6px;
+              font-size: 10px;
+              top: 0;
+              line-height: 16px;
+            `}
         }
         input {
           height: 40px;
@@ -206,10 +193,13 @@ const MainContainerColTwo = styled.div`
           background-color: #fafafa;
           border-radius: 3px;
           cursor: auto;
-          font-size: 16px;
+          font-size: 12px;
 
           &:focus {
+            font-size: 12px;
             outline: #a2a2a2;
+            padding-top: 6px;
+            padding-bottom: 5px;
             border: 1px solid #a2a2a2;
           }
         }
@@ -241,6 +231,7 @@ const MainContainerColTwo = styled.div`
         }
         span:nth-of-type(2) {
           margin-left: 1rem;
+          position: static;
           margin-right: 1rem;
           text-transform: uppercase;
           font-size: 14px;
@@ -249,6 +240,7 @@ const MainContainerColTwo = styled.div`
         }
         span:nth-of-type(1),
         span:nth-of-type(3) {
+          position: static;
           width: 100px;
           height: 1px;
           background-color: #dbdbdb;

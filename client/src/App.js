@@ -12,9 +12,9 @@ function App() {
   return (
     <>
       <Switch>
-        <Route exact path="/login" component={Login}></Route>
         <Route exact path="/" component={Home}></Route>
-        <Route exact path="register" component={Register}></Route>
+        <Route exact path="/login" component={Login}></Route>
+        <Route exact path="/register" component={Register}></Route>
         <Route exact path="/profile" component={Profile}></Route>
       </Switch>
     </>
