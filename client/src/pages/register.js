@@ -76,8 +76,6 @@ export default function Register() {
 const MainContainer = styled.div`
   background-color: #fafafa;
   padding-top: 3rem;
-  padding-right: 10rem;
-  padding-left: 10rem;
   display: flex;
   justify-content: center;
   grid-auto-rows: 1fr;

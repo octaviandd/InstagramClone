@@ -89,12 +89,13 @@ export default function Login() {
 
 const MainContainer = styled.div`
   background-color: #fafafa;
-  padding: 5rem 10rem;
   display: flex;
   justify-content: center;
   align-items: center;
   grid-auto-rows: 1fr;
   width: 100%;
+  flex-shrink: 0;
+  min-height: 100vh;
 `;
 
 const MainContainerColOne = styled.div`
@@ -137,6 +138,7 @@ const MainContainerColTwo = styled.div`
   max-width: 350px;
   width: 100%;
   flex-shrink: 0;
+  padding-top: 3rem;
 
   div {
     background-color: white;

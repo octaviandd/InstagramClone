@@ -1,24 +1,47 @@
 /** @format */
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import profileImg from "../assets/profileimg.jpg";
 
 export default function Navbar() {
+  const [isActive, activate] = useState(false);
+  const [value, setValue] = useState("");
+  const inputRef = useRef();
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value !== "") {
+      activate(true);
+    } else {
+      activate(false);
+    }
+    console.log(isActive);
+  }, [value]);
+
   return (
     <MainContainer>
       <Container>
         <div>
-          <h3>Instagram</h3>
+          <h3>InstagramClone</h3>
         </div>
-        <SearchBar>
+        <SearchBar active={isActive}>
           <div>
-            <input type="text" />
+            <input
+              tabindex="1"
+              type="text"
+              ref={inputRef}
+              onChange={(e) => handleInput(e)}
+            />
             <span id="search-icon">
               <i className="fas fa-search"></i>
             </span>
             <span id="search-placeholder">Search</span>
             <span id="search-close">
-              <i class="fas fa-times"></i>
+              <i className="fas fa-times"></i>
             </span>
           </div>
         </SearchBar>
@@ -27,7 +50,7 @@ export default function Navbar() {
             <a>
               <svg
                 aria-label="Home"
-                class="_8-yf5 "
+                className="_8-yf5 "
                 fill="#262626"
                 height="22"
                 viewBox="0 0 48 48"
@@ -41,7 +64,7 @@ export default function Navbar() {
             <a>
               <svg
                 aria-label="Direct"
-                class="_8-yf5 "
+                className="_8-yf5 "
                 fill="#262626"
                 height="22"
                 viewBox="0 0 48 48"
@@ -55,16 +78,16 @@ export default function Navbar() {
             <a>
               <svg
                 aria-label="Find People"
-                class="_8-yf5 "
+                className="_8-yf5 "
                 fill="#262626"
                 height="22"
                 viewBox="0 0 48 48"
                 width="22"
               >
                 <path
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                   d="M24 0C10.8 0 0 10.8 0 24s10.8 24 24 24 24-10.8 24-24S37.2 0 24 0zm0 45C12.4 45 3 35.6 3 24S12.4 3 24 3s21 9.4 21 21-9.4 21-21 21zm10.2-33.2l-14.8 7c-.3.1-.6.4-.7.7l-7 14.8c-.3.6-.2 1.3.3 1.7.3.3.7.4 1.1.4.2 0 .4 0 .6-.1l14.8-7c.3-.1.6-.4.7-.7l7-14.8c.3-.6.2-1.3-.3-1.7-.4-.5-1.1-.6-1.7-.3zm-7.4 15l-5.5-5.5 10.5-5-5 10.5z"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                 ></path>
               </svg>
             </a>
@@ -73,7 +96,7 @@ export default function Navbar() {
             <a>
               <svg
                 aria-label="Activity Feed"
-                class="_8-yf5 "
+                className="_8-yf5 "
                 fill="#262626"
                 height="22"
                 viewBox="0 0 48 48"
@@ -85,7 +108,7 @@ export default function Navbar() {
           </div>
           <div>
             <span>
-              <img src="https://instagram.fman1-2.fna.fbcdn.net/v/t51.2885-19/s150x150/71314653_499340394233642_6637010501492539392_n.jpg?_nc_ht=instagram.fman1-2.fna.fbcdn.net&_nc_ohc=9LiJkrHUXrgAX8sprx6&oh=33bc470e6f0c73d984d7a5baec560a8a&oe=5F39614A" />
+              <img src={profileImg} />
             </span>
           </div>
         </Icons>
@@ -119,6 +142,14 @@ const Icons = styled.div`
 
   div {
     margin-left: 20px;
+
+    span {
+      img {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+      }
+    }
   }
 `;
 
@@ -130,22 +161,27 @@ const SearchBar = styled.div`
       background-color: #fafafa;
       border: 1px solid #dbdbdb;
       border-radius: 3px;
-      font-size: 16px;
-      padding-left: 20px;
+      font-size: 14px;
+      padding-left: 24px;
+      padding-right: 10px;
       padding-top: 3px;
       padding-bottom: 3px;
       line-height: 20px;
 
       &:focus {
         outline: #a2a2a2;
+      }
 
-        #search-icon {
-          left: 20px;
-        }
+      &:focus ~ #search-icon {
+        left: 10px;
+      }
 
-        #search-close {
-          display: block;
-        }
+      &:focus ~ #search-close {
+        display: block;
+      }
+
+      &:focus ~ #search-placeholder {
+        left: 25px;
       }
     }
 
@@ -157,7 +193,7 @@ const SearchBar = styled.div`
     }
 
     span:nth-of-type(1) {
-      left: 80px;
+      left: 76px;
       top: 3px;
       line-height: 20px;
       i {
@@ -166,11 +202,17 @@ const SearchBar = styled.div`
     }
 
     span:nth-of-type(2) {
-      left: 100px;
+      left: 96px;
       top: 4px;
       color: #8e8e8e;
       font-size: 14px;
       line-height: 20px;
+      pointer-events: none;
+      ${({ active }) =>
+        active &&
+        `
+        display: none;
+      `}
     }
     span:nth-of-type(3) {
       display: none;
@@ -180,7 +222,7 @@ const SearchBar = styled.div`
         background-color: #c7c7c7;
         border-radius: 50%;
         color: #f2f2f2;
-        font-size: 13px;
+        font-size: 12px;
         padding: 1px 3px;
       }
     }
