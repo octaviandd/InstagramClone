@@ -68,7 +68,6 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   position: fixed;
-  max-width: 293px;
   height: 100vh;
   width: 100%;
 `;

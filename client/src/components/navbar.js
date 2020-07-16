@@ -126,6 +126,8 @@ const MainContainer = styled.div`
   margin: 0;
   position: relative;
   justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
 const Container = styled.div`
