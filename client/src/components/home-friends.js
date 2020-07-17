@@ -69,7 +69,7 @@ const MainContainer = styled.div`
   align-items: center;
   position: fixed;
   height: 100vh;
-  width: 100%;
+  width: 293px;
 `;
 
 const Suggestions = styled.div`

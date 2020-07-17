@@ -67,8 +67,8 @@ const MainContainer = styled.div`
   display: flex;
   flex-shrink: 0;
   background-color: #ffffff;
-  overflow-y: hidden;
   height: 120px;
+  margin-bottom: 25px;
 `;
 
 const Container = styled.div`
@@ -76,6 +76,7 @@ const Container = styled.div`
   border-radius: 3px;
   width: 100%;
   display: flex;
+  overflow-x: hidden;
   position: relative;
 
   button {

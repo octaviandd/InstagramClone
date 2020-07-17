@@ -39,6 +39,7 @@ const ContainerColOne = styled.div`
   width: 100%;
   margin-right: 28px;
   height: 100%;
+  flex-direction: column;
 `;
 
 const ContainerColTwo = styled.div`
