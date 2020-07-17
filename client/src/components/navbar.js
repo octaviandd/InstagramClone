@@ -19,7 +19,6 @@ export default function Navbar() {
     } else {
       activate(false);
     }
-    console.log(isActive);
   }, [value]);
 
   return (
@@ -31,7 +30,7 @@ export default function Navbar() {
         <SearchBar active={isActive}>
           <div>
             <input
-              tabindex="1"
+              tabIndex="1"
               type="text"
               ref={inputRef}
               onChange={(e) => handleInput(e)}
@@ -47,7 +46,7 @@ export default function Navbar() {
         </SearchBar>
         <Icons>
           <div>
-            <a>
+            <a href="#">
               <svg
                 aria-label="Home"
                 className="_8-yf5 "
@@ -61,7 +60,7 @@ export default function Navbar() {
             </a>
           </div>
           <div>
-            <a>
+            <a href="#">
               <svg
                 aria-label="Direct"
                 className="_8-yf5 "
@@ -75,7 +74,7 @@ export default function Navbar() {
             </a>
           </div>
           <div>
-            <a>
+            <a href="#">
               <svg
                 aria-label="Find People"
                 className="_8-yf5 "
@@ -93,7 +92,7 @@ export default function Navbar() {
             </a>
           </div>
           <div>
-            <a>
+            <a href="#">
               <svg
                 aria-label="Activity Feed"
                 className="_8-yf5 "
@@ -107,9 +106,11 @@ export default function Navbar() {
             </a>
           </div>
           <div>
-            <span>
-              <img src={profileImg} />
-            </span>
+            <a href="#">
+              <span>
+                <img src={profileImg} />
+              </span>
+            </a>
           </div>
         </Icons>
       </Container>

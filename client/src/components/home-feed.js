@@ -1,11 +1,27 @@
 /** @format */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import exampleImg from "../assets/example.jpg";
 
 export default function HomeFeed() {
+  const [isActive, activate] = useState(false);
+  const [value, setValue] = useState("");
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value !== "") {
+      activate(true);
+    } else {
+      activate(false);
+    }
+    console.log(isActive);
+  }, [value]);
+
   return (
     <MainContainer>
       <Container>
@@ -31,7 +47,7 @@ export default function HomeFeed() {
               <button>
                 <svg
                   aria-label="Like"
-                  class="_8-yf5 "
+                  className="_8-yf5 "
                   fill="#262626"
                   height="24"
                   viewBox="0 0 48 48"
@@ -42,7 +58,7 @@ export default function HomeFeed() {
               </button>
               <button>
                 <svg
-                  ariaLabel="Comment"
+                  aria-label="Comment"
                   className="_8-yf5 "
                   fill="#262626"
                   height="24"
@@ -59,7 +75,7 @@ export default function HomeFeed() {
               <button>
                 <svg
                   aria-label="Share Post"
-                  class="_8-yf5 "
+                  className="_8-yf5 "
                   fill="#262626"
                   height="24"
                   viewBox="0 0 48 48"
@@ -73,7 +89,7 @@ export default function HomeFeed() {
               <button>
                 <svg
                   aria-label="Save"
-                  class="_8-yf5 "
+                  className="_8-yf5 "
                   fill="#262626"
                   height="24"
                   viewBox="0 0 48 48"
@@ -91,17 +107,24 @@ export default function HomeFeed() {
           </LikesContainer>
           <CommentsContainer>
             <div>
-              <a href="#">octaviandd</a> Surprised at the gym
-              @eliteathletesperformance yesterday by the one and only
-              @justbeingkurt
-            </div>
-            <div>
-              <a href="#">George Soros</a> Great, nice.
-            </div>
-            <div>
-              <a href="#">Bill Gates</a> Nice,man.
+              <div>
+                <a href="#">octaviandd</a> Surprised at the gym
+                @eliteathletesperformance yesterday by the one and only
+                @justbeingkurt
+              </div>
+              <div>
+                <a href="#">George Soros</a> Great, nice.
+              </div>
+              <div>
+                <a href="#">Bill Gates</a> Nice,man.
+              </div>
             </div>
           </CommentsContainer>
+          <AddCommentsContainer active={isActive}>
+            <input type="text" onChange={(e) => handleInput(e)} />
+            <span>Add a comment..</span>
+            <button>Post</button>
+          </AddCommentsContainer>
         </RowThree>
       </Container>
     </MainContainer>
@@ -203,12 +226,15 @@ const RowThree = styled.div`
   border-right: 1px solid #dbdbdb;
   border-left: 1px solid #dbdbdb;
   border-bottom: 1px solid #dbdbdb;
-  padding: 10px 10px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  position: relative;
 `;
 
 const ButtonsContainer = styled.div`
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-right: 10px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -230,6 +256,7 @@ const LikesContainer = styled.div`
   display: flex;
   width: 100%;
   margin-top: 7.5px;
+  padding-left: 10px;
 
   a {
     font-size: 14px;
@@ -240,12 +267,15 @@ const LikesContainer = styled.div`
   }
 `;
 const CommentsContainer = styled.div`
+  padding-left: 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
 
-  & > div {
-    margin-bottom: 5px;
+  & > div:nth-of-type(1) {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 7.5px;
     font-size: 14px;
     line-height: 18px;
     a {
@@ -253,5 +283,46 @@ const CommentsContainer = styled.div`
       text-decoration: none;
       color: #363636;
     }
+  }
+`;
+
+const AddCommentsContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #dbdbdb;
+  width: 100%;
+  padding: 15px 10px;
+
+  input {
+    border: none;
+    font-size: 14px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  span {
+    left: 12.5px;
+    position: absolute;
+    color: #dbdbdb;
+    font-size: 14px;
+    line-height: 18px;
+    pointer-events: none;
+    ${({ active }) =>
+      active &&
+      `
+        display: none;
+      `}
+  }
+
+  button {
+    font-size: 16px;
+    background-color: transparent;
+    color: #b1defc;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
   }
 `;

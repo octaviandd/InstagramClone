@@ -7,10 +7,12 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Profile from "./pages/profile";
+import Navbar from "./components/navbar";
 
 function App() {
   return (
     <>
+      <Navbar></Navbar>
       <Switch>
         <Route exact path="/" component={Home}></Route>
         <Route exact path="/login" component={Login}></Route>

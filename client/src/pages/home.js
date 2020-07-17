@@ -8,7 +8,6 @@ import HomeMain from "../components/home-main";
 export default function Home() {
   return (
     <MainContainer>
-      <Navbar></Navbar>
       <HomeMain></HomeMain>
     </MainContainer>
   );
