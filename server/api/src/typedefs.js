@@ -13,8 +13,8 @@ const typeDefs = gql`
     posts: [Post]!
     comments: [Comment]!
     images: [Image]!
-    followers: [Follower]!
-    following: [Following]!
+    # followers: [Follower]!
+    # following: [Following]!
   }
 
   type AuthUser {
@@ -30,8 +30,8 @@ const typeDefs = gql`
 
   type Post {
     id: ID!
-    content: String!
     author: User!
+    content: String!
     createdAt: String!
     likes: Int!
   }
@@ -44,15 +44,15 @@ const typeDefs = gql`
     likes: Int!
   }
 
-  type Follower {
-    id: ID!
-    name: String!
-  }
+  # type Follower {
+  #   id: ID!
+  #   name: String!
+  # }
 
-  type Following {
-    id: ID!
-    name: String
-  }
+  # type Following {
+  #   id: ID!
+  #   name: String
+  # }
 
   input FindUserById {
     id: ID!
@@ -62,20 +62,19 @@ const typeDefs = gql`
     content: String!
   }
 
-  input CommentInput {
-    id: ID!
+  input NewCommentInput {
     content: String!
   }
 
-  input FollowerInput {
-    id: ID!
-    name: String!
-  }
+  # input FollowerInput {
+  #   id: ID!
+  #   name: String!
+  # }
 
-  input FollowingInput {
-    id: ID!
-    name: String!
-  }
+  # input FollowingInput {
+  #   id: ID!
+  #   name: String!
+  # }
 
   input SignupInput {
     name: String!
@@ -89,19 +88,6 @@ const typeDefs = gql`
     password: String!
   }
 
-  input NewUserInput {
-    id: ID!
-    name: String!
-    age: Int!
-    avatar: String!
-    password: String!
-    img: String!
-    posts: NewPostInput!
-    comments: CommentInput!
-    followers: FollowerInput!
-    following: FollowingInput!
-  }
-
   type Query {
     getMe: User!
     getUser(id: ID!): User!
@@ -111,10 +97,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    newUser(input: NewUserInput!): User!
     createPost(input: NewPostInput!): Post!
     createUser(input: SignupInput!): AuthUser!
     loginUser(input: SigninInput!): AuthUser!
+    createComment(input: NewCommentInput!): Comment!
   }
 `;
 

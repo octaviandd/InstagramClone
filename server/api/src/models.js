@@ -5,8 +5,9 @@ import { Schema } from "mongoose";
 const userSchema = new Schema(
   {
     _id: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       auto: false,
+      required: true,
     },
     email: {
       type: String,
@@ -29,23 +30,22 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    age: {
-      type: Number,
-      required: true,
-    },
-    avatar: {
-      type: String,
-    },
-    posts: {
-      type: Array,
-      required: true,
-    },
-    comments: {
-      type: Array,
-      required: true,
-    },
+    posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+        required: true,
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+        required: true,
+      },
+    ],
     images: {
-      type: String,
+      type: Array,
       required: true,
     },
     followers: {
@@ -65,8 +65,9 @@ const userSchema = new Schema(
 const postSchema = new Schema(
   {
     _id: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
+      auto: false,
     },
     content: {
       type: String,
@@ -84,10 +85,12 @@ const postSchema = new Schema(
       type: Number,
       required: true,
     },
-    comments: {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-    },
+    comments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     collection: "Posts",
@@ -97,8 +100,9 @@ const postSchema = new Schema(
 const commentSchema = new Schema(
   {
     _id: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
+      auto: false,
     },
     content: {
       type: String,
@@ -131,9 +135,7 @@ const Post = mongoose.model("Post", postSchema);
 const User = mongoose.model("User", userSchema);
 
 export default {
-  models: {
-    Comment,
-    Post,
-    User,
-  },
+  Comment: Comment,
+  Post: Post,
+  User: User,
 };
