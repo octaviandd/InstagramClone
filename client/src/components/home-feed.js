@@ -136,6 +136,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-bottom: 75px;
 `;
 
 const Container = styled.div`

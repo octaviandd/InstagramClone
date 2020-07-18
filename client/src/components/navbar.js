@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isActive, activate] = useState(false);
@@ -25,7 +26,9 @@ export default function Navbar() {
     <MainContainer>
       <Container>
         <div>
-          <h3>InstagramClone</h3>
+          <h3>
+            <Link to="/">InstagramClone</Link>
+          </h3>
         </div>
         <SearchBar active={isActive}>
           <div>
@@ -138,6 +141,15 @@ const Container = styled.div`
   max-width: 975px;
   width: 100%;
   align-items: center;
+
+  & > div:nth-of-type(1) {
+    h3 {
+      a {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  }
 `;
 
 const Icons = styled.div`
