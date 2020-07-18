@@ -4,70 +4,118 @@ import { gql } from "apollo-server-express";
 const typeDefs = gql`
   type User {
     id: ID!
-    name: String!
-    age: Int!
     email: String!
+    password: String!
+    name: String!
+    createdAt: String!
+    age: Int!
+    avatar: String!
     posts: [Post]!
     comments: [Comment]!
-    img: String!
-    friends: [Friend]!
+    images: [Image]!
+    followers: [Follower]!
+    following: [Following]!
   }
 
-  type Friend {
+  type AuthUser {
+    token: String!
+    user: User!
+  }
+
+  type Image {
     id: ID!
-    name: String!
-    img: String!
+    url: String!
+    author: String!
   }
 
   type Post {
     id: ID!
-    text: String!
+    content: String!
+    author: User!
+    createdAt: String!
+    likes: Int!
   }
 
   type Comment {
     id: ID!
-    text: String!
+    content: String!
+    author: User!
+    createdAt: String!
+    likes: Int!
+  }
+
+  type Follower {
+    id: ID!
+    name: String!
+  }
+
+  type Following {
+    id: ID!
+    name: String
   }
 
   input FindUserById {
     id: ID!
   }
 
+  input NewPostInput {
+    content: String!
+  }
+
+  input CommentInput {
+    id: ID!
+    content: String!
+  }
+
+  input FollowerInput {
+    id: ID!
+    name: String!
+  }
+
+  input FollowingInput {
+    id: ID!
+    name: String!
+  }
+
+  input SignupInput {
+    name: String!
+    username: String!
+    email: String!
+    password: String!
+  }
+
+  input SigninInput {
+    email: String!
+    password: String!
+  }
+
   input NewUserInput {
     id: ID!
     name: String!
     age: Int!
-    email: String!
-    friends: NewFriend!
-    comments: NewComment!
+    avatar: String!
+    password: String!
     img: String!
-    posts: NewPost!
-  }
-
-  input NewFriend {
-    id: ID!
-    name: String!
-    img: String!
-  }
-
-  input NewPost {
-    id: ID!
-    text: String!
-  }
-
-  input NewComment {
-    id: ID!
-    text: String!
+    posts: NewPostInput!
+    comments: CommentInput!
+    followers: FollowerInput!
+    following: FollowingInput!
   }
 
   type Query {
-    getUser(input: FindUserById!): User!
+    getMe: User!
+    getUser(id: ID!): User!
     getUsers: [User]!
+    getPosts: [Post]!
+    getPost(input: ID!): Post!
   }
 
   type Mutation {
     newUser(input: NewUserInput!): User!
+    createPost(input: NewPostInput!): Post!
+    createUser(input: SignupInput!): AuthUser!
+    loginUser(input: SigninInput!): AuthUser!
   }
 `;
 
-module.exports = typeDefs;
+export default typeDefs;

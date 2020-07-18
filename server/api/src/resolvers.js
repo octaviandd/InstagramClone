@@ -1,5 +1,6 @@
 /** @format */
 import { User } from "./models";
+import nanoid from "nanoid";
 
 const resolvers = {
   Query: {
@@ -14,12 +15,15 @@ const resolvers = {
       const user = new User({
         id: input.id,
         name: input.name,
+        password: input.password,
         email: input.email,
         age: input.age,
         posts: input.posts,
+        avatar: input.avatar,
+        images: input.images,
         comments: input.comments,
-        friends: input.friends,
-        img: input.img,
+        followers: input.followers,
+        following: input.following,
       });
       return user.save();
     },
