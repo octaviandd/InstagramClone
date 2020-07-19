@@ -5,12 +5,12 @@ import styled from "styled-components";
 import image from "../assets/loginpage.png";
 import Carousel from "../components/carousel";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export default function Login() {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
-  const ref1 = useRef();
-  const ref2 = useRef();
+  const { register, handleSubmit, errors } = useForm();
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -24,6 +24,10 @@ export default function Login() {
     }
   }, [value]);
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <MainContainer>
       <MainContainerColOne>
@@ -34,7 +38,7 @@ export default function Login() {
       </MainContainerColOne>
       <MainContainerColTwo active={isActive}>
         <div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <h1>Instagram</h1>
             <div>
               <label>
@@ -42,9 +46,14 @@ export default function Login() {
                   onChange={(e) => handleInput(e)}
                   type="email"
                   id="nameInput"
-                  ref={ref1}
+                  name="email"
+                  ref={register({
+                    required: true,
+                    pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  })}
                 />
                 <span className="text-legend">Username or e-mail</span>
+                {errors.email && <span>Invalid Email</span>}
               </label>
             </div>
             <div>
@@ -53,9 +62,10 @@ export default function Login() {
                   onChange={(e) => handleInput(e)}
                   type="password"
                   id="passwordInput"
-                  ref={ref2}
+                  ref={register({ required: true, minLength: 6 })}
                 />
                 <span className="text-legend">Password</span>
+                {errors.username && <span>Invalid Username</span>}
               </label>
             </div>
             <div>

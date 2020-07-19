@@ -34,12 +34,14 @@ const typeDefs = gql`
     content: String!
     createdAt: String!
     likes: Int!
+    comments: [Comment]!
   }
 
   type Comment {
     id: ID!
     content: String!
     author: User!
+    parentPost: Post!
     createdAt: String!
     likes: Int!
   }

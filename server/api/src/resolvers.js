@@ -1,16 +1,19 @@
 /** @format */
 import { nanoid } from "nanoid";
 import { authenticated } from "./auth";
+import bcrypt from "bcrypt";
+const salt = 10;
 
 const resolvers = {
   Query: {
-    getMe: authenticated((_, __, { user }) => {
-      return user;
+    getMe: authenticated(async (_, __, { user, models }) => {
+      const presetUser = await models.User.findOne({ id: user.id });
+      return presetUser;
     }),
-    getUsers: async (_, __, { models }) => {
+    getUsers: authenticated(async (_, __, { models }) => {
       const users = await models.User.find({}).exec();
       return users;
-    },
+    }),
   },
 
   Mutation: {
@@ -23,7 +26,7 @@ const resolvers = {
       const user = new models.User({
         _id: nanoid(),
         name: input.name,
-        password: input.password,
+        password: await bcrypt.hash(input.password, salt),
         email: input.email,
         createdAt: Date.now(),
         posts: [],
@@ -39,34 +42,56 @@ const resolvers = {
     loginUser: async (_, { input }, { models, createToken }) => {
       const user = await models.User.findOne({ email: input.email });
       if (!user) {
-        throw new Error("Invalid Credentials");
+        throw new Error("User doesn't exist");
+      }
+      const valid = await bcrypt.compare(input.password, user.password);
+      console.log(valid);
+      if (!valid) {
+        throw new Error("Invalid password");
       }
       const token = createToken(user);
       return { user, token };
     },
-    createPost: authenticated((_, { input }, { models, user }) => {
+    createPost: authenticated(async (_, { input }, { models, user }) => {
+      const presentUser = await models.User.findOne({ id: user.id });
       const post = new models.Post({
         _id: nanoid(),
+        author: presentUser,
         content: input.content,
-        author: user.id,
         createdAt: Date.now(),
         likes: 0,
         comments: [],
       });
       post.save();
-      return { post, user };
+      return post;
     }),
-    createComment: authenticated((_, { input }, { models, user }) => {
+    createComment: authenticated(async (_, { input }, { models, user }) => {
       const comment = new models.Comment({
         _id: nanoid(),
         content: input.content,
-        author: user.id,
+        author: presentUser,
+        parentPost: presetPost,
         createdAt: Date.now(),
         likes: 0,
       });
       comment.save();
-      return { comment, user };
+      return comment;
     }),
+  },
+  Post: {
+    comments: async (parentPost, { input }, { models, user }) => {
+      const presentUser = await models.User.findOne({ id: user.id });
+      const comment = new models.Comment({
+        _id: nanoid(),
+        content: input.content,
+        author: presentUser,
+        parentPost: parentPost,
+        createdAt: Date.now(),
+        likes: 0,
+      });
+      comment.save();
+      return comment;
+    },
   },
 };
 

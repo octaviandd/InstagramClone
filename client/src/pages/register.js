@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export default function Register() {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
+  const { register, handleSubmit, errors } = useForm();
 
   useEffect(() => {
     if (value !== "") {
@@ -20,34 +22,68 @@ export default function Register() {
     setValue(e.target.value);
   };
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <MainContainer>
       <Container active={isActive}>
         <div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <h1>Instagram</h1>
             <h4>Sign up to see photos and videos from your friends.</h4>
             <div>
               <label>
-                <input type="email" onChange={(e) => handleInput(e)}></input>
+                <input
+                  name="email"
+                  type="email"
+                  onChange={(e) => handleInput(e)}
+                  ref={register({
+                    required: true,
+                    pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  })}
+                ></input>
                 <span className="text-legend">Email</span>
+                {errors.email && <span>Invalid Email</span>}
               </label>
             </div>
             <div>
               <label>
-                <input type="text" onChange={(e) => handleInput(e)}></input>
+                <input
+                  name="fullName"
+                  type="text"
+                  onChange={(e) => handleInput(e)}
+                  ref={register({ required: true })}
+                ></input>
                 <span className="text-legend">Full Name</span>
+                {errors.fullName && <span>Invalid Name</span>}
               </label>
             </div>
             <div>
               <label>
-                <input type="text" onChange={(e) => handleInput(e)}></input>
+                <input
+                  name="username"
+                  type="text"
+                  onChange={(e) => handleInput(e)}
+                  ref={register({ required: true, minLength: 6 })}
+                ></input>
                 <span className="text-legend">Username</span>
+                {errors.username && <span>Invalid Username</span>}
               </label>
             </div>
             <div>
               <label>
-                <input type="password" onChange={(e) => handleInput(e)}></input>
+                <input
+                  name="password"
+                  type="password"
+                  onChange={(e) => handleInput(e)}
+                  ref={register({
+                    required: true,
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ -/:-@\[-`{-~]).{6,64}$/,
+                  })}
+                ></input>
+                {errors.password && <span>Invalid password</span>}
                 <span className="text-legend">Password</span>
               </label>
             </div>
@@ -145,6 +181,7 @@ const Container = styled.div`
         line-height: 40px;
         right: 0;
         left: 8px;
+        top: 0;
         cursor: auto;
         transition: all 0.3s ease-in-out;
         ${({ active }) =>
