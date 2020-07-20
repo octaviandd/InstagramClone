@@ -5,14 +5,44 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter as Router } from "react-router-dom";
-import { ApolloClient } from "apollo-client";
+
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  ApolloProvider,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+
+const httpLink = createHttpLink({
+  uri: "http://localhost:4000",
+  credentials: "include",
+});
+
+const cache = new InMemoryCache();
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.get("token");
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+console.log(authLink);
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache,
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
+    <ApolloProvider client={client}>
       <App />
-    </Router>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

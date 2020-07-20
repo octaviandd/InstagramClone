@@ -19,7 +19,6 @@ export default function HomeFeed() {
     } else {
       activate(false);
     }
-    console.log(isActive);
   }, [value]);
 
   return (

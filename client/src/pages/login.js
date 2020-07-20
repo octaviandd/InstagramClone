@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import image from "../assets/loginpage.png";
 import Carousel from "../components/carousel";

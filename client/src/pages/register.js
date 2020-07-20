@@ -4,11 +4,31 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useQuery, useMutation, gql } from "@apollo/client";
+
+const SIGNUP_MUTATION = gql`
+  mutation SignupMutation(
+    $email: String!
+    $password: String!
+    $name: String!
+    $username: String!
+  ) {
+    signup(
+      email: $email
+      password: $password
+      name: $name
+      username: $username
+    ) {
+      token
+    }
+  }
+`;
 
 export default function Register() {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const { register, handleSubmit, errors } = useForm();
+  const [addUser, { data }] = useMutation(SIGNUP_MUTATION);
 
   useEffect(() => {
     if (value !== "") {
@@ -23,7 +43,17 @@ export default function Register() {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log({
+      data: [data.username, data.email, data.password, data.name],
+    });
+    addUser({
+      variables: {
+        name: data.name,
+        username: data.username,
+        password: data.password,
+        email: data.email,
+      },
+    });
   };
 
   return (
