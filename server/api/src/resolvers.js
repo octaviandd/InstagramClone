@@ -14,9 +14,20 @@ const resolvers = {
       const users = await models.User.find({}).exec();
       return users;
     }),
+    getPosts: authenticated(async (_, __, { user, models }) => {
+      const posts = await models.Post.findMany({}).exec();
+      return posts;
+    }),
+    test() {
+      return "hello";
+    },
   },
 
   Mutation: {
+    test: () => {
+      const testNumber = nanoid();
+      return testNumber;
+    },
     createUser: async (_, { input }, { models, createToken }) => {
       const existing = await models.User.findOne({ email: input.email });
       console.log(existing);
@@ -28,6 +39,7 @@ const resolvers = {
         name: input.name,
         password: await bcrypt.hash(input.password, salt),
         email: input.email,
+        username: input.username,
         createdAt: Date.now(),
         posts: [],
         images: [],
@@ -66,32 +78,19 @@ const resolvers = {
       return post;
     }),
     createComment: authenticated(async (_, { input }, { models, user }) => {
+      const parentPost = models.Post.findOne({ id: input.id });
+      const parentUser = models.User.findOn({ id: user.id });
       const comment = new models.Comment({
         _id: nanoid(),
         content: input.content,
-        author: presentUser,
-        parentPost: presetPost,
-        createdAt: Date.now(),
-        likes: 0,
-      });
-      comment.save();
-      return comment;
-    }),
-  },
-  Post: {
-    comments: async (parentPost, { input }, { models, user }) => {
-      const presentUser = await models.User.findOne({ id: user.id });
-      const comment = new models.Comment({
-        _id: nanoid(),
-        content: input.content,
-        author: presentUser,
+        author: parentUser,
         parentPost: parentPost,
         createdAt: Date.now(),
         likes: 0,
       });
       comment.save();
       return comment;
-    },
+    }),
   },
 };
 

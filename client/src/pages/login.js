@@ -6,11 +6,19 @@ import image from "../assets/loginpage.png";
 import Carousel from "../components/carousel";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useQuery, gql } from "@apollo/client";
 
-export default function Login() {
+const GET_TEST = gql`
+  query GetDogs {
+    test
+  }
+`;
+
+export default function Login({ history }) {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const { register, handleSubmit, errors } = useForm();
+  const { loading, error, data } = useQuery(GET_TEST);
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -24,8 +32,9 @@ export default function Login() {
     }
   }, [value]);
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     console.log(data);
+    history.push("/");
   };
 
   return (
@@ -61,6 +70,7 @@ export default function Login() {
                 <input
                   onChange={(e) => handleInput(e)}
                   type="password"
+                  name="password"
                   id="passwordInput"
                   ref={register({ required: true, minLength: 6 })}
                 />

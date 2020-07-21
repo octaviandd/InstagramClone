@@ -4,31 +4,39 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import gql from "graphql-tag";
 
-const SIGNUP_MUTATION = gql`
-  mutation SignupMutation(
-    $email: String!
-    $password: String!
-    $name: String!
-    $username: String!
-  ) {
-    signup(
-      email: $email
-      password: $password
-      name: $name
-      username: $username
-    ) {
+const NEW_USER = gql`
+  mutation CreateUser($input: SignupInput!) {
+    createUser(input: $input) {
+      user {
+        id
+        name
+        username
+        email
+        images {
+          id
+        }
+        createdAt
+        comments {
+          id
+        }
+        posts {
+          id
+        }
+        avatar
+      }
       token
     }
   }
 `;
 
-export default function Register() {
+export default function Register({ history }) {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const { register, handleSubmit, errors } = useForm();
-  const [addUser, { data }] = useMutation(SIGNUP_MUTATION);
+  const [newTest, { data, loading, error }] = useMutation(NEW_USER);
 
   useEffect(() => {
     if (value !== "") {
@@ -42,19 +50,21 @@ export default function Register() {
     setValue(e.target.value);
   };
 
-  const onSubmit = (data) => {
-    console.log({
-      data: [data.username, data.email, data.password, data.name],
-    });
-    addUser({
+  const onSubmit = (formData) => {
+    newTest({
       variables: {
-        name: data.name,
-        username: data.username,
-        password: data.password,
-        email: data.email,
+        input: {
+          name: formData.name,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        },
       },
-    });
+    }).then((res) => console.log(res));
+    history.push("/");
   };
+
+  if (error) throw new Error(`{error}`);
 
   return (
     <MainContainer>
@@ -81,7 +91,7 @@ export default function Register() {
             <div>
               <label>
                 <input
-                  name="fullName"
+                  name="name"
                   type="text"
                   onChange={(e) => handleInput(e)}
                   ref={register({ required: true })}

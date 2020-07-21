@@ -7,6 +7,7 @@ const typeDefs = gql`
     email: String!
     password: String!
     name: String!
+    username: String!
     createdAt: String!
     age: Int!
     avatar: String!
@@ -92,10 +93,12 @@ const typeDefs = gql`
 
   type Query {
     getMe: User!
-    getUser(id: ID!): User!
+    getUser(input: ID!): User!
     getUsers: [User]!
     getPosts: [Post]!
     getPost(input: ID!): Post!
+    getComments(input: ID!): [Comment]!
+    test: String!
   }
 
   type Mutation {
@@ -103,6 +106,10 @@ const typeDefs = gql`
     createUser(input: SignupInput!): AuthUser!
     loginUser(input: SigninInput!): AuthUser!
     createComment(input: NewCommentInput!): Comment!
+    likePost(input: ID!): Post!
+    likeComment(input: ID!): Comment!
+    addFriend(input: ID!): User!
+    test(input: String!): String!
   }
 `;
 
