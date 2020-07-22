@@ -16,6 +16,12 @@ const userSchema = new Schema(
       trim: true,
       lowercase: true,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
@@ -45,14 +51,6 @@ const userSchema = new Schema(
       },
     ],
     images: {
-      type: Array,
-      required: true,
-    },
-    followers: {
-      type: Array,
-      required: true,
-    },
-    following: {
       type: Array,
       required: true,
     },

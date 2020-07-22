@@ -18,16 +18,9 @@ const resolvers = {
       const posts = await models.Post.findMany({}).exec();
       return posts;
     }),
-    test() {
-      return "hello";
-    },
   },
 
   Mutation: {
-    test: () => {
-      const testNumber = nanoid();
-      return testNumber;
-    },
     createUser: async (_, { input }, { models, createToken }) => {
       const existing = await models.User.findOne({ email: input.email });
       console.log(existing);

@@ -8,17 +8,11 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useQuery, gql } from "@apollo/client";
 
-const GET_TEST = gql`
-  query GetDogs {
-    test
-  }
-`;
-
 export default function Login({ history }) {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const { register, handleSubmit, errors } = useForm();
-  const { loading, error, data } = useQuery(GET_TEST);
+  // const { loading, error, data } = useQuery();
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -32,8 +26,8 @@ export default function Login({ history }) {
     }
   }, [value]);
 
-  const onSubmit = () => {
-    console.log(data);
+  const onSubmit = (formData) => {
+    console.log(formData);
     history.push("/");
   };
 

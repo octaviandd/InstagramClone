@@ -4,33 +4,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQuery, useMutation } from "@apollo/client";
-import gql from "graphql-tag";
-
-const NEW_USER = gql`
-  mutation CreateUser($input: SignupInput!) {
-    createUser(input: $input) {
-      user {
-        id
-        name
-        username
-        email
-        images {
-          id
-        }
-        createdAt
-        comments {
-          id
-        }
-        posts {
-          id
-        }
-        avatar
-      }
-      token
-    }
-  }
-`;
+import { useQuery, useMutation, gql } from "@apollo/client";
+import { setAccessToken, getAccessToken } from "../helpers/token";
+import { NEW_USER } from "../helpers/mutations";
 
 export default function Register({ history }) {
   const [isActive, activate] = useState(false);
@@ -60,7 +36,12 @@ export default function Register({ history }) {
           password: formData.password,
         },
       },
-    }).then((res) => console.log(res));
+    }).then((res) => {
+      console.log(res);
+      console.log(res.data.createUser.token);
+      setAccessToken(res.data.createUser.token);
+    });
+
     history.push("/");
   };
 

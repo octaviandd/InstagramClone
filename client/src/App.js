@@ -8,6 +8,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Profile from "./pages/profile";
 import Navbar from "./components/navbar";
+import { setAccessToken, getAccessToken } from "./helpers/token";
 
 function App() {
   return (

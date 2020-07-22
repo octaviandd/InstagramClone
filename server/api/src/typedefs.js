@@ -10,7 +10,6 @@ const typeDefs = gql`
     username: String!
     createdAt: String!
     age: Int!
-    avatar: String!
     posts: [Post]!
     comments: [Comment]!
     images: [Image]!
