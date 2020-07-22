@@ -6,8 +6,12 @@ const salt = 10;
 
 const resolvers = {
   Query: {
+    test: authenticated(async () => {
+      return "hello";
+    }),
     getMe: authenticated(async (_, __, { user, models }) => {
       const presetUser = await models.User.findOne({ id: user.id });
+      console.log(presetUser);
       return presetUser;
     }),
     getUsers: authenticated(async (_, __, { models }) => {
@@ -55,6 +59,7 @@ const resolvers = {
         throw new Error("Invalid password");
       }
       const token = createToken(user);
+      console.log(token);
       return { user, token };
     },
     createPost: authenticated(async (_, { input }, { models, user }) => {

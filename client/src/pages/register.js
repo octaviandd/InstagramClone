@@ -12,7 +12,7 @@ export default function Register({ history }) {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const { register, handleSubmit, errors } = useForm();
-  const [newTest, { data, loading, error }] = useMutation(NEW_USER);
+  const [registerUser, { data, loading, error }] = useMutation(NEW_USER);
 
   useEffect(() => {
     if (value !== "") {
@@ -27,7 +27,7 @@ export default function Register({ history }) {
   };
 
   const onSubmit = (formData) => {
-    newTest({
+    registerUser({
       variables: {
         input: {
           name: formData.name,

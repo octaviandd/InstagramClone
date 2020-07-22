@@ -4,8 +4,17 @@ import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import postImg from "../assets/post.jpg";
+import { GET_CURRENT_USER, TEST_GQL } from "../helpers/queries";
+import { useQuery } from "@apollo/client";
 
 export default function Profile() {
+  const { data, error, loading } = useQuery(GET_CURRENT_USER);
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+
+  console.log(data);
+
   return (
     <MainContainer>
       <RowOne>

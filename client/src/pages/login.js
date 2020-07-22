@@ -6,13 +6,17 @@ import image from "../assets/loginpage.png";
 import Carousel from "../components/carousel";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQuery, gql } from "@apollo/client";
+import { LOGIN_USER } from "../helpers/mutations";
+import { useMutation } from "@apollo/client";
+import { setAccessToken } from "../helpers/token";
+
+//client.resetStore()
 
 export default function Login({ history }) {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const { register, handleSubmit, errors } = useForm();
-  // const { loading, error, data } = useQuery();
+  const [logUser, { data, loading, error }] = useMutation(LOGIN_USER);
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -27,7 +31,18 @@ export default function Login({ history }) {
   }, [value]);
 
   const onSubmit = (formData) => {
-    console.log(formData);
+    logUser({
+      variables: {
+        input: {
+          email: formData.email,
+          password: formData.password,
+        },
+      },
+    }).then((res) => {
+      console.log(res);
+      setAccessToken(res.data.loginUser.token);
+    });
+
     history.push("/");
   };
 
