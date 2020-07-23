@@ -40,9 +40,10 @@ export default function Register({ history }) {
       console.log(res);
       console.log(res.data.createUser.token);
       setAccessToken(res.data.createUser.token);
+      if (res) {
+        history.push("/");
+      }
     });
-
-    history.push("/");
   };
 
   if (error) throw new Error(`{error}`);

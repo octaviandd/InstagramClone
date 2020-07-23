@@ -41,10 +41,19 @@ export default function Login({ history }) {
     }).then((res) => {
       console.log(res);
       setAccessToken(res.data.loginUser.token);
+      if (res) {
+        history.push("/");
+      }
     });
-
-    history.push("/");
   };
+
+  if (error) {
+    return (
+      <div>
+        <h1>{`${error}`}</h1>
+      </div>
+    );
+  }
 
   return (
     <MainContainer>

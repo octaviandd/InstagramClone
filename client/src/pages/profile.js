@@ -4,85 +4,95 @@ import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import postImg from "../assets/post.jpg";
-import { GET_CURRENT_USER, TEST_GQL } from "../helpers/queries";
+import { GET_CURRENT_USER, GET_USER } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
+import Navbar from "../components/navbar";
+import { useParams } from "react-router-dom";
 
 export default function Profile() {
+  const { id } = useParams();
+  console.log(id);
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
+  const { data1, error1, loading1 } = useQuery(GET_USER);
 
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
   console.log(data);
+  const { followers, following, posts, username } = data.getMe;
+  console.log(posts);
 
   return (
-    <MainContainer>
-      <RowOne>
-        <div>
-          <img src={profileImg} width="150" height="150" />
-        </div>
-        <div>
+    <>
+      <Navbar></Navbar>
+      <MainContainer>
+        <RowOne>
           <div>
-            <p>octaviandd</p>
-            <button>Edit Profile</button>
-            <button>
-              <a href="#">
-                <svg
-                  aria-label="Options"
-                  className="_8-yf5 "
-                  fill="#262626"
-                  height="24"
-                  viewBox="0 0 48 48"
-                  width="24"
-                >
-                  <path
-                    clipRule="evenodd"
-                    d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6 0-1.1.3-1.3.8l-1.1 2.2c-.2.4-.5.7-1 .8-1.6.5-3.2 1.1-4.6 1.9-.4.2-.8.3-1.2.1l-2.3-.8c-.5-.2-1.1 0-1.5.4L5.9 8.8c-.4.4-.5 1-.4 1.5l.8 2.3c.1.4.1.8-.1 1.2-.8 1.5-1.5 3-1.9 4.7-.1.4-.4.8-.8 1l-2.1 1.1c-.5.3-.8.8-.8 1.3V26c0 .6.3 1.1.8 1.3l2.1 1.1c.4.2.7.5.8 1 .5 1.6 1.1 3.2 1.9 4.7.2.4.3.8.1 1.2l-.8 2.3c-.2.5 0 1.1.4 1.5L8.8 42c.4.4 1 .5 1.5.4l2.3-.8c.4-.1.8-.1 1.2.1 1.4.8 3 1.5 4.6 1.9.4.1.8.4 1 .8l1.1 2.2c.3.5.8.8 1.3.8h4.1c.6 0 1.1-.3 1.3-.8l1.1-2.2c.2-.4.5-.7 1-.8 1.6-.5 3.2-1.1 4.6-1.9.4-.2.8-.3 1.2-.1l2.3.8c.5.2 1.1 0 1.5-.4l2.9-2.9c.4-.4.5-1 .4-1.5l-.8-2.3c-.1-.4-.1-.8.1-1.2.8-1.5 1.5-3 1.9-4.7.1-.4.4-.8.8-1l2.1-1.1c.5-.3.8-.8.8-1.3v-4.1c.4-.5.1-1.1-.4-1.3zM24 41.5c-9.7 0-17.5-7.8-17.5-17.5S14.3 6.5 24 6.5 41.5 14.3 41.5 24 33.7 41.5 24 41.5z"
-                    fillRule="evenodd"
-                  ></path>
-                </svg>
-              </a>
-            </button>
+            <img src={profileImg} width="150" height="150" />
           </div>
           <div>
-            <span>
-              <strong>1</strong> post
-            </span>
-            <span>
-              <strong>165</strong> followers
-            </span>
-            <span>
-              <strong>155</strong> following
-            </span>
+            <div>
+              <p>{username && username}</p>
+              <button>Edit Profile</button>
+              <button>
+                <a href="#">
+                  <svg
+                    aria-label="Options"
+                    className="_8-yf5 "
+                    fill="#262626"
+                    height="24"
+                    viewBox="0 0 48 48"
+                    width="24"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6 0-1.1.3-1.3.8l-1.1 2.2c-.2.4-.5.7-1 .8-1.6.5-3.2 1.1-4.6 1.9-.4.2-.8.3-1.2.1l-2.3-.8c-.5-.2-1.1 0-1.5.4L5.9 8.8c-.4.4-.5 1-.4 1.5l.8 2.3c.1.4.1.8-.1 1.2-.8 1.5-1.5 3-1.9 4.7-.1.4-.4.8-.8 1l-2.1 1.1c-.5.3-.8.8-.8 1.3V26c0 .6.3 1.1.8 1.3l2.1 1.1c.4.2.7.5.8 1 .5 1.6 1.1 3.2 1.9 4.7.2.4.3.8.1 1.2l-.8 2.3c-.2.5 0 1.1.4 1.5L8.8 42c.4.4 1 .5 1.5.4l2.3-.8c.4-.1.8-.1 1.2.1 1.4.8 3 1.5 4.6 1.9.4.1.8.4 1 .8l1.1 2.2c.3.5.8.8 1.3.8h4.1c.6 0 1.1-.3 1.3-.8l1.1-2.2c.2-.4.5-.7 1-.8 1.6-.5 3.2-1.1 4.6-1.9.4-.2.8-.3 1.2-.1l2.3.8c.5.2 1.1 0 1.5-.4l2.9-2.9c.4-.4.5-1 .4-1.5l-.8-2.3c-.1-.4-.1-.8.1-1.2.8-1.5 1.5-3 1.9-4.7.1-.4.4-.8.8-1l2.1-1.1c.5-.3.8-.8.8-1.3v-4.1c.4-.5.1-1.1-.4-1.3zM24 41.5c-9.7 0-17.5-7.8-17.5-17.5S14.3 6.5 24 6.5 41.5 14.3 41.5 24 33.7 41.5 24 41.5z"
+                      fillRule="evenodd"
+                    ></path>
+                  </svg>
+                </a>
+              </button>
+            </div>
+            <div>
+              <span>
+                <strong>{posts && posts.length}</strong> post
+              </span>
+              <span>
+                <strong>{followers && followers.length}</strong> followers
+              </span>
+              <span>
+                <strong>{following && following.length}</strong> following
+              </span>
+            </div>
           </div>
-        </div>
-      </RowOne>
-      <RowTwo>
-        <div>
-          <span>
-            <svg
-              aria-label="Posts"
-              fill="#262626"
-              height="12"
-              viewBox="0 0 48 48"
-              width="12"
-            >
-              <path
-                clipRule="evenodd"
-                d="M45 1.5H3c-.8 0-1.5.7-1.5 1.5v42c0 .8.7 1.5 1.5 1.5h42c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5zm-40.5 3h11v11h-11v-11zm0 14h11v11h-11v-11zm11 25h-11v-11h11v11zm14 0h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11zm14 28h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11z"
-                fillRule="evenodd"
-              ></path>
-            </svg>
-            <span>POSTS</span>
-          </span>
-        </div>
-        <div>
+        </RowOne>
+        <RowTwo>
           <div>
-            <img src={postImg} width="300" height="300"></img>
+            <span>
+              <svg
+                aria-label="Posts"
+                fill="#262626"
+                height="12"
+                viewBox="0 0 48 48"
+                width="12"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M45 1.5H3c-.8 0-1.5.7-1.5 1.5v42c0 .8.7 1.5 1.5 1.5h42c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5zm-40.5 3h11v11h-11v-11zm0 14h11v11h-11v-11zm11 25h-11v-11h11v11zm14 0h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11zm14 28h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11z"
+                  fillRule="evenodd"
+                ></path>
+              </svg>
+              <span>POSTS</span>
+            </span>
           </div>
-        </div>
-      </RowTwo>
-    </MainContainer>
+          <div>
+            <div>
+              <img src={postImg} width="300" height="300"></img>
+            </div>
+          </div>
+        </RowTwo>
+      </MainContainer>
+    </>
   );
 }
 

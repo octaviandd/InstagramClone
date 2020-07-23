@@ -91,7 +91,6 @@ const typeDefs = gql`
   }
 
   type Query {
-    test: String!
     getMe: User!
     getUser(input: ID!): User!
     getUsers: [User]!
@@ -108,7 +107,6 @@ const typeDefs = gql`
     likePost(input: ID!): Post!
     likeComment(input: ID!): Comment!
     addFriend(input: ID!): User!
-    test(input: String!): String!
   }
 `;
 

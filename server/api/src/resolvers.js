@@ -6,9 +6,6 @@ const salt = 10;
 
 const resolvers = {
   Query: {
-    test: authenticated(async () => {
-      return "hello";
-    }),
     getMe: authenticated(async (_, __, { user, models }) => {
       const presetUser = await models.User.findOne({ id: user.id });
       console.log(presetUser);

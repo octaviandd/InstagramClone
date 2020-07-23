@@ -5,12 +5,14 @@ import styled from "styled-components";
 import HomeStory from "./home-story";
 import HomeFriends from "./home-friends";
 import HomeFeed from "./home-feed";
+import HomeNewPost from "./home-new-post";
 
-export default function HomeMain() {
+export default function HomeMain({ userID }) {
   return (
     <MainContainer>
       <ContainerColOne>
         <HomeStory></HomeStory>
+        <HomeNewPost userID={userID && userID}></HomeNewPost>
         <HomeFeed></HomeFeed>
       </ContainerColOne>
       <ContainerColTwo>

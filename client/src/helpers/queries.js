@@ -3,7 +3,7 @@
 import gql from "graphql-tag";
 
 export const GET_USERS = gql`
-  query {
+  query GetUsers {
     users {
       id
       name
@@ -23,12 +23,13 @@ export const GET_USERS = gql`
   }
 `;
 
-export const GET_CURRENT_USER = gql`
-  query GetCurrentUser {
-    getMe {
+export const GET_USER = gql`
+  query GetUser($input: ID!) {
+    getUser(input: $input) {
       id
       name
       email
+      username
       createdAt
       images {
         id
@@ -39,12 +40,39 @@ export const GET_CURRENT_USER = gql`
       comments {
         id
       }
+      following {
+        id
+      }
+      followers {
+        id
+      }
     }
   }
 `;
 
-export const TEST_GQL = gql`
-  query GetTest {
-    test
+export const GET_CURRENT_USER = gql`
+  query GetCurrentUser {
+    getMe {
+      id
+      name
+      email
+      username
+      createdAt
+      images {
+        id
+      }
+      posts {
+        id
+      }
+      comments {
+        id
+      }
+      following {
+        id
+      }
+      followers {
+        id
+      }
+    }
   }
 `;

@@ -36,8 +36,6 @@ const client = new ApolloClient({
   cache,
 });
 
-console.log(authLink);
-
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
