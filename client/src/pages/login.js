@@ -80,7 +80,11 @@ export default function Login({ history }) {
                   })}
                 />
                 <span className="text-legend">Username or e-mail</span>
-                {errors.email && <span>Invalid Email</span>}
+                {errors.email && (
+                  <span className="error-icon">
+                    <i className="fas fa-times"></i>
+                  </span>
+                )}
               </label>
             </div>
             <div>
@@ -93,7 +97,11 @@ export default function Login({ history }) {
                   ref={register({ required: true, minLength: 6 })}
                 />
                 <span className="text-legend">Password</span>
-                {errors.username && <span>Invalid Username</span>}
+                {errors.username && (
+                  <span className="error-icon">
+                    <i className="fas fa-times"></i>
+                  </span>
+                )}
               </label>
             </div>
             <div>
@@ -223,6 +231,15 @@ const MainContainerColTwo = styled.div`
               line-height: 16px;
             `}
         }
+
+        .error-icon {
+          position: absolute;
+          border: 1px solid black;
+          border-radius: 50%;
+          right: 20px;
+          top: 10px;
+        }
+
         input {
           height: 40px;
           padding-left: 8px;

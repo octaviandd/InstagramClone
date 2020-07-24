@@ -2,6 +2,9 @@
 import { nanoid } from "nanoid";
 import { authenticated } from "./auth";
 import bcrypt from "bcrypt";
+import aws from "aws-sdk";
+const config = require("./s3");
+const { extname } = require("path");
 const salt = 10;
 
 const resolvers = {
@@ -22,6 +25,29 @@ const resolvers = {
   },
 
   Mutation: {
+    singleUpload: authenticated(async (parent, { file }, { models }) => {
+      const { createReadStream, filename, mimetype, encoding } = await file;
+
+      const s3 = new AWS.S3(config);
+
+      const { Location } = await s3
+        .upload({
+          Body: createReadStream(),
+          Key: `${uuid()}${extname(filename)}`,
+          ContentType: mimetype,
+        })
+        .promise();
+
+      return {
+        filename,
+        mimetype,
+        encoding,
+        uri: Location,
+      };
+    }),
+    signS3: authenticated(
+      async (parent, { fileName, fileType }, { models }) => {}
+    ),
     createUser: async (_, { input }, { models, createToken }) => {
       const existing = await models.User.findOne({ email: input.email });
       console.log(existing);

@@ -2,26 +2,6 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
-  type User {
-    id: ID!
-    email: String!
-    password: String!
-    name: String!
-    username: String!
-    createdAt: String!
-    age: Int!
-    posts: [Post]!
-    comments: [Comment]!
-    images: [Image]!
-    followers: [Follower]!
-    following: [Following]!
-  }
-
-  type AuthUser {
-    token: String!
-    user: User!
-  }
-
   type Image {
     id: ID!
     url: String!
@@ -46,9 +26,26 @@ const typeDefs = gql`
     likes: Int!
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    uri: String!
+  }
+
   type Follower {
     id: ID!
     name: String!
+  }
+
+  type S3Payload {
+    signedRequest: String!
+    url: String!
+  }
+
+  input NewS3 {
+    fileName: String!
+    fileType: String!
   }
 
   type Following {
@@ -60,14 +57,6 @@ const typeDefs = gql`
     id: ID!
   }
 
-  input NewPostInput {
-    content: String!
-  }
-
-  input NewCommentInput {
-    content: String!
-  }
-
   input FollowerInput {
     id: ID!
     name: String!
@@ -77,6 +66,51 @@ const typeDefs = gql`
     id: ID!
     name: String!
   }
+
+  type Query {
+    getMe: User!
+    getUser(input: ID!): User!
+    getUsers: [User]!
+    getPosts: [Post]!
+    getPost(input: ID!): Post!
+    getComments(input: ID!): [Comment]!
+  }
+
+  type Mutation {
+    singleUpload(file: Upload!): File!
+    signS3(input: NewS3!): S3Payload!
+    createPost(input: NewPostInput!): Post!
+    createUser(input: SignupInput!): AuthUser!
+    loginUser(input: SigninInput!): AuthUser!
+    createComment(input: NewCommentInput!): Comment!
+    likePost(input: ID!): Post!
+    likeComment(input: ID!): Comment!
+    addFriend(input: ID!): User!
+  }
+
+  # USER && AUTH
+  type User {
+    id: ID!
+    email: String!
+    password: String!
+    name: String!
+    username: String!
+    createdAt: String!
+    age: Int!
+    posts: [Post]!
+    comments: [Comment]!
+    images: [Image]!
+    followers: [Follower]!
+    following: [Following]!
+  }
+
+  type AuthUser {
+    token: String!
+    user: User!
+  }
+  # USER && AUTH
+
+  # Authentication INPUT
 
   input SignupInput {
     name: String!
@@ -90,24 +124,19 @@ const typeDefs = gql`
     password: String!
   }
 
-  type Query {
-    getMe: User!
-    getUser(input: ID!): User!
-    getUsers: [User]!
-    getPosts: [Post]!
-    getPost(input: ID!): Post!
-    getComments(input: ID!): [Comment]!
+  # Authentication INPUT
+
+  # POST && COMMENT INPUT
+
+  input NewPostInput {
+    content: String!
   }
 
-  type Mutation {
-    createPost(input: NewPostInput!): Post!
-    createUser(input: SignupInput!): AuthUser!
-    loginUser(input: SigninInput!): AuthUser!
-    createComment(input: NewCommentInput!): Comment!
-    likePost(input: ID!): Post!
-    likeComment(input: ID!): Comment!
-    addFriend(input: ID!): User!
+  input NewCommentInput {
+    content: String!
   }
+
+  # POST && COMMENT INPUT
 `;
 
 export default typeDefs;

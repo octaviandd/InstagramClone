@@ -66,3 +66,23 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const S3_NEWSIGN = gql`
+  mutation($input: NewS3!) {
+    signS3(input: $input) {
+      url
+      signedRequest
+    }
+  }
+`;
+
+const SINGLE_UPLOAD = gql`
+  mutation($file: Upload!) {
+    singleUpload(file: $file) {
+      filename
+      mimetype
+      encoding
+      url
+    }
+  }
+`;
