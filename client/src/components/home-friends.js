@@ -3,6 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
+import { FaGithub } from "react-icons/fa";
 
 export default function HomeFriends() {
   return (
@@ -55,7 +56,7 @@ export default function HomeFriends() {
       <Watermark>
         <p>Made by Octavian David</p>
         <a href="http://github.com/octaviandd">
-          <i className="fab fa-github"></i>
+          <FaGithub />
         </a>
       </Watermark>
     </MainContainer>
@@ -144,6 +145,10 @@ const Watermark = styled.div`
     margin-top: 1rem;
     color: black;
     font-size: 20px;
+    svg {
+      height: 25px;
+      width: 25px;
+    }
   }
 `;
 const Profile = styled.div`

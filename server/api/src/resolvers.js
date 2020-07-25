@@ -17,7 +17,12 @@ const resolvers = {
       const users = await models.User.find({}).exec();
       return users;
     }),
-    getPosts: authenticated(async (_, __, { user, models }) => {
+    getUserPosts: authenticated(async (_, __, { user, models }) => {
+      const userPosts = await models.Post.find({ id: user.id }).exec();
+      console.log(userPosts);
+      return userPosts;
+    }),
+    getAllPosts: authenticated(async (_, __, { user, models }) => {
       const posts = await models.Post.findMany({}).exec();
       return posts;
     }),

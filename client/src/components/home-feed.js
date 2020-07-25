@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import exampleImg from "../assets/example.jpg";
+import { useQuery } from "@apollo/client";
 
 export default function HomeFeed() {
   const [isActive, activate] = useState(false);

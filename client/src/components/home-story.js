@@ -3,6 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 
 export default function HomeStory() {
   return (
@@ -10,7 +11,7 @@ export default function HomeStory() {
       <Container>
         <Slider>
           <button>
-            <i className="fas fa-chevron-left"></i>
+            <FaAngleLeft></FaAngleLeft>
           </button>
           <div>
             <img src={profileImg} width="65" height="65" />
@@ -53,7 +54,7 @@ export default function HomeStory() {
             <span>User8</span>
           </div>
           <button>
-            <i className="fas fa-chevron-right"></i>
+            <FaAngleRight></FaAngleRight>
           </button>
         </Slider>
       </Container>
@@ -87,8 +88,9 @@ const Container = styled.div`
     background-color: #ffffff;
     border: none;
     cursor: pointer;
-    i {
-      font-size: 16px;
+    svg {
+      width: 20px;
+      height: 20px;
       /* color: transparent; */
     }
   }

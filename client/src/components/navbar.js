@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { Link } from "react-router-dom";
+import { FaSearch, FaTimes } from "react-icons/fa";
 
 export default function Navbar({ userID }) {
   const [isActive, activate] = useState(false);
@@ -39,11 +40,11 @@ export default function Navbar({ userID }) {
               onChange={(e) => handleInput(e)}
             />
             <span id="search-icon">
-              <i className="fas fa-search"></i>
+              <FaSearch />
             </span>
             <span id="search-placeholder">Search</span>
             <span id="search-close">
-              <i className="fas fa-times"></i>
+              <FaTimes />
             </span>
           </div>
         </SearchBar>
@@ -111,7 +112,7 @@ export default function Navbar({ userID }) {
           <div>
             <Link to={`profile/${userID}`}>
               <span>
-                <img src={profileImg} />
+                <img src={profileImg} alt="profile-logo" />
               </span>
             </Link>
           </div>
@@ -202,8 +203,8 @@ const SearchBar = styled.div`
 
     span {
       position: absolute;
-      i {
-        color: #c7c7c7;
+      svg {
+        fill: #c7c7c7;
       }
     }
 
@@ -211,8 +212,9 @@ const SearchBar = styled.div`
       left: 76px;
       top: 3px;
       line-height: 20px;
-      i {
-        font-size: 12px;
+      svg {
+        width: 12px;
+        height: 12px;
       }
     }
 
@@ -231,13 +233,14 @@ const SearchBar = styled.div`
     }
     span:nth-of-type(3) {
       display: none;
-      top: 3px;
+      top: 5px;
       right: 10px;
-      i {
+      svg {
         background-color: #c7c7c7;
         border-radius: 50%;
-        color: #f2f2f2;
-        font-size: 12px;
+        fill: #f2f2f2;
+        width: 12px;
+        height: 12px;
         padding: 1px 3px;
       }
     }

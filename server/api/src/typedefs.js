@@ -62,7 +62,8 @@ const typeDefs = gql`
     getMe: User!
     getUser(input: ID!): User!
     getUsers: [User]!
-    getPosts: [Post]!
+    getAllPosts: [Post]!
+    getUserPosts: [Post]!
     getPost(input: ID!): Post!
     getComments(input: ID!): [Comment]!
   }

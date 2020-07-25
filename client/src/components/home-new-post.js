@@ -5,6 +5,7 @@ import { NEW_POST, SINGLE_UPLOAD } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
+import { FaPlusCircle, FaTimes } from "react-icons/fa";
 
 export default function HomeNewPost({ userID }) {
   const [isActive, setActive] = useState(false);
@@ -28,7 +29,6 @@ export default function HomeNewPost({ userID }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const onSubmit = async (formData) => {
-    console.log(formData.description);
     createPost({
       variables: {
         input: {
@@ -40,10 +40,13 @@ export default function HomeNewPost({ userID }) {
     setActive(!isActive);
   };
 
+  if (error) return error;
+  if (loading) return "Loading..";
+
   return (
     <MainContainer>
       <button onClick={() => setActive(!isActive)}>
-        <i className="fas fa-plus-circle"></i>
+        <FaPlusCircle />
       </button>
       {isActive && (
         <form onSubmit={handleSubmit(onSubmit)} encType={"multipart/form-data"}>
@@ -63,7 +66,7 @@ export default function HomeNewPost({ userID }) {
           />
           <button type="submit">Submit</button>
           <span onClick={() => setActive(!isActive)}>
-            <i className="fas fa-times"></i>
+            <FaTimes />
           </span>
         </form>
       )}
@@ -83,8 +86,9 @@ const MainContainer = styled.div`
     border: none;
     cursor: pointer;
 
-    i {
-      font-size: 30px;
+    svg {
+      width: 30px;
+      height: 30px;
     }
   }
 
@@ -132,8 +136,9 @@ const MainContainer = styled.div`
       right: 15px;
       top: 10px;
       cursor: pointer;
-      i {
-        font-size: 18px;
+      svg {
+        width: 18px;
+        height: 18px;
       }
     }
   }

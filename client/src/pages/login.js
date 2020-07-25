@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { LOGIN_USER } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../helpers/token";
+import { FaTimes, FaGithub } from "react-icons/fa";
 
 //client.resetStore()
 
@@ -82,7 +83,7 @@ export default function Login({ history }) {
                 <span className="text-legend">Username or e-mail</span>
                 {errors.email && (
                   <span className="error-icon">
-                    <i className="fas fa-times"></i>
+                    <FaTimes />
                   </span>
                 )}
               </label>
@@ -99,7 +100,7 @@ export default function Login({ history }) {
                 <span className="text-legend">Password</span>
                 {errors.username && (
                   <span className="error-icon">
-                    <i className="fas fa-times"></i>
+                    <FaTimes />
                   </span>
                 )}
               </label>
@@ -125,7 +126,7 @@ export default function Login({ history }) {
         <div>
           <p>Made by Octavian David</p>
           <a href="http://github.com/octaviandd">
-            <i className="fab fa-github"></i>
+            <FaGithub />
           </a>
         </div>
       </MainContainerColTwo>

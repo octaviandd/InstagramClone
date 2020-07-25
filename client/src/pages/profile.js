@@ -4,23 +4,20 @@ import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import postImg from "../assets/post.jpg";
-import { GET_CURRENT_USER, GET_USER } from "../helpers/queries";
+import { GET_CURRENT_USER, GET_USER_POSTS } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import Navbar from "../components/navbar";
-import { useParams } from "react-router-dom";
 
 export default function Profile() {
-  const { id } = useParams();
-  console.log(id);
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
-  const { data1, error1, loading1 } = useQuery(GET_USER);
+  const { data: data1, loading: loading1, error: error1 } = useQuery(
+    GET_USER_POSTS
+  );
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+  if (loading || loading1) return "Loading...";
+  if (error || error1) return `Error! ${error.message}`;
 
-  console.log(data);
-  const { followers, following, posts, username } = data.getMe;
-  console.log(posts);
+  const { followers, following, posts, username, _id } = data.getMe;
 
   return (
     <>
@@ -55,7 +52,7 @@ export default function Profile() {
             </div>
             <div>
               <span>
-                <strong>{posts && posts.length}</strong> post
+                <strong>{data1 && data1.getUserPosts.length}</strong> post
               </span>
               <span>
                 <strong>{followers && followers.length}</strong> followers
@@ -87,7 +84,18 @@ export default function Profile() {
           </div>
           <div>
             <div>
-              <img src={postImg} width="300" height="300"></img>
+              {data1 &&
+                data1.getUserPosts.map((post) => {
+                  return (
+                    <img
+                      key={post.picture}
+                      src={post.picture}
+                      width="300"
+                      height="300"
+                      alt={post._id}
+                    ></img>
+                  );
+                })}
             </div>
           </div>
         </RowTwo>

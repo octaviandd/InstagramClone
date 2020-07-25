@@ -76,3 +76,11 @@ export const GET_CURRENT_USER = gql`
     }
   }
 `;
+
+export const GET_USER_POSTS = gql`
+  query GetPosts {
+    getUserPosts {
+      picture
+    }
+  }
+`;
