@@ -84,3 +84,18 @@ export const GET_USER_POSTS = gql`
     }
   }
 `;
+
+export const GET_ALL_POSTS = gql`
+  query {
+    getAllPosts {
+      picture
+      id
+      description
+      createdAt
+      likes
+      author {
+        id
+      }
+    }
+  }
+`;

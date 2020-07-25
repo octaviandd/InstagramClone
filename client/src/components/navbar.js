@@ -112,7 +112,7 @@ export default function Navbar({ userID }) {
           <div>
             <Link to={`profile/${userID}`}>
               <span>
-                <img src={profileImg} alt="profile-logo" />
+                <img src={profileImg} alt="profile-icon" />
               </span>
             </Link>
           </div>
@@ -210,7 +210,7 @@ const SearchBar = styled.div`
 
     span:nth-of-type(1) {
       left: 76px;
-      top: 3px;
+      top: 5px;
       line-height: 20px;
       svg {
         width: 12px;

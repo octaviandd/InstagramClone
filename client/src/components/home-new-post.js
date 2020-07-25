@@ -18,7 +18,6 @@ export default function HomeNewPost({ userID }) {
 
   const onDrop = useCallback(
     ([file]) => {
-      console.log(file);
       uploadPicture({ variables: { file } }).then((res) => {
         addPicture(res.data.singleUpload.uri);
       });

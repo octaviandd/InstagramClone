@@ -19,11 +19,11 @@ const resolvers = {
     }),
     getUserPosts: authenticated(async (_, __, { user, models }) => {
       const userPosts = await models.Post.find({ id: user.id }).exec();
-      console.log(userPosts);
       return userPosts;
     }),
     getAllPosts: authenticated(async (_, __, { user, models }) => {
-      const posts = await models.Post.findMany({}).exec();
+      const posts = await models.Post.find().populate("User");
+      console.log(posts);
       return posts;
     }),
   },
@@ -83,6 +83,7 @@ const resolvers = {
     },
     createPost: authenticated(async (_, { input }, { models, user }) => {
       const presentUser = await models.User.findOne({ id: user.id });
+      console.log(presentUser);
       const post = new models.Post({
         _id: nanoid(),
         author: presentUser,

@@ -4,7 +4,11 @@ import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import postImg from "../assets/post.jpg";
-import { GET_CURRENT_USER, GET_USER_POSTS } from "../helpers/queries";
+import {
+  GET_CURRENT_USER,
+  GET_USER_POSTS,
+  GET_ALL_POSTS,
+} from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import Navbar from "../components/navbar";
 
@@ -17,7 +21,7 @@ export default function Profile() {
   if (loading || loading1) return "Loading...";
   if (error || error1) return `Error! ${error.message}`;
 
-  const { followers, following, posts, username, _id } = data.getMe;
+  const { followers, following, username } = data.getMe;
 
   return (
     <>

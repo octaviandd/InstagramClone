@@ -5,7 +5,7 @@ const typeDefs = gql`
   type Image {
     id: ID!
     url: String!
-    author: String!
+    author: User!
   }
 
   type Post {

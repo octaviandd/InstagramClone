@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { setAccessToken, getAccessToken } from "../helpers/token";
+import { useMutation } from "@apollo/client";
+import { setAccessToken } from "../helpers/token";
 import { NEW_USER } from "../helpers/mutations";
 
 export default function Register({ history }) {

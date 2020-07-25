@@ -40,7 +40,6 @@ export default function Login({ history }) {
         },
       },
     }).then((res) => {
-      console.log(res);
       setAccessToken(res.data.loginUser.token);
       if (res) {
         history.push("/");
