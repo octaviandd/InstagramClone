@@ -20,7 +20,6 @@ export default function Carousel() {
       lazy={true}
       fadeEffect={(true, { crossFade: true })}
       effect="slide"
-      onSwiper={(swiper) => console.log(swiper)}
     >
       <SwiperSlide>
         <img src={carousel1} alt="carousel1" width="240" height="426"></img>

@@ -11,8 +11,9 @@ const typeDefs = gql`
   type Post {
     id: ID!
     author: User!
-    content: String!
+    description: String!
     createdAt: String!
+    picture: String!
     likes: Int!
     comments: [Comment]!
   }
@@ -36,16 +37,6 @@ const typeDefs = gql`
   type Follower {
     id: ID!
     name: String!
-  }
-
-  type S3Payload {
-    signedRequest: String!
-    url: String!
-  }
-
-  input NewS3 {
-    fileName: String!
-    fileType: String!
   }
 
   type Following {
@@ -78,7 +69,6 @@ const typeDefs = gql`
 
   type Mutation {
     singleUpload(file: Upload!): File!
-    signS3(input: NewS3!): S3Payload!
     createPost(input: NewPostInput!): Post!
     createUser(input: SignupInput!): AuthUser!
     loginUser(input: SigninInput!): AuthUser!
@@ -129,7 +119,8 @@ const typeDefs = gql`
   # POST && COMMENT INPUT
 
   input NewPostInput {
-    content: String!
+    description: String!
+    picture: String!
   }
 
   input NewCommentInput {

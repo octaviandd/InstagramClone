@@ -1,69 +1,43 @@
 /** @format */
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import ImageUploader from "react-images-upload";
-import { NEW_POST, S3_NEWSIGN } from "../helpers/mutations";
+import { NEW_POST, SINGLE_UPLOAD } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import moment from "moment";
+import { useDropzone } from "react-dropzone";
 
 export default function HomeNewPost({ userID }) {
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
-  const [createPost, { data, error, loading }] = useMutation(NEW_POST);
-  const [pictures, addPicture] = useState([]);
-  const [name, setName] = useState("");
-  const [file, setFile] = useState(null);
+  const [createPost, { postData, postError, postLoading }] = useMutation(
+    NEW_POST
+  );
+  const [uploadPicture, { data, error, loading }] = useMutation(SINGLE_UPLOAD);
+  const [picture, addPicture] = useState("");
 
-  const onSubmit = (formData) => {
-    console.log(formData);
-    setActive(!isActive);
-    // needs adjustment
+  const onDrop = useCallback(
+    ([file]) => {
+      console.log(file);
+      uploadPicture({ variables: { file } }).then((res) => {
+        addPicture(res.data.singleUpload.uri);
+      });
+    },
+    [uploadPicture]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const onSubmit = async (formData) => {
+    console.log(formData.description);
     createPost({
       variables: {
         input: {
-          content: formData.description,
+          description: formData.description,
+          picture: picture,
         },
       },
-    }).then((res) => {
-      console.log(res);
     });
-  };
-
-  const uploadToS3 = async (file, signedRequest) => {
-    const options = {
-      headers: {
-        "Content-Type": file.type,
-      },
-    };
-    await axios.put(signedRequest, file, options);
-  };
-
-  const submit = async () => {
-    const response = await this.props.s3Sign({
-      variables: {
-        filename: formatFilename(file.name),
-        filetype: file.type,
-      },
-    });
-    const { signedRequest, url } = response.data.signS3;
-    await uploadToS3(file, signedRequest);
-
-    const graphqlResponse = await this.props.createChampion({
-      variables: {
-        name,
-        pictureUrl: url,
-      },
-    });
-  };
-
-  const formatFilename = (filename) => {
-    const date = moment().format("YYYYMMDD");
-    const randomString = Math.random().toString(36).substring(2, 7);
-    const cleanFileName = filename.toLowerCase().replace(/[^a-z0-9]/g, "-");
-    const newFilename = `images/${date}-${randomString}-${cleanFileName}`;
-    return newFilename.substring(0, 60);
+    setActive(!isActive);
   };
 
   return (
@@ -72,16 +46,15 @@ export default function HomeNewPost({ userID }) {
         <i className="fas fa-plus-circle"></i>
       </button>
       {isActive && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ImageUploader
-            name="image"
-            withIcon={true}
-            onChange={addPicture}
-            buttonText="Choose images"
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
-            ref={register}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} encType={"multipart/form-data"}>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p>Drop the files here ...</p>
+            ) : (
+              <p>Drag 'n' drop some files here, or click to select files</p>
+            )}
+          </div>
           <textarea
             rows="5"
             cols="33"

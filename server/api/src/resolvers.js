@@ -2,7 +2,7 @@
 import { nanoid } from "nanoid";
 import { authenticated } from "./auth";
 import bcrypt from "bcrypt";
-import aws from "aws-sdk";
+import AWS from "aws-sdk";
 const config = require("./s3");
 const { extname } = require("path");
 const salt = 10;
@@ -11,7 +11,6 @@ const resolvers = {
   Query: {
     getMe: authenticated(async (_, __, { user, models }) => {
       const presetUser = await models.User.findOne({ id: user.id });
-      console.log(presetUser);
       return presetUser;
     }),
     getUsers: authenticated(async (_, __, { models }) => {
@@ -25,15 +24,13 @@ const resolvers = {
   },
 
   Mutation: {
-    singleUpload: authenticated(async (parent, { file }, { models }) => {
-      const { createReadStream, filename, mimetype, encoding } = await file;
-
-      const s3 = new AWS.S3(config);
-
+    singleUpload: authenticated(async (_, { file }) => {
+      const { encoding, filename, mimetype, createReadStream } = await file;
+      const s3 = new AWS.S3(config.s3);
       const { Location } = await s3
         .upload({
           Body: createReadStream(),
-          Key: `${uuid()}${extname(filename)}`,
+          Key: `${nanoid()}${extname(filename)}`,
           ContentType: mimetype,
         })
         .promise();
@@ -45,12 +42,8 @@ const resolvers = {
         uri: Location,
       };
     }),
-    signS3: authenticated(
-      async (parent, { fileName, fileType }, { models }) => {}
-    ),
     createUser: async (_, { input }, { models, createToken }) => {
       const existing = await models.User.findOne({ email: input.email });
-      console.log(existing);
       if (existing) {
         throw new Error("User already exists.");
       }
@@ -77,12 +70,10 @@ const resolvers = {
         throw new Error("User doesn't exist");
       }
       const valid = await bcrypt.compare(input.password, user.password);
-      console.log(valid);
       if (!valid) {
         throw new Error("Invalid password");
       }
       const token = createToken(user);
-      console.log(token);
       return { user, token };
     },
     createPost: authenticated(async (_, { input }, { models, user }) => {
@@ -90,7 +81,8 @@ const resolvers = {
       const post = new models.Post({
         _id: nanoid(),
         author: presentUser,
-        content: input.content,
+        description: input.description,
+        picture: input.picture,
         createdAt: Date.now(),
         likes: 0,
         comments: [],

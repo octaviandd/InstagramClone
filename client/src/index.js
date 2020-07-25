@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { createUploadLink } from "apollo-upload-client";
 
 import {
   ApolloClient,
@@ -14,7 +15,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: "http://localhost:4000/graphql",
   credentials: "include",
 });

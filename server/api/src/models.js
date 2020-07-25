@@ -73,7 +73,11 @@ const postSchema = new Schema(
       required: true,
       auto: false,
     },
-    content: {
+    description: {
+      type: String,
+      required: true,
+    },
+    picture: {
       type: String,
       required: true,
     },
