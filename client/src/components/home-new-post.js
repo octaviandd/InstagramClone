@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { FaPlusCircle, FaTimes } from "react-icons/fa";
 
-export default function HomeNewPost({ userID }) {
+export default function HomeNewPost() {
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
   const [createPost, { postData, postError, postLoading }] = useMutation(

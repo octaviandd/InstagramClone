@@ -22,8 +22,7 @@ const resolvers = {
       return userPosts;
     }),
     getAllPosts: authenticated(async (_, __, { user, models }) => {
-      const posts = await models.Post.find().populate("User");
-      console.log(posts);
+      const posts = await models.Post.find().populate("author");
       return posts;
     }),
   },

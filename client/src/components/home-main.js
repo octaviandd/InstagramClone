@@ -7,12 +7,12 @@ import HomeFriends from "./home-friends";
 import HomeFeed from "./home-feed";
 import HomeNewPost from "./home-new-post";
 
-export default function HomeMain({ userID }) {
+export default function HomeMain() {
   return (
     <MainContainer>
       <ContainerColOne>
         <HomeStory></HomeStory>
-        <HomeNewPost userID={userID && userID}></HomeNewPost>
+        <HomeNewPost></HomeNewPost>
         <HomeFeed></HomeFeed>
       </ContainerColOne>
       <ContainerColTwo>

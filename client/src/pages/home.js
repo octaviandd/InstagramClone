@@ -13,7 +13,7 @@ export default function Home(props) {
   return (
     <MainContainer>
       <Navbar userID={data && data.getMe.id}></Navbar>
-      <HomeMain userID={data && data.getMe.id}></HomeMain>
+      <HomeMain></HomeMain>
     </MainContainer>
   );
 }

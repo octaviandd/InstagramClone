@@ -7,8 +7,6 @@ import exampleImg from "../assets/example.jpg";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_POSTS } from "../helpers/queries";
 
-console.log(GET_ALL_POSTS);
-
 export default function HomeFeed() {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
@@ -26,12 +24,10 @@ export default function HomeFeed() {
     }
   }, [value]);
 
-  // if (error) return error;
-  // if (loading) return "Loading..";
+  if (error) return error;
+  if (loading) return "Loading..";
 
-  // const postsArray = data.getAllPosts;
-
-  // console.log(postsArray);
+  coonsole.log(data);
 
   return (
     <MainContainer>
