@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import profileImg from "../assets/profileimg.jpg";
-import exampleImg from "../assets/example.jpg";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_POSTS } from "../helpers/queries";
+import { Link } from "react-router-dom";
 
 export default function HomeFeed() {
   const [isActive, activate] = useState(false);
@@ -27,18 +26,22 @@ export default function HomeFeed() {
   if (error) return error;
   if (loading) return "Loading..";
 
-  coonsole.log(data);
+  console.log(data);
+
+  const postsArray = data.getAllPosts;
 
   return (
     <MainContainer>
-      {/* {postsArray &&
+      {postsArray &&
         postsArray.map((post) => {
           return (
             <Container key={post.id}>
               <RowOne>
                 <div>
-                  <img src={profileImg} width="40" height="40" />
-                  <span>octaviandd</span>
+                  <Link to={`profile/${post.author.id}`}>
+                    <img src={post.picture} width="40" height="40" />
+                    <span>{post.author.username}</span>
+                  </Link>
                 </div>
                 <div>
                   <span></span>
@@ -136,7 +139,7 @@ export default function HomeFeed() {
               </RowThree>
             </Container>
           );
-        })} */}
+        })}
     </MainContainer>
   );
 }
@@ -208,20 +211,34 @@ const RowOne = styled.div`
     display: flex;
     align-items: center;
     position: relative;
-    img {
-      margin-right: 15px;
-      border-radius: 50%;
-    }
-    span {
-      font-size: 14px;
-      line-height: 18;
-      font-weight: 800;
+    height: 60px;
+    a {
+      line-height: 60px;
+      display: flex;
+      font-size: 0;
+      height: 60px;
+      align-items: center;
+      text-decoration: none;
+      color: black;
+      img {
+        margin-right: 15px;
+        border-radius: 50%;
+      }
+      span {
+        line-height: 60px;
+        font-size: 14px;
+        font-weight: 800;
+      }
     }
   }
 `;
 
 const RowTow = styled.div`
   & > div {
+    display: flex;
+    min-height: 500px;
+    background-color: white;
+    border: 1px solid #dbdbdb;
   }
   & > div > img {
     width: 100%;
@@ -235,6 +252,7 @@ const RowThree = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding-top: 5px;
   border-right: 1px solid #dbdbdb;
   border-left: 1px solid #dbdbdb;
   border-bottom: 1px solid #dbdbdb;

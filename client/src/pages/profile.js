@@ -3,20 +3,28 @@
 import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
-import postImg from "../assets/post.jpg";
 import {
   GET_CURRENT_USER,
   GET_USER_POSTS,
-  GET_ALL_POSTS,
+  GET_USER_BY_ID,
 } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import Navbar from "../components/navbar";
 
-export default function Profile() {
+export default function Profile(props) {
+  console.log(props.match.params.id);
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   const { data: data1, loading: loading1, error: error1 } = useQuery(
     GET_USER_POSTS
   );
+  const { data: data2, loading: loading2, error: error2 } = useQuery(
+    GET_USER_BY_ID,
+    {
+      variables: { input: props.match.params.id },
+    }
+  );
+
+  console.log(data2);
 
   if (loading || loading1) return "Loading...";
   if (error || error1) return `Error! ${error.message}`;

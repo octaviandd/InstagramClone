@@ -7,13 +7,13 @@ import HomeMain from "../components/home-main";
 import { GET_CURRENT_USER } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 
-export default function Home(props) {
+export default function Home() {
   const { data } = useQuery(GET_CURRENT_USER);
 
   return (
     <MainContainer>
       <Navbar userID={data && data.getMe.id}></Navbar>
-      <HomeMain></HomeMain>
+      <HomeMain userID={data && data.getMe.id}></HomeMain>
     </MainContainer>
   );
 }

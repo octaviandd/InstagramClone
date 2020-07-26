@@ -10,8 +10,12 @@ const salt = 10;
 const resolvers = {
   Query: {
     getMe: authenticated(async (_, __, { user, models }) => {
-      const presetUser = await models.User.findOne({ id: user.id });
-      return presetUser;
+      const presentUser = await models.User.findOne({ id: user.id });
+      return presentUser;
+    }),
+    getUserById: authenticated(async (_, { input }, { models }) => {
+      const userToBeReturned = await models.User.findOne({ _id: input });
+      return userToBeReturned;
     }),
     getUsers: authenticated(async (_, __, { models }) => {
       const users = await models.User.find({}).exec();

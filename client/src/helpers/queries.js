@@ -23,9 +23,9 @@ export const GET_USERS = gql`
   }
 `;
 
-export const GET_USER = gql`
+export const GET_USER_BY_ID = gql`
   query GetUser($input: ID!) {
-    getUser(input: $input) {
+    getUserById(input: $input) {
       id
       name
       email
@@ -95,6 +95,7 @@ export const GET_ALL_POSTS = gql`
       likes
       author {
         id
+        username
       }
     }
   }

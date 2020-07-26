@@ -7,13 +7,13 @@ import HomeFriends from "./home-friends";
 import HomeFeed from "./home-feed";
 import HomeNewPost from "./home-new-post";
 
-export default function HomeMain() {
+export default function HomeMain({ userID }) {
   return (
     <MainContainer>
       <ContainerColOne>
         <HomeStory></HomeStory>
         <HomeNewPost></HomeNewPost>
-        <HomeFeed></HomeFeed>
+        <HomeFeed userID={userID && userID}></HomeFeed>
       </ContainerColOne>
       <ContainerColTwo>
         <HomeFriends></HomeFriends>
@@ -23,7 +23,6 @@ export default function HomeMain() {
 }
 
 const MainContainer = styled.div`
-  /* position: relative; */
   display: flex;
   justify-content: center;
   background-color: #fafafa;
