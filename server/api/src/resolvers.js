@@ -10,7 +10,7 @@ const salt = 10;
 const resolvers = {
   Query: {
     getMe: authenticated(async (_, __, { user, models }) => {
-      const presentUser = await models.User.findOne({ id: user.id });
+      const presentUser = await models.User.findOne({ _id: user.id });
       return presentUser;
     }),
     getUserById: authenticated(async (_, { input }, { models }) => {
@@ -18,17 +18,26 @@ const resolvers = {
       return userToBeReturned;
     }),
     getUsers: authenticated(async (_, __, { models }) => {
-      const users = await models.User.find({}).exec();
+      const users = await models.User.find({});
       return users;
     }),
-    getUserPosts: authenticated(async (_, __, { user, models }) => {
-      const userPosts = await models.Post.find({ id: user.id }).exec();
-      return userPosts;
+    getUserPosts: authenticated(async (_, { input }, { models }) => {
+      const userPosts = await models.Post.find({}).populate("author");
+      const newUsers = userPosts.filter(
+        (userPost) => userPost.author._id === input
+      );
+      return newUsers;
     }),
-    getAllPosts: authenticated(async (_, __, { user, models }) => {
+    getAllPosts: authenticated(async (_, __, { models }) => {
       const posts = await models.Post.find().populate("author");
+
       return posts;
     }),
+    getPostComments: authenticated(
+      async (_, { input }, { models, user }) => {}
+    ),
+    getFollowers: authenticated(async () => {}),
+    getFollowedUsers: authenticated(async () => {}),
   },
 
   Mutation: {
@@ -85,8 +94,7 @@ const resolvers = {
       return { user, token };
     },
     createPost: authenticated(async (_, { input }, { models, user }) => {
-      const presentUser = await models.User.findOne({ id: user.id });
-      console.log(presentUser);
+      const presentUser = await models.User.findOne({ _id: user.id });
       const post = new models.Post({
         _id: nanoid(),
         author: presentUser,
@@ -100,8 +108,10 @@ const resolvers = {
       return post;
     }),
     createComment: authenticated(async (_, { input }, { models, user }) => {
-      const parentPost = models.Post.findOne({ id: input.id });
-      const parentUser = models.User.findOn({ id: user.id });
+      const parentUser = await models.User.findOne({ _id: user.id });
+      const parentPost = await models.Post.findOne({
+        _id: "0mgOuFDTRe_k6XcN3Od_5",
+      });
       const comment = new models.Comment({
         _id: nanoid(),
         content: input.content,
@@ -110,10 +120,23 @@ const resolvers = {
         createdAt: Date.now(),
         likes: 0,
       });
+
       comment.save();
       return comment;
     }),
+    followUser: authenticated(async (_, { input }, { models, user }) => {
+      const userToBeFollowed = models.User.findOne({ _id: input });
+    }),
   },
+
+  // Post: {
+  //   comments: async (parent, _, { models }) => {
+  //     console.log("hello");
+  //     const foundComments = await models.Comment.find({});
+  //     console.log(foundComments);
+  //     return foundComments;
+  //   },
+  // },
 };
 
 module.exports = resolvers;

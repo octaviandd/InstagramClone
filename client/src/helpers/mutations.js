@@ -77,3 +77,15 @@ export const SINGLE_UPLOAD = gql`
     }
   }
 `;
+
+export const NEW_COMMENT = gql`
+  mutation CreateComment($input: NewCommentInput!) {
+    createComment {
+      id
+      content
+      parentPost
+      createdAt
+      likes
+    }
+  }
+`;

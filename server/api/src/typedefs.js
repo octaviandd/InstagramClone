@@ -63,9 +63,11 @@ const typeDefs = gql`
     getUserById(input: ID!): User!
     getUsers: [User]!
     getAllPosts: [Post]!
-    getUserPosts: [Post]!
+    getUserPosts(input: ID!): [Post]!
     getPost(input: ID!): Post!
-    getComments(input: ID!): [Comment]!
+    getPostComments(input: ID!): [Comment]!
+    getFollowers(input: ID!): [Follower]!
+    getFollowedUsers(input: ID!): [Following]!
   }
 
   type Mutation {
@@ -76,7 +78,7 @@ const typeDefs = gql`
     createComment(input: NewCommentInput!): Comment!
     likePost(input: ID!): Post!
     likeComment(input: ID!): Comment!
-    addFriend(input: ID!): User!
+    followUser(input: ID!): User!
   }
 
   # USER && AUTH

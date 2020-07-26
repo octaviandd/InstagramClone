@@ -117,13 +117,13 @@ const commentSchema = new Schema(
       type: String,
       required: true,
     },
-    originalPost: {
-      type: Schema.Types.ObjectId,
-      ref: "Post",
-    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    parentPost: {
+      type: Schema.Types.ObjectId,
+      ref: "Post",
     },
     createdAt: {
       type: String,

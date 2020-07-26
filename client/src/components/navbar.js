@@ -1,19 +1,28 @@
 /** @format */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { Link } from "react-router-dom";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import { GET_USERS } from "../helpers/queries";
+import { useQuery } from "@apollo/client";
 
-export default function Navbar({ userID, history }) {
+export default function Navbar({ userID }) {
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
   const [activeDropdown, activateDropdown] = useState(false);
-  const inputRef = useRef();
+  const { data, loading, error } = useQuery(GET_USERS);
+  const [activeSearchDropdown, activateSearchDropdown] = useState(false);
+
+  console.log(data);
 
   const handleInput = (e) => {
     setValue(e.target.value);
+  };
+
+  const clearText = () => {
+    setValue("");
   };
 
   const logOut = () => {
@@ -42,17 +51,19 @@ export default function Navbar({ userID, history }) {
             <input
               tabIndex="1"
               type="text"
-              ref={inputRef}
+              id="search-input"
+              value={value}
               onChange={(e) => handleInput(e)}
             />
             <span id="search-icon">
               <FaSearch />
             </span>
             <span id="search-placeholder">Search</span>
-            <span id="search-close">
+            <span id="search-close" onClick={() => clearText()}>
               <FaTimes />
             </span>
           </div>
+          <SearchDropDown>heelo</SearchDropDown>
         </SearchBar>
         <Icons>
           <div>
@@ -229,7 +240,11 @@ const SearchBar = styled.div`
   div {
     position: relative;
 
+    #search-close {
+      opacity: 0;
+    }
     input {
+      position: relative;
       background-color: #fafafa;
       border: 1px solid #dbdbdb;
       border-radius: 3px;
@@ -239,8 +254,10 @@ const SearchBar = styled.div`
       padding-top: 3px;
       padding-bottom: 3px;
       line-height: 20px;
+      text-indent: 70px;
 
       &:focus {
+        text-indent: 0;
         outline: #a2a2a2;
       }
 
@@ -249,7 +266,7 @@ const SearchBar = styled.div`
       }
 
       &:focus ~ #search-close {
-        display: block;
+        opacity: 1;
       }
 
       &:focus ~ #search-placeholder {
@@ -288,7 +305,6 @@ const SearchBar = styled.div`
       `}
     }
     span:nth-of-type(3) {
-      display: none;
       top: 5px;
       right: 10px;
       svg {
@@ -354,4 +370,16 @@ const Dropdown = styled.div`
       }
     }
   }
+`;
+
+const SearchDropDown = styled.div`
+  position: absolute;
+  max-width: 220px;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  max-height: 362px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;

@@ -9,7 +9,7 @@ export const createToken = ({ id }) =>
 export const getUserFromToken = (token) => {
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
-    return models.User.findOne({ id: user.id });
+    return user;
   } catch (e) {
     return null;
   }

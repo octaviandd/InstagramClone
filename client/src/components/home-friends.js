@@ -4,13 +4,27 @@ import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { FaGithub } from "react-icons/fa";
+import { GET_CURRENT_USER } from "../helpers/queries";
+import { useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 export default function HomeFriends() {
+  const { data, error, loading } = useQuery(GET_CURRENT_USER);
+
+  if (error) return error;
+  if (loading) return "Loading...";
+
+  const { id, username } = data.getMe;
+
   return (
     <MainContainer>
       <Profile>
-        <img src={profileImg}></img>
-        <a href="#">octaviandd</a>
+        <Link to={`/profile/${id}`}>
+          <img src={profileImg}></img>
+        </Link>
+        <Link to={`/profile/${id}`}>
+          <span>{username}</span>
+        </Link>
       </Profile>
       <Suggestions>
         <div>

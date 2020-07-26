@@ -12,10 +12,12 @@ import { useQuery } from "@apollo/client";
 import Navbar from "../components/navbar";
 
 export default function Profile(props) {
-  console.log(props.match.params.id);
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   const { data: data1, loading: loading1, error: error1 } = useQuery(
-    GET_USER_POSTS
+    GET_USER_POSTS,
+    {
+      variables: { input: props.match.params.id },
+    }
   );
   const { data: data2, loading: loading2, error: error2 } = useQuery(
     GET_USER_BY_ID,
@@ -24,12 +26,10 @@ export default function Profile(props) {
     }
   );
 
-  console.log(data2);
+  if (loading || loading1 || loading2) return "Loading...";
+  if (error || error1 || error2) return `Error! ${error.message}`;
 
-  if (loading || loading1) return "Loading...";
-  if (error || error1) return `Error! ${error.message}`;
-
-  const { followers, following, username } = data.getMe;
+  const { followers, following, username } = data2.getUserById;
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function Profile(props) {
           <div>
             <div>
               <p>{username && username}</p>
-              <button>Edit Profile</button>
+              <button>Follow</button>
               <button>
                 <a href="#">
                   <svg

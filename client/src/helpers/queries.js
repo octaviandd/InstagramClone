@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 
 export const GET_USERS = gql`
   query GetUsers {
-    users {
+    getUsers {
       id
       name
       username
@@ -78,8 +78,8 @@ export const GET_CURRENT_USER = gql`
 `;
 
 export const GET_USER_POSTS = gql`
-  query GetPosts {
-    getUserPosts {
+  query GetPosts($input: ID!) {
+    getUserPosts(input: $input) {
       picture
     }
   }
@@ -97,6 +97,22 @@ export const GET_ALL_POSTS = gql`
         id
         username
       }
+      comments {
+        id
+      }
+    }
+  }
+`;
+
+export const GET_POST_COMMENTS = gql`
+  query GetPostComments($input: ID!) {
+    getPostComments(input: $input) {
+      id
+      content
+      author
+      parentPost
+      createdAt
+      likes
     }
   }
 `;
