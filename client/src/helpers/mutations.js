@@ -80,10 +80,12 @@ export const SINGLE_UPLOAD = gql`
 
 export const NEW_COMMENT = gql`
   mutation CreateComment($input: NewCommentInput!) {
-    createComment {
+    createComment(input: $input) {
       id
       content
-      parentPost
+      parentPost {
+        id
+      }
       createdAt
       likes
     }

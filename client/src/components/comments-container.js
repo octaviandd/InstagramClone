@@ -3,12 +3,25 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { NEW_COMMENT } from "../helpers/mutations";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { useForm } from "react-hook-form";
+import { GET_POST_COMMENTS } from "../helpers/queries";
 
 export default function CommentsContainer({ id }) {
-  const [createComment, { data, loading, error }] = useMutation(NEW_COMMENT);
+  const [
+    createComment,
+    { data: data2, loading: loading2, error: error2 },
+  ] = useMutation(NEW_COMMENT);
+  console.log(id);
   const [content, setContent] = useState("");
+  const { register, handleSubmit, errors } = useForm();
   const [isActive, activate] = useState(false);
+  const [comments, setComments] = useState(null);
+  const { data, error, loading } = useQuery(GET_POST_COMMENTS, {
+    variables: id,
+  });
+
+  console.log(data);
 
   const handleInput = (e) => {
     setContent(e.target.value);
@@ -22,6 +35,20 @@ export default function CommentsContainer({ id }) {
     }
   }, [content]);
 
+  const onSubmit = (formData) => {
+    console.log(formData);
+    createComment({
+      variables: { input: { content: formData.content, id: id } },
+    }).then((res) => {
+      setComments(res);
+      console.log(comments);
+    });
+    setContent("");
+  };
+
+  // if (error2 || error) return error;
+  if (loading) return "Loading..";
+
   return (
     <>
       <MainContainer>
@@ -29,17 +56,28 @@ export default function CommentsContainer({ id }) {
           <div>
             <a href="#">octaviandd</a>
           </div>
-          <div>
-            <a href="#">George Soros</a> Great, nice.
-          </div>
-          <div>
-            <a href="#">Bill Gates</a> Nice,man.
-          </div>
+          {/* {comments &&
+            comments.map((comment) => {
+              return (
+                <div>
+                  <a href="">test</a>
+                  <span>{comment.content}</span>
+                </div>
+              );
+            })} */}
         </div>
         <AddCommentsContainer active={isActive}>
-          <input type="text" onChange={(e) => handleInput(e)} value={content} />
-          <span>Add a comment..</span>
-          <button>Post</button>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+              type="text"
+              name="content"
+              onChange={(e) => handleInput(e)}
+              value={content}
+              ref={register({ required: true, minlength: 1 })}
+            />
+            <span>Add a comment..</span>
+            <button type="submit">Post</button>
+          </form>
         </AddCommentsContainer>
       </MainContainer>
     </>
@@ -58,6 +96,7 @@ const MainContainer = styled.div`
     margin-bottom: 7.5px;
     font-size: 14px;
     line-height: 18px;
+
     a {
       font-weight: 800;
       text-decoration: none;
@@ -73,6 +112,11 @@ const AddCommentsContainer = styled.div`
   border-top: 1px solid #dbdbdb;
   width: 100%;
   padding: 15px 10px;
+  form {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
 
   input {
     border: none;

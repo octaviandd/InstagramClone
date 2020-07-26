@@ -110,9 +110,19 @@ export const GET_POST_COMMENTS = gql`
       id
       content
       author
-      parentPost
+      parentPost {
+        id
+      }
       createdAt
       likes
+    }
+  }
+`;
+
+export const GET_POST = gql`
+  query GetPost($input: ID!) {
+    getPost(input: $input) {
+      id
     }
   }
 `;

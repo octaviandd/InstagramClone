@@ -30,12 +30,26 @@ const resolvers = {
     }),
     getAllPosts: authenticated(async (_, __, { models }) => {
       const posts = await models.Post.find().populate("author");
-
       return posts;
     }),
-    getPostComments: authenticated(
-      async (_, { input }, { models, user }) => {}
-    ),
+    getPost: authenticated(async (_, { input }, { models }) => {
+      const foundPost = models.Post.findOne({ _id: input });
+      return foundPost;
+    }),
+    getPostComments: authenticated(async (_, { input }, { models, user }) => {
+      console.log("RESOLVER FIRES");
+      const userPosts = await models.Post.find({}).populate("author");
+
+      const newComments = userPosts.filter(
+        (userPost) => userPost._id === input.id
+      );
+
+      const foundComments = models.Comment.find({
+        parentPost: "PEiRuIjjWCqTEYbnlMQdM",
+      });
+      console.log(foundComments);
+      return foundComments;
+    }),
     getFollowers: authenticated(async () => {}),
     getFollowedUsers: authenticated(async () => {}),
   },
@@ -110,7 +124,7 @@ const resolvers = {
     createComment: authenticated(async (_, { input }, { models, user }) => {
       const parentUser = await models.User.findOne({ _id: user.id });
       const parentPost = await models.Post.findOne({
-        _id: "0mgOuFDTRe_k6XcN3Od_5",
+        _id: input.id,
       });
       const comment = new models.Comment({
         _id: nanoid(),

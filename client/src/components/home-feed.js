@@ -27,8 +27,6 @@ export default function HomeFeed() {
 
   const postsArray = data.getAllPosts;
 
-  console.log(data);
-
   const newArr = postsArray.slice();
   newArr.sort(compare);
 

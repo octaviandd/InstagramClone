@@ -15,8 +15,6 @@ export default function Navbar({ userID }) {
   const { data, loading, error } = useQuery(GET_USERS);
   const [activeSearchDropdown, activateSearchDropdown] = useState(false);
 
-  console.log(data);
-
   const handleInput = (e) => {
     setValue(e.target.value);
   };

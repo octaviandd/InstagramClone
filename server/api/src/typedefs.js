@@ -128,6 +128,7 @@ const typeDefs = gql`
 
   input NewCommentInput {
     content: String!
+    id: ID!
   }
 
   # POST && COMMENT INPUT
