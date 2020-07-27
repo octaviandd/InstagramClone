@@ -109,7 +109,10 @@ export const GET_POST_COMMENTS = gql`
     getPostComments(input: $input) {
       id
       content
-      author
+      author {
+        id
+        username
+      }
       parentPost {
         id
       }

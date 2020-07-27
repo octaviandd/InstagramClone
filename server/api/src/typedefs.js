@@ -22,7 +22,7 @@ const typeDefs = gql`
     id: ID!
     content: String!
     author: User!
-    parentPost: Post!
+    parentPost: User!
     createdAt: String!
     likes: Int!
   }

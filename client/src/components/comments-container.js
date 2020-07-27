@@ -6,22 +6,22 @@ import { NEW_COMMENT } from "../helpers/mutations";
 import { useMutation, useQuery } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { GET_POST_COMMENTS } from "../helpers/queries";
+import { Link } from "react-router-dom";
 
-export default function CommentsContainer({ id }) {
+export default function CommentsContainer({ id, username, author }) {
   const [
     createComment,
     { data: data2, loading: loading2, error: error2 },
   ] = useMutation(NEW_COMMENT);
-  console.log(id);
+
+  const { data, loading, error } = useQuery(GET_POST_COMMENTS, {
+    variables: { input: id },
+  });
+
   const [content, setContent] = useState("");
   const { register, handleSubmit, errors } = useForm();
   const [isActive, activate] = useState(false);
   const [comments, setComments] = useState(null);
-  const { data, error, loading } = useQuery(GET_POST_COMMENTS, {
-    variables: id,
-  });
-
-  console.log(data);
 
   const handleInput = (e) => {
     setContent(e.target.value);
@@ -41,30 +41,48 @@ export default function CommentsContainer({ id }) {
       variables: { input: { content: formData.content, id: id } },
     }).then((res) => {
       setComments(res);
-      console.log(comments);
     });
     setContent("");
   };
 
-  // if (error2 || error) return error;
-  if (loading) return "Loading..";
+  if (error) console.log(error);
+  if (loading) return "Loading...";
 
   return (
     <>
       <MainContainer>
         <div>
           <div>
-            <a href="#">octaviandd</a>
+            <Link to={`/profile/${author}`}>{username}</Link>
           </div>
-          {/* {comments &&
-            comments.map((comment) => {
+          {data.getPostComments &&
+            data.getPostComments.map((comment) => {
               return (
-                <div>
-                  <a href="">test</a>
-                  <span>{comment.content}</span>
-                </div>
+                <Comments key={comment.id}>
+                  <div>
+                    <Link to={`/profile/${comment.author.id}`}>
+                      {comment.author.username}
+                    </Link>
+                    <span>{comment.content}</span>
+                  </div>
+                  <div>
+                    <button type="button">
+                      <div class="QBdPU ">
+                        <svg
+                          aria-label="Like"
+                          fill="#8e8e8e"
+                          height="12"
+                          viewBox="0 0 48 48"
+                          width="12"
+                        >
+                          <path d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path>
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </Comments>
               );
-            })} */}
+            })}
         </div>
         <AddCommentsContainer active={isActive}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -148,5 +166,25 @@ const AddCommentsContainer = styled.div`
     border: none;
     font-weight: 600;
     cursor: pointer;
+  }
+`;
+
+const Comments = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  & > div:nth-of-type(1) {
+    a {
+      margin-right: 6px;
+    }
+  }
+
+  & > div:nth-of-type(2) {
+    button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    margin-right: 15px;
   }
 `;

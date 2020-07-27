@@ -36,18 +36,15 @@ const resolvers = {
       const foundPost = models.Post.findOne({ _id: input });
       return foundPost;
     }),
-    getPostComments: authenticated(async (_, { input }, { models, user }) => {
-      console.log("RESOLVER FIRES");
-      const userPosts = await models.Post.find({}).populate("author");
+    getPostComments: authenticated(async (_, { input }, { models }) => {
+      const newComments = await models.Comment.find()
+        .populate("parentPost")
+        .populate("author");
 
-      const newComments = userPosts.filter(
-        (userPost) => userPost._id === input.id
+      const foundComments = newComments.filter(
+        (comment) => comment.parentPost._id === input
       );
 
-      const foundComments = models.Comment.find({
-        parentPost: "PEiRuIjjWCqTEYbnlMQdM",
-      });
-      console.log(foundComments);
       return foundComments;
     }),
     getFollowers: authenticated(async () => {}),
@@ -134,6 +131,8 @@ const resolvers = {
         createdAt: Date.now(),
         likes: 0,
       });
+
+      console.log(comment);
 
       comment.save();
       return comment;

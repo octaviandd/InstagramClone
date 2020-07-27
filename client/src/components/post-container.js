@@ -4,6 +4,8 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import CommentsContainer from "../components/comments-container";
+import { GET_POST_COMMENTS } from "../helpers/queries";
+import { useQuery } from "@apollo/client";
 
 export default function PostContainer(post) {
   return (
@@ -90,7 +92,11 @@ export default function PostContainer(post) {
             <span>{post.post.likes > 0 && `${post.post.likes} likes`}</span>
           </a>
         </LikesContainer>
-        <CommentsContainer id={post.post.id}></CommentsContainer>
+        <CommentsContainer
+          id={post.post.id}
+          username={post.post.author.username}
+          author={post.post.author.id}
+        ></CommentsContainer>
       </RowThree>
     </Container>
   );
