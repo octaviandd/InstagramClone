@@ -93,9 +93,9 @@ export const NEW_COMMENT = gql`
 `;
 
 export const FOLLOW_USER = gql`
-  mutation FollowUser($input: ID!){
-    followUser(input: $input){
-      username
+  mutation FollowUser($input: ID!) {
+    followUser(input: $input) {
+      id
     }
   }
-`
+`;

@@ -3,13 +3,13 @@ import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
   type Image {
-    id: ID!
+    _id: ID!
     url: String!
     author: User!
   }
 
   type Post {
-    id: ID!
+    _id: ID!
     author: User!
     description: String!
     createdAt: String!
@@ -19,7 +19,7 @@ const typeDefs = gql`
   }
 
   type Comment {
-    id: ID!
+    _id: ID!
     content: String!
     author: User!
     parentPost: User!
@@ -59,7 +59,7 @@ const typeDefs = gql`
 
   # USER && AUTH
   type User {
-    id: ID!
+    _id: ID!
     email: String!
     password: String!
     name: String!
@@ -104,7 +104,7 @@ const typeDefs = gql`
 
   input NewCommentInput {
     content: String!
-    id: ID!
+    _id: ID!
   }
 
   # POST && COMMENT INPUT

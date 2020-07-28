@@ -13,6 +13,9 @@ import Navbar from "../components/navbar";
 
 export default function Profile(props) {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
+
+  console.log(data);
+  if (error) console.log(error);
   const { data: data1, loading: loading1, error: error1 } = useQuery(
     GET_USER_POSTS,
     {
@@ -26,7 +29,6 @@ export default function Profile(props) {
     }
   );
 
-  console.log(data);
   if (loading || loading1 || loading2) return "Loading...";
   if (error || error1 || error2) return `Error! ${error.message}`;
 

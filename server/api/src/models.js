@@ -69,11 +69,6 @@ const userSchema = new Schema(
 
 const postSchema = new Schema(
   {
-    _id: {
-      type: String,
-      required: true,
-      auto: false,
-    },
     description: {
       type: String,
       required: true,
@@ -109,11 +104,6 @@ const postSchema = new Schema(
 
 const commentSchema = new Schema(
   {
-    _id: {
-      type: String,
-      required: true,
-      auto: false,
-    },
     content: {
       type: String,
       required: true,

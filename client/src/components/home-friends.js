@@ -14,20 +14,18 @@ export default function HomeFriends() {
 
   const { data: data3 } = useQuery(GET_USERS);
 
-  console.log(data3);
-
   if (error) return error;
   if (loading) return "Loading...";
 
-  const { id, username } = data.getMe;
+  const { _id, username } = data.getMe;
 
   return (
     <MainContainer>
       <Profile>
-        <Link to={`/profile/${id}`}>
+        <Link to={`/profile/${_id}`}>
           <img src={profileImg}></img>
         </Link>
-        <Link to={`/profile/${id}`}>
+        <Link to={`/profile/${_id}`}>
           <span>{username}</span>
         </Link>
       </Profile>
@@ -38,10 +36,10 @@ export default function HomeFriends() {
         </div>
         {data3 &&
           data3.getUsers
-            .filter((user) => user.id !== id)
+            .filter((user) => user._id !== _id)
             .map((user) => {
               return (
-                <UserContainer key={user.id} user={user} currentUserId={id} />
+                <UserContainer key={user._id} user={user} currentUserId={_id} />
               );
             })}
       </Suggestions>

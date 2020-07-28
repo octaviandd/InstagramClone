@@ -8,12 +8,14 @@ import { GET_CURRENT_USER } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 
 export default function Home() {
-  const { data } = useQuery(GET_CURRENT_USER);
+  const { data, loading, error } = useQuery(GET_CURRENT_USER);
+
+  if (loading) return "Loading...";
 
   return (
     <MainContainer>
-      <Navbar userID={data && data.getMe.id}></Navbar>
-      <HomeMain userID={data && data.getMe.id}></HomeMain>
+      <Navbar userID={data && data.getMe._id}></Navbar>
+      <HomeMain userID={data && data.getMe._id}></HomeMain>
     </MainContainer>
   );
 }

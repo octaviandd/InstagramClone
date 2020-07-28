@@ -5,22 +5,25 @@ import gql from "graphql-tag";
 export const GET_USERS = gql`
   query GetUsers {
     getUsers {
-      id
+      _id
       name
       username
       email
       createdAt
       images {
-        id
+        _id
       }
       posts {
-        id
+        _id
       }
       comments {
-        id
+        _id
+      }
+      followers {
+        _id
       }
       following {
-        id
+        _id
       }
     }
   }
@@ -29,25 +32,25 @@ export const GET_USERS = gql`
 export const GET_USER_BY_ID = gql`
   query GetUser($input: ID!) {
     getUserById(input: $input) {
-      id
+      _id
       name
       email
       username
       createdAt
       images {
-        id
+        _id
       }
       posts {
-        id
+        _id
       }
       comments {
-        id
+        _id
       }
       following {
-        id
+        _id
       }
       followers {
-        id
+        _id
       }
     }
   }
@@ -56,25 +59,25 @@ export const GET_USER_BY_ID = gql`
 export const GET_CURRENT_USER = gql`
   query GetCurrentUser {
     getMe {
-      id
+      _id
       name
       email
       username
       createdAt
       images {
-        id
+        _id
       }
       posts {
-        id
+        _id
       }
       comments {
-        id
+        _id
       }
       following {
-        id
+        _id
       }
       followers {
-        id
+        _id
       }
     }
   }
@@ -92,16 +95,16 @@ export const GET_ALL_POSTS = gql`
   query {
     getAllPosts {
       picture
-      id
+      _id
       description
       createdAt
       likes
       author {
-        id
+        _id
         username
       }
       comments {
-        id
+        _id
       }
     }
   }
@@ -110,14 +113,14 @@ export const GET_ALL_POSTS = gql`
 export const GET_POST_COMMENTS = gql`
   query GetPostComments($input: ID!) {
     getPostComments(input: $input) {
-      id
+      _id
       content
       author {
-        id
+        _id
         username
       }
       parentPost {
-        id
+        _id
       }
       createdAt
       likes
@@ -128,7 +131,7 @@ export const GET_POST_COMMENTS = gql`
 export const GET_POST = gql`
   query GetPost($input: ID!) {
     getPost(input: $input) {
-      id
+      _id
     }
   }
 `;
