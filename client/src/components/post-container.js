@@ -4,8 +4,6 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import CommentsContainer from "../components/comments-container";
-import { GET_POST_COMMENTS } from "../helpers/queries";
-import { useQuery } from "@apollo/client";
 
 export default function PostContainer(post) {
   return (

@@ -103,12 +103,12 @@ export default function CommentsContainer({ id, username, author }) {
 }
 
 const MainContainer = styled.div`
-  padding-left: 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
 
   & > div:nth-of-type(1) {
+    padding-left: 10px;
     display: flex;
     flex-direction: column;
     margin-bottom: 7.5px;
@@ -129,8 +129,9 @@ const AddCommentsContainer = styled.div`
   justify-content: space-between;
   border-top: 1px solid #dbdbdb;
   width: 100%;
-  padding: 15px 10px;
+
   form {
+    padding: 15px 10px;
     width: 100%;
     display: flex;
     justify-content: space-between;

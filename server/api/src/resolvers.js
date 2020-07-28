@@ -11,6 +11,7 @@ const resolvers = {
   Query: {
     getMe: authenticated(async (_, __, { user, models }) => {
       const presentUser = await models.User.findOne({ _id: user.id });
+      console.log(presentUser);
       return presentUser;
     }),
     getUserById: authenticated(async (_, { input }, { models }) => {
@@ -20,6 +21,18 @@ const resolvers = {
     getUsers: authenticated(async (_, __, { models }) => {
       const users = await models.User.find({});
       return users;
+    }),
+    getFollowers: authenticated(async (_, { input }, { models }) => {
+      const currentUser = await models.User.find({ _id: input }).populate(
+        "followers"
+      );
+    }),
+    getFollowedUsers: authenticated(async (_, { input }, { models }) => {
+      const currentUser = await models.User.find({ _id: input }).populate(
+        "following"
+      );
+      const allUsers = await models.User.find({});
+      const userThatYouFollow = currentUser.filter(currentUser);
     }),
     getUserPosts: authenticated(async (_, { input }, { models }) => {
       const userPosts = await models.Post.find({}).populate("author");
@@ -40,15 +53,11 @@ const resolvers = {
       const newComments = await models.Comment.find()
         .populate("parentPost")
         .populate("author");
-
       const foundComments = newComments.filter(
         (comment) => comment.parentPost._id === input
       );
-
       return foundComments;
     }),
-    getFollowers: authenticated(async () => {}),
-    getFollowedUsers: authenticated(async () => {}),
   },
 
   Mutation: {
@@ -138,7 +147,20 @@ const resolvers = {
       return comment;
     }),
     followUser: authenticated(async (_, { input }, { models, user }) => {
-      const userToBeFollowed = models.User.findOne({ _id: input });
+      const userToBeFollowed = await models.User.findOne({ _id: input });
+
+      const currentUser = await models.User.findOneAndUpdate(
+        { _id: user.id },
+        { $push: { following: userToBeFollowed } },
+        { useFindAndModify: false, new: true },
+        function (res) {
+          console.log(res);
+        }
+      );
+
+      console.log(currentUser);
+
+      return userToBeFollowed;
     }),
   },
 

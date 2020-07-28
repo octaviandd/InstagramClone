@@ -4,12 +4,17 @@ import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { FaGithub } from "react-icons/fa";
-import { GET_CURRENT_USER } from "../helpers/queries";
-import { useQuery } from "@apollo/client";
+import { GET_CURRENT_USER, GET_USERS } from "../helpers/queries";
+import { useQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
+import UserContainer from "./home-friends-user-container";
 
 export default function HomeFriends() {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
+
+  const { data: data3 } = useQuery(GET_USERS);
+
+  console.log(data3);
 
   if (error) return error;
   if (loading) return "Loading...";
@@ -31,41 +36,14 @@ export default function HomeFriends() {
           <p>Suggestions For You</p>
           <a href="#">See all</a>
         </div>
-        <div>
-          <div>
-            <img src={profileImg}></img>
-            <p>JohnDoe1</p>
-          </div>
-          <button>Follow</button>
-        </div>
-        <div>
-          <div>
-            <img src={profileImg}></img>
-            <p>JohnDoe2</p>
-          </div>
-          <button>Follow</button>
-        </div>
-        <div>
-          <div>
-            <img src={profileImg}></img>
-            <p>JohnDoe3</p>
-          </div>
-          <button>Follow</button>
-        </div>
-        <div>
-          <div>
-            <img src={profileImg}></img>
-            <p>JohnDoe4</p>
-          </div>
-          <button>Follow</button>
-        </div>
-        <div>
-          <div>
-            <img src={profileImg}></img>
-            <p>JohnDoe5</p>
-          </div>
-          <button>Follow</button>
-        </div>
+        {data3 &&
+          data3.getUsers
+            .filter((user) => user.id !== id)
+            .map((user) => {
+              return (
+                <UserContainer key={user.id} user={user} currentUserId={id} />
+              );
+            })}
       </Suggestions>
       <Watermark>
         <p>Made by Octavian David</p>
@@ -98,34 +76,6 @@ const Suggestions = styled.div`
     width: 100%;
     margin-top: 3.5px;
     margin-bottom: 3.5px;
-
-    div {
-      display: flex;
-      p {
-        font-size: 14px;
-        line-height: 18px;
-        font-size: 14px;
-        font-weight: bold;
-        color: black;
-      }
-      img {
-        margin-right: 7.5px;
-      }
-    }
-
-    img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-    }
-    button {
-      border: none;
-      color: #0095f6;
-      background-color: inherit;
-      font-weight: bold;
-      font-size: 12px;
-      cursor: pointer;
-    }
   }
 
   & > div:nth-of-type(1) {

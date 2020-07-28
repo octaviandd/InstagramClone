@@ -26,6 +26,7 @@ export default function Profile(props) {
     }
   );
 
+  console.log(data);
   if (loading || loading1 || loading2) return "Loading...";
   if (error || error1 || error2) return `Error! ${error.message}`;
 

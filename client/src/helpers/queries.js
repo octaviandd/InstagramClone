@@ -19,6 +19,9 @@ export const GET_USERS = gql`
       comments {
         id
       }
+      following {
+        id
+      }
     }
   }
 `;

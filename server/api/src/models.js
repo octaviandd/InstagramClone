@@ -52,14 +52,20 @@ const userSchema = new Schema(
       type: Array,
       required: true,
     },
-    followers: {
-      type: Array,
-      required: true,
-    },
-    following: {
-      type: Array,
-      required: true,
-    },
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User",
+      },
+    ],
   },
   {
     collection: "Users",

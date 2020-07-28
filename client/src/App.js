@@ -2,12 +2,11 @@
 
 import React from "react";
 import "./App.css";
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import { Switch, BrowserRouter as Router } from "react-router-dom";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Profile from "./pages/profile";
-import Navbar from "./components/navbar";
 import { PrivateRoute } from "./components/private-route";
 import { LoggedInRoute } from "./components/loggedin-route";
 
