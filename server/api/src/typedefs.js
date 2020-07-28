@@ -34,30 +34,6 @@ const typeDefs = gql`
     uri: String!
   }
 
-  type Follower {
-    id: ID!
-    name: String!
-  }
-
-  type Following {
-    id: ID!
-    name: String
-  }
-
-  input FindUserById {
-    id: ID!
-  }
-
-  input FollowerInput {
-    id: ID!
-    name: String!
-  }
-
-  input FollowingInput {
-    id: ID!
-    name: String!
-  }
-
   type Query {
     getMe: User!
     getUserById(input: ID!): User!
@@ -66,8 +42,8 @@ const typeDefs = gql`
     getUserPosts(input: ID!): [Post]!
     getPost(input: ID!): Post!
     getPostComments(input: ID!): [Comment]!
-    getFollowers(input: ID!): [Follower]!
-    getFollowedUsers(input: ID!): [Following]!
+    getFollowers(input: ID!): [User]!
+    getFollowedUsers(input: ID!): [User]!
   }
 
   type Mutation {
@@ -93,8 +69,8 @@ const typeDefs = gql`
     posts: [Post]!
     comments: [Comment]!
     images: [Image]!
-    followers: [Follower]!
-    following: [Following]!
+    followers: [User]!
+    following: [User]!
   }
 
   type AuthUser {

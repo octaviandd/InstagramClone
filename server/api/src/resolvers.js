@@ -85,7 +85,6 @@ const resolvers = {
         throw new Error("User already exists.");
       }
       const user = new models.User({
-        _id: nanoid(),
         name: input.name,
         password: await bcrypt.hash(input.password, salt),
         email: input.email,
@@ -151,15 +150,13 @@ const resolvers = {
 
       const currentUser = await models.User.findOneAndUpdate(
         { _id: user.id },
-        { $push: { following: userToBeFollowed } },
+        { $addToSet: { following: userToBeFollowed } },
         { useFindAndModify: false, new: true },
-        function (res) {
-          console.log(res);
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
         }
       );
-
-      console.log(currentUser);
-
       return userToBeFollowed;
     }),
   },
