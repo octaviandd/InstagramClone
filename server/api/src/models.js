@@ -86,10 +86,13 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-    likes: {
-      type: Number,
-      required: true,
-    },
+    likes: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
     comments: [
       {
         type: mongoose.Types.ObjectId,

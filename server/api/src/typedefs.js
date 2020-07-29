@@ -47,6 +47,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    unfollowUser(input: ID!): User!
     singleUpload(file: Upload!): File!
     createPost(input: NewPostInput!): Post!
     createUser(input: SignupInput!): AuthUser!
@@ -55,6 +56,7 @@ const typeDefs = gql`
     likePost(input: ID!): Post!
     likeComment(input: ID!): Comment!
     followUser(input: ID!): User!
+    unlikePost(input: ID!): Post!
   }
 
   # USER && AUTH

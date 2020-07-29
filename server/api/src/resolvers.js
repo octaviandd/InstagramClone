@@ -96,6 +96,7 @@ const resolvers = {
         followers: [],
         following: [],
       });
+      console.log(user);
       const token = createToken(user);
       user.save();
       return { user, token };
@@ -115,12 +116,11 @@ const resolvers = {
     createPost: authenticated(async (_, { input }, { models, user }) => {
       const presentUser = await models.User.findOne({ _id: user.id });
       const post = new models.Post({
-        _id: nanoid(),
         author: presentUser,
         description: input.description,
         picture: input.picture,
         createdAt: Date.now(),
-        likes: 0,
+        likes: [],
         comments: [],
       });
       post.save();
@@ -132,15 +132,12 @@ const resolvers = {
         _id: input.id,
       });
       const comment = new models.Comment({
-        _id: nanoid(),
         content: input.content,
         author: parentUser,
         parentPost: parentPost,
         createdAt: Date.now(),
-        likes: 0,
+        likes: [],
       });
-
-      console.log(comment);
 
       comment.save();
       return comment;
@@ -157,7 +154,49 @@ const resolvers = {
           return res;
         }
       );
+
+      userToBeFollowed.updateOne(
+        { $addToSet: { followers: currentUser } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+
       return userToBeFollowed;
+    }),
+    unfollowUser: authenticated(async () => {
+      const userToBeUnfollowed = await models.User.findOne({ _id: input });
+      const currentUser = await models.User.findOneAndUpdate(
+        { _id: user.id },
+        { $addToSet: { following: userToBeFollowed } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+      userToBeUnfllowed.updateOne(
+        { $addToSet: { followers: currentUser } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+
+      return userToBeUnfollowed;
+    }),
+    likePost: authenticated(async (_, { input }, { models, user }) => {
+      const currentUser = await models.User.findOne({ _id: user.id });
+
+      const postToBeLiked = models.Post.updateOne({ _id: input });
+    }),
+    unlikePost: authenticated(async (_, { input }, { models, user }) => {
+      const currentUser = await models.User.findOne({ _id: user.id });
+
+      const postToBeUnliked = models.Post.updateOne({ _id: input });
     }),
   },
 
