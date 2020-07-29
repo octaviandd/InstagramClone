@@ -1,23 +1,22 @@
 /** @format */
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { FaGithub } from "react-icons/fa";
 import { GET_CURRENT_USER, GET_USERS } from "../helpers/queries";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import UserContainer from "./home-friends-user-container";
 
 export default function HomeFriends() {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
-
   const { data: data3 } = useQuery(GET_USERS);
 
   if (error) return error;
   if (loading) return "Loading...";
 
-  const { _id, username } = data.getMe;
+  const { _id, username, following } = data.getMe;
 
   return (
     <MainContainer>
@@ -36,7 +35,12 @@ export default function HomeFriends() {
         </div>
         {data3 &&
           data3.getUsers
-            .filter((user) => user._id !== _id)
+            .filter(
+              (user) =>
+                user._id !== _id &&
+                !following.find(({ _id }) => user._id === _id)
+            )
+            .slice(0, 5)
             .map((user) => {
               return (
                 <UserContainer key={user._id} user={user} currentUserId={_id} />

@@ -4,16 +4,31 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { Link } from "react-router-dom";
-import { FaSearch, FaTimes } from "react-icons/fa";
+
 import { GET_USERS } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
+import SearchBar from "./search-bar";
 
 export default function Navbar({ userID }) {
+  const { data, loading, error } = useQuery(GET_USERS);
+  const [activeDropdown, activateDropdown] = useState(false);
+  const [isSearchDropdownActive, setSearchDropdown] = useState(false);
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
-  const [activeDropdown, activateDropdown] = useState(false);
-  const { data, loading, error } = useQuery(GET_USERS);
-  const [activeSearchDropdown, activateSearchDropdown] = useState(false);
+
+  useEffect(() => {
+    if (value !== "") {
+      activate(true);
+    } else {
+      activate(false);
+    }
+
+    if (value.length > 2) {
+      setSearchDropdown(true);
+    } else {
+      setSearchDropdown(false);
+    }
+  }, [value]);
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -28,14 +43,6 @@ export default function Navbar({ userID }) {
     window.location.reload(false);
   };
 
-  useEffect(() => {
-    if (value !== "") {
-      activate(true);
-    } else {
-      activate(false);
-    }
-  }, [value]);
-
   return (
     <MainContainer>
       <Container>
@@ -44,25 +51,14 @@ export default function Navbar({ userID }) {
             <Link to="/">InstagramClone</Link>
           </h3>
         </div>
-        <SearchBar active={isActive}>
-          <div>
-            <input
-              tabIndex="1"
-              type="text"
-              id="search-input"
-              value={value}
-              onChange={(e) => handleInput(e)}
-            />
-            <span id="search-icon">
-              <FaSearch />
-            </span>
-            <span id="search-placeholder">Search</span>
-            <span id="search-close" onClick={() => clearText()}>
-              <FaTimes />
-            </span>
-          </div>
-          <SearchDropDown>heelo</SearchDropDown>
-        </SearchBar>
+        <SearchBar
+          clearText={clearText}
+          value={value}
+          handleInput={handleInput}
+          isSearchDropdownActive={isSearchDropdownActive}
+          active={isActive}
+        />
+
         <Icons>
           <div>
             <Link to="/">
@@ -177,6 +173,7 @@ export default function Navbar({ userID }) {
             </ul>
           </Dropdown>
         )}
+        {isSearchDropdownActive ? <SearchDropDown>heeo</SearchDropDown> : null}
       </Container>
     </MainContainer>
   );
@@ -229,89 +226,6 @@ const Icons = styled.div`
         width: 25px;
         height: 25px;
         border-radius: 50%;
-      }
-    }
-  }
-`;
-
-const SearchBar = styled.div`
-  div {
-    position: relative;
-
-    #search-close {
-      opacity: 0;
-    }
-    input {
-      position: relative;
-      background-color: #fafafa;
-      border: 1px solid #dbdbdb;
-      border-radius: 3px;
-      font-size: 14px;
-      padding-left: 24px;
-      padding-right: 10px;
-      padding-top: 3px;
-      padding-bottom: 3px;
-      line-height: 20px;
-      text-indent: 70px;
-
-      &:focus {
-        text-indent: 0;
-        outline: #a2a2a2;
-      }
-
-      &:focus ~ #search-icon {
-        left: 10px;
-      }
-
-      &:focus ~ #search-close {
-        opacity: 1;
-      }
-
-      &:focus ~ #search-placeholder {
-        left: 25px;
-      }
-    }
-
-    span {
-      position: absolute;
-      svg {
-        fill: #c7c7c7;
-      }
-    }
-
-    span:nth-of-type(1) {
-      left: 76px;
-      top: 5px;
-      line-height: 20px;
-      svg {
-        width: 12px;
-        height: 12px;
-      }
-    }
-
-    span:nth-of-type(2) {
-      left: 96px;
-      top: 4px;
-      color: #8e8e8e;
-      font-size: 14px;
-      line-height: 20px;
-      pointer-events: none;
-      ${({ active }) =>
-        active &&
-        `
-        display: none;
-      `}
-    }
-    span:nth-of-type(3) {
-      top: 5px;
-      right: 10px;
-      svg {
-        background-color: #c7c7c7;
-        border-radius: 50%;
-        fill: #f2f2f2;
-        width: 12px;
-        height: 12px;
-        padding: 1px 3px;
       }
     }
   }
@@ -372,12 +286,18 @@ const Dropdown = styled.div`
 
 const SearchDropDown = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 415px;
+  top: 61px;
   max-width: 220px;
   width: 100%;
   background-color: white;
   border: 1px solid #dbdbdb;
   max-height: 362px;
   height: 100%;
+  z-index: 999;
   overflow-x: hidden;
   overflow-y: auto;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 `;

@@ -34,7 +34,7 @@ export default function HomeFeed() {
     <MainContainer>
       {newArr &&
         newArr.map((post) => {
-          return <PostContainer key={post.id} post={post && post} />;
+          return <PostContainer key={post._id} post={post && post} />;
         })}
     </MainContainer>
   );

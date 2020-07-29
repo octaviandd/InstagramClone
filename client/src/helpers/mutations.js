@@ -6,19 +6,19 @@ export const NEW_USER = gql`
   mutation CreateUser($input: SignupInput!) {
     createUser(input: $input) {
       user {
-        id
+        _id
         name
         username
         email
         images {
-          id
+          _id
         }
         createdAt
         comments {
-          id
+          _id
         }
         posts {
-          id
+          _id
         }
       }
       token
@@ -29,15 +29,15 @@ export const NEW_USER = gql`
 export const NEW_POST = gql`
   mutation CreatePost($input: NewPostInput!) {
     createPost(input: $input) {
-      id
+      _id
       author {
-        id
+        _id
       }
       description
       createdAt
       likes
       comments {
-        id
+        _id
       }
     }
   }
@@ -47,19 +47,19 @@ export const LOGIN_USER = gql`
   mutation LoginUser($input: SigninInput!) {
     loginUser(input: $input) {
       user {
-        id
+        _id
         name
         username
         email
         createdAt
         images {
-          id
+          _id
         }
         posts {
-          id
+          _id
         }
         comments {
-          id
+          _id
         }
       }
       token
@@ -81,10 +81,10 @@ export const SINGLE_UPLOAD = gql`
 export const NEW_COMMENT = gql`
   mutation CreateComment($input: NewCommentInput!) {
     createComment(input: $input) {
-      id
+      _id
       content
       parentPost {
-        id
+        _id
       }
       createdAt
       likes
@@ -95,7 +95,7 @@ export const NEW_COMMENT = gql`
 export const FOLLOW_USER = gql`
   mutation FollowUser($input: ID!) {
     followUser(input: $input) {
-      id
+      _id
     }
   }
 `;

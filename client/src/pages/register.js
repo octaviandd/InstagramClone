@@ -46,7 +46,7 @@ export default function Register({ history }) {
     });
   };
 
-  if (error) throw new Error(`{error}`);
+  if (error) return error;
 
   return (
     <MainContainer>
