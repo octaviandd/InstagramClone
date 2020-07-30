@@ -8,7 +8,12 @@ import { useForm } from "react-hook-form";
 import { GET_POST_COMMENTS } from "../helpers/queries";
 import { Link } from "react-router-dom";
 
-export default function CommentsContainer({ id, username, author }) {
+export default function CommentsContainer({
+  id,
+  username,
+  author,
+  description,
+}) {
   const [
     createComment,
     { data: data2, loading: loading2, error: error2 },
@@ -54,6 +59,7 @@ export default function CommentsContainer({ id, username, author }) {
         <div>
           <div>
             <Link to={`/profile/${author}`}>{username}</Link>
+            <span>{description}</span>
           </div>
           {data.getPostComments &&
             data.getPostComments.map((comment) => {
@@ -67,7 +73,7 @@ export default function CommentsContainer({ id, username, author }) {
                   </div>
                   <div>
                     <button type="button">
-                      <div class="QBdPU ">
+                      <div>
                         <svg
                           aria-label="Like"
                           fill="#8e8e8e"
@@ -119,6 +125,7 @@ const MainContainer = styled.div`
       font-weight: 800;
       text-decoration: none;
       color: #363636;
+      margin-right: 6px;
     }
   }
 `;

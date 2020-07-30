@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import CommentsContainer from "../components/comments-container";
 
 export default function PostContainer(post) {
+  console.log(post);
   const [isLiked, likePost] = useState(false);
   return (
     <Container>
@@ -28,7 +29,7 @@ export default function PostContainer(post) {
         </div>
       </RowTow>
       <RowThree>
-        <ButtonsContainer>
+        <ButtonsContainer isLiked={isLiked}>
           <div>
             <button>
               <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
@@ -58,15 +59,18 @@ export default function PostContainer(post) {
             </button>
           </div>
         </ButtonsContainer>
-        <LikesContainer isLiked={isLiked}>
+        <LikesContainer>
           <a href="">
-            <span>{post.post.likes > 0 && `${post.post.likes} likes`}</span>
+            <span>
+              {post.post.likes.length > 0 && `${post.post.likes.length} likes`}
+            </span>
           </a>
         </LikesContainer>
         <CommentsContainer
           id={post.post._id}
           username={post.post.author.username}
           author={post.post.author._id}
+          description={post.post.description}
         ></CommentsContainer>
       </RowThree>
     </Container>
@@ -196,6 +200,11 @@ const ButtonsContainer = styled.div`
       cursor: pointer;
       background-color: transparent;
       border: none;
+    }
+    & > button:nth-of-type(1) {
+      svg {
+        ${({ isLiked }) => isLiked && `fill:" red`}
+      }
     }
     button:nth-of-type(2) {
       margin-left: 10px;

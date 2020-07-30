@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { Link } from "react-router-dom";
-
 import { GET_USERS } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import SearchBar from "./search-bar";
@@ -23,7 +22,7 @@ export default function Navbar({ userID }) {
       activate(false);
     }
 
-    if (value.length > 2) {
+    if (value.length > 1) {
       setSearchDropdown(true);
     } else {
       setSearchDropdown(false);
@@ -43,6 +42,9 @@ export default function Navbar({ userID }) {
     window.location.reload(false);
   };
 
+  if (error) console.log(error);
+  if (loading) return "Loading...";
+
   return (
     <MainContainer>
       <Container>
@@ -58,46 +60,24 @@ export default function Navbar({ userID }) {
           isSearchDropdownActive={isSearchDropdownActive}
           active={isActive}
         />
-
         <Icons>
           <div>
             <Link to="/">
-              <svg
-                aria-label="Home"
-                className="_8-yf5 "
-                fill="#262626"
-                height="22"
-                viewBox="0 0 48 48"
-                width="22"
-              >
+              <svg fill="#262626" height="22" viewBox="0 0 48 48" width="22">
                 <path d="M45.5 48H30.1c-.8 0-1.5-.7-1.5-1.5V34.2c0-2.6-2.1-4.6-4.6-4.6s-4.6 2.1-4.6 4.6v12.3c0 .8-.7 1.5-1.5 1.5H2.5c-.8 0-1.5-.7-1.5-1.5V23c0-.4.2-.8.4-1.1L22.9.4c.6-.6 1.6-.6 2.1 0l21.5 21.5c.3.3.4.7.4 1.1v23.5c.1.8-.6 1.5-1.4 1.5z"></path>
               </svg>
             </Link>
           </div>
           <div>
             <Link to="">
-              <svg
-                aria-label="Direct"
-                className="_8-yf5 "
-                fill="#262626"
-                height="22"
-                viewBox="0 0 48 48"
-                width="22"
-              >
+              <svg fill="#262626" height="22" viewBox="0 0 48 48" width="22">
                 <path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z"></path>
               </svg>
             </Link>
           </div>
           <div>
             <Link to="">
-              <svg
-                aria-label="Find People"
-                className="_8-yf5 "
-                fill="#262626"
-                height="22"
-                viewBox="0 0 48 48"
-                width="22"
-              >
+              <svg fill="#262626" height="22" viewBox="0 0 48 48" width="22">
                 <path
                   clipRule="evenodd"
                   d="M24 0C10.8 0 0 10.8 0 24s10.8 24 24 24 24-10.8 24-24S37.2 0 24 0zm0 45C12.4 45 3 35.6 3 24S12.4 3 24 3s21 9.4 21 21-9.4 21-21 21zm10.2-33.2l-14.8 7c-.3.1-.6.4-.7.7l-7 14.8c-.3.6-.2 1.3.3 1.7.3.3.7.4 1.1.4.2 0 .4 0 .6-.1l14.8-7c.3-.1.6-.4.7-.7l7-14.8c.3-.6.2-1.3-.3-1.7-.4-.5-1.1-.6-1.7-.3zm-7.4 15l-5.5-5.5 10.5-5-5 10.5z"
@@ -110,8 +90,6 @@ export default function Navbar({ userID }) {
             <Link to="">
               <svg
                 aria-label="Activity Feed"
-                className="_8-yf5 "
-                fill="#262626"
                 height="22"
                 viewBox="0 0 48 48"
                 width="22"
@@ -173,7 +151,29 @@ export default function Navbar({ userID }) {
             </ul>
           </Dropdown>
         )}
-        {isSearchDropdownActive ? <SearchDropDown>heeo</SearchDropDown> : null}
+        {isSearchDropdownActive && (
+          <SearchDropDown>
+            {data &&
+              data.getUsers
+                .slice(0, 20)
+                .filter((user) => user.username.includes(value))
+                .map((user) => {
+                  return (
+                    <div style={{ width: "100%" }}>
+                      <Link to={`/profile/${user._id}`}>
+                        <div>
+                          <img src={profileImg} />
+                        </div>
+                        <div>
+                          <p>{user.username}</p>
+                          <p>{user.name}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
+          </SearchDropDown>
+        )}
       </Container>
     </MainContainer>
   );
@@ -294,10 +294,48 @@ const SearchDropDown = styled.div`
   width: 100%;
   background-color: white;
   border: 1px solid #dbdbdb;
-  max-height: 362px;
-  height: 100%;
+  height: 362px;
   z-index: 999;
   overflow-x: hidden;
   overflow-y: auto;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+
+  & > div {
+    border-bottom: 1px solid #dbdbdb;
+    padding: 8px 14px;
+  }
+
+  a {
+    height: 50px;
+    align-items: center;
+    display: flex;
+    text-decoration: none;
+    color: black;
+
+    & > div:nth-of-type(1) {
+      img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: contain;
+        margin-right: 8px;
+      }
+    }
+
+    & > div:nth-of-type(2) {
+      & > p:nth-of-type(1) {
+        font-weight: 600;
+        line-height: 22px;
+        font-size: 14px;
+        text-overflow: ellipsis;
+      }
+      & > p:nth-of-type(2) {
+        font-weight: 300;
+        font-size: 14px;
+        text-align: left;
+        text-overflow: ellipsis;
+        line-height: 22px;
+      }
+    }
+  }
 `;

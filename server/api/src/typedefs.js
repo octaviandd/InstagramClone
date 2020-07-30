@@ -14,7 +14,7 @@ const typeDefs = gql`
     description: String!
     createdAt: String!
     picture: String!
-    likes: Int!
+    likes: [User]!
     comments: [Comment]!
   }
 
@@ -24,7 +24,7 @@ const typeDefs = gql`
     author: User!
     parentPost: User!
     createdAt: String!
-    likes: Int!
+    likes: [User]!
   }
 
   type File {

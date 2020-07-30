@@ -124,7 +124,8 @@ const commentSchema = new Schema(
       required: true,
     },
     likes: {
-      type: Number,
+      type: mongoose.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },

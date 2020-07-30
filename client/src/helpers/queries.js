@@ -42,6 +42,7 @@ export const GET_USER_BY_ID = gql`
       }
       posts {
         _id
+        picture
       }
       comments {
         _id
@@ -98,7 +99,9 @@ export const GET_ALL_POSTS = gql`
       _id
       description
       createdAt
-      likes
+      likes {
+        _id
+      }
       author {
         _id
         username
@@ -123,7 +126,9 @@ export const GET_POST_COMMENTS = gql`
         _id
       }
       createdAt
-      likes
+      likes {
+        _id
+      }
     }
   }
 `;

@@ -35,7 +35,9 @@ export const NEW_POST = gql`
       }
       description
       createdAt
-      likes
+      likes {
+        _id
+      }
       comments {
         _id
       }
@@ -87,7 +89,9 @@ export const NEW_COMMENT = gql`
         _id
       }
       createdAt
-      likes
+      likes {
+        _id
+      }
     }
   }
 `;

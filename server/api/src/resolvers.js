@@ -11,11 +11,12 @@ const resolvers = {
   Query: {
     getMe: authenticated(async (_, __, { user, models }) => {
       const presentUser = await models.User.findOne({ _id: user.id });
-      console.log(presentUser);
       return presentUser;
     }),
     getUserById: authenticated(async (_, { input }, { models }) => {
-      const userToBeReturned = await models.User.findOne({ _id: input });
+      const userToBeReturned = await models.User.findOne({
+        _id: input,
+      }).populate("posts");
       return userToBeReturned;
     }),
     getUsers: authenticated(async (_, __, { models }) => {
@@ -123,6 +124,16 @@ const resolvers = {
         likes: [],
         comments: [],
       });
+
+      presentUser.updateOne(
+        { $addToSet: { posts: post } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+
       post.save();
       return post;
     }),
@@ -191,12 +202,31 @@ const resolvers = {
     likePost: authenticated(async (_, { input }, { models, user }) => {
       const currentUser = await models.User.findOne({ _id: user.id });
 
-      const postToBeLiked = models.Post.updateOne({ _id: input });
+      const postToBeLiked = models.Post.updateOne(
+        { _id: input },
+        { $addToSet: { likes: currentUser } },
+        { useFindAndModify: false, new: true },
+        (err, res) => {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+
+      return postToBeLiked;
     }),
     unlikePost: authenticated(async (_, { input }, { models, user }) => {
       const currentUser = await models.User.findOne({ _id: user.id });
 
-      const postToBeUnliked = models.Post.updateOne({ _id: input });
+      const postToBeUnliked = models.Post.updateOne(
+        { _id: input },
+        { $pull: { likes: currentUser } },
+        (err, res) => {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+
+      return postToBeUnliked;
     }),
   },
 
