@@ -24,10 +24,20 @@ export default function Profile(props) {
     }
   );
 
+  const followTheUser = () => {};
+
+  const unfollowTheUser = () => {};
+
   if (loading2) return "Loading...";
   if (error2) return `Error! ${error2.message}`;
 
-  const { followers, following, username, posts, _id } = data2.getUserById;
+  const {
+    followers,
+    following,
+    username,
+    posts,
+    _id: newId,
+  } = data2.getUserById;
 
   return (
     <>
@@ -40,8 +50,14 @@ export default function Profile(props) {
           <div>
             <div>
               <p>{username && username}</p>
-              {data && data.getMe._id !== _id ? (
-                <button>Follow</button>
+              {data && data.getMe._id !== newId ? (
+                <div>
+                  {data.getMe.following.find(({ _id }) => newId === _id) ? (
+                    <button>Unfollow</button>
+                  ) : (
+                    <button>Follow</button>
+                  )}
+                </div>
               ) : (
                 <button>
                   <a href="#">
