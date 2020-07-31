@@ -159,7 +159,7 @@ export default function Navbar({ userID }) {
                 .filter((user) => user.username.includes(value))
                 .map((user) => {
                   return (
-                    <div style={{ width: "100%" }}>
+                    <div key={user._id}>
                       <Link to={`/profile/${user._id}`}>
                         <div>
                           <img src={profileImg} />

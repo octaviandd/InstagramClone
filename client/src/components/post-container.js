@@ -4,10 +4,40 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import CommentsContainer from "../components/comments-container";
+import { LIKE_POST, UNLIKE_POST } from "../helpers/mutations";
+import { useMutation } from "@apollo/client";
 
 export default function PostContainer(post) {
-  console.log(post);
   const [isLiked, likePost] = useState(false);
+  console.log(post);
+
+  //MUTATIONS AND QUERIES
+
+  const [likeAPost, { data, loading, error }] = useMutation(LIKE_POST);
+
+  const [
+    unlikeAPost,
+    { data: data1, loading: loading1, error: error1 },
+  ] = useMutation(UNLIKE_POST);
+
+  // METHODS FOR MUTATIONS AND QUERIES
+
+  const likePostMethod = () => {
+    likeAPost({
+      variables: {
+        input: { userID: post.post.author._id, postID: post.post._id },
+      },
+    });
+  };
+
+  const unlikePostMethod = () => {
+    unlikeAPost({
+      variables: {
+        input: { userID: post.post.author._id, postID: post.post._id },
+      },
+    });
+  };
+
   return (
     <Container>
       <RowOne>

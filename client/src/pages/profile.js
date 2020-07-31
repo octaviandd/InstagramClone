@@ -4,19 +4,27 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { GET_CURRENT_USER, GET_USER_BY_ID } from "../helpers/queries";
-import { useQuery } from "@apollo/client";
-import { FOLLOW_USER } from "../helpers/mutations";
-import { useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { FOLLOW_USER, UNFOLLOW_USER } from "../helpers/mutations";
 import Navbar from "../components/navbar";
 
 export default function Profile(props) {
+  //HOOKS
   const [isFollowing, follow] = useState(false);
   const { data, loading, error } = useQuery(GET_CURRENT_USER);
 
+  //MUTATIONS
   const [
     followUser,
     { data: data1, error: error1, loading: loading1 },
   ] = useMutation(FOLLOW_USER);
+
+  const [
+    unfollowUser,
+    { data: data3, error: error3, loading: loading3 },
+  ] = useMutation(UNFOLLOW_USER);
+
+  //QUERIES
   const { data: data2, loading: loading2, error: error2 } = useQuery(
     GET_USER_BY_ID,
     {
@@ -24,12 +32,13 @@ export default function Profile(props) {
     }
   );
 
-  const followTheUser = () => {};
+  //ERROR HANDLING + LOADING HANDLERS
 
-  const unfollowTheUser = () => {};
+  if ((loading, loading1, loading2)) return "Loading...";
+  if ((error, error1, error2))
+    return `Error! ${error2.message || error1.message || error3.message}`;
 
-  if (loading2) return "Loading...";
-  if (error2) return `Error! ${error2.message}`;
+  //DESTRUCTURING
 
   const {
     followers,
@@ -38,6 +47,21 @@ export default function Profile(props) {
     posts,
     _id: newId,
   } = data2.getUserById;
+
+  console.log(newId);
+
+  //METHODS FOR QUERIES && MUTATIONS
+
+  const followTheUser = () => {
+    followUser({ variables: { input: newId } }).then((res) => console.log(res));
+  };
+
+  const unfollowTheUser = () => {
+    console.log("FIRING");
+    unfollowUser({ variables: { input: newId } }).then((res) =>
+      console.log(res)
+    );
+  };
 
   return (
     <>
@@ -53,9 +77,19 @@ export default function Profile(props) {
               {data && data.getMe._id !== newId ? (
                 <div>
                   {data.getMe.following.find(({ _id }) => newId === _id) ? (
-                    <button>Unfollow</button>
+                    <UnfollowButton
+                      isFollowing={isFollowing}
+                      onClick={(newId) => unfollowTheUser(newId)}
+                    >
+                      Following
+                    </UnfollowButton>
                   ) : (
-                    <button>Follow</button>
+                    <FollowButton
+                      isFollowing={isFollowing}
+                      onClick={() => followTheUser(newId)}
+                    >
+                      Follow
+                    </FollowButton>
                   )}
                 </div>
               ) : (
@@ -173,7 +207,6 @@ const RowOne = styled.div`
         cursor: pointer;
         margin-left: 20px;
         margin-right: 15px;
-        background-color: #ffffff;
         border: 1px solid #dbdbdb;
         padding: 3px 9px;
         border-radius: 5px;
@@ -182,7 +215,6 @@ const RowOne = styled.div`
         letter-spacing: 0.2px;
       }
       button:nth-of-type(2) {
-        background-color: transparent;
         border: none;
       }
     }
@@ -233,4 +265,17 @@ const RowTwo = styled.div`
       object-fit: contain;
     }
   }
+`;
+
+const FollowButton = styled.button`
+  background-color: #0095f6;
+  color: white;
+
+  ${({ isFollowing }) => isFollowing && `display:none`}
+`;
+
+const UnfollowButton = styled.button`
+  background-color: #fafafa;
+
+  ${({ isFollowing }) => isFollowing && `display:block`}
 `;

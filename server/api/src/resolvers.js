@@ -155,7 +155,6 @@ const resolvers = {
     }),
     followUser: authenticated(async (_, { input }, { models, user }) => {
       const userToBeFollowed = await models.User.findOne({ _id: input });
-
       const currentUser = await models.User.findOneAndUpdate(
         { _id: user.id },
         { $addToSet: { following: userToBeFollowed } },
@@ -177,19 +176,19 @@ const resolvers = {
 
       return userToBeFollowed;
     }),
-    unfollowUser: authenticated(async () => {
+    unfollowUser: authenticated(async (_, { input }, { user, models }) => {
       const userToBeUnfollowed = await models.User.findOne({ _id: input });
       const currentUser = await models.User.findOneAndUpdate(
         { _id: user.id },
-        { $addToSet: { following: userToBeFollowed } },
+        { $pull: { following: userToBeUnfollowed._id } },
         { useFindAndModify: false, new: true },
         function (err, res) {
           if (err) console.log(err);
           return res;
         }
       );
-      userToBeUnfllowed.updateOne(
-        { $addToSet: { followers: currentUser } },
+      userToBeUnfollowed.updateOne(
+        { $pull: { followers: currentUser._id } },
         { useFindAndModify: false, new: true },
         function (err, res) {
           if (err) console.log(err);
@@ -199,11 +198,12 @@ const resolvers = {
 
       return userToBeUnfollowed;
     }),
-    likePost: authenticated(async (_, { input }, { models, user }) => {
+    likePost: authenticated(async (_, { postID, userID }, { models, user }) => {
       const currentUser = await models.User.findOne({ _id: user.id });
+      const parentUser = await models.User.findOne({ _id: userID });
 
       const postToBeLiked = models.Post.updateOne(
-        { _id: input },
+        { _id: postID },
         { $addToSet: { likes: currentUser } },
         { useFindAndModify: false, new: true },
         (err, res) => {
@@ -219,7 +219,7 @@ const resolvers = {
 
       const postToBeUnliked = models.Post.updateOne(
         { _id: input },
-        { $pull: { likes: currentUser } },
+        { $pull: { likes: currentUser._id } },
         (err, res) => {
           if (err) console.log(err);
           return res;

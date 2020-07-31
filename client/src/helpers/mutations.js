@@ -103,3 +103,43 @@ export const FOLLOW_USER = gql`
     }
   }
 `;
+
+export const UNFOLLOW_USER = gql`
+  mutation UnfollowUser($input: ID!) {
+    unfollowUser(input: $input) {
+      _id
+    }
+  }
+`;
+
+export const LIKE_POST = gql`
+  mutation LikePost($input: ID!) {
+    likePost(input: $input) {
+      _id
+    }
+  }
+`;
+
+export const UNLIKE_POST = gql`
+  mutation UnlikePost($input: ID!) {
+    unlikePost(input: $input) {
+      _id
+    }
+  }
+`;
+
+export const LIKE_COMMENT = gql`
+  mutation LikeComment($input: ID!) {
+    likeComment(input: $input) {
+      _id
+    }
+  }
+`;
+
+export const UNLIKE_COMMENT = gql`
+  mutation unlikeComment($input: ID!) {
+    unlikeComment(input: $input) {
+      _id
+    }
+  }
+`;

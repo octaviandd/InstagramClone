@@ -7,7 +7,7 @@ import { FOLLOW_USER } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import profileImg from "../assets/profileimg.jpg";
 
-export default function UserContainer({ user, id }) {
+export default function UserContainer({ user }) {
   const [isFollowing, follow] = useState(false);
   const [followUser, { data, error, loading }] = useMutation(FOLLOW_USER);
 
