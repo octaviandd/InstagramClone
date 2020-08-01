@@ -3,9 +3,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_POSTS } from "../helpers/queries";
+import { GET_ALL_POSTS, GET_CURRENT_USER } from "../helpers/queries";
 import PostContainer from "../components/post-container";
 
+// Method for object comparison by timeline (createdAt)
 function compare(a, b) {
   const timeA = a.createdAt.toUpperCase();
   const timeB = b.createdAt.toUpperCase();
@@ -18,14 +19,23 @@ function compare(a, b) {
   }
   return comparison;
 }
+//
 
 export default function HomeFeed() {
-  const { data, error, loading } = useQuery(GET_ALL_POSTS);
+  // HOOKS
 
+  const { data, error, loading } = useQuery(GET_ALL_POSTS);
+  const { data: data2, error: error2, loading: loading2 } = useQuery(
+    GET_CURRENT_USER
+  );
+
+  // ERROR HANDLING
   if (error) return error;
   if (loading) return "Loading..";
 
-  const postsArray = data.getAllPosts;
+  //DESTRUCTURING
+  const { following } = data2.results;
+  const postsArray = data.results;
 
   const newArr = postsArray.slice();
   newArr.sort(compare);
@@ -33,9 +43,13 @@ export default function HomeFeed() {
   return (
     <MainContainer>
       {newArr &&
-        newArr.map((post) => {
-          return <PostContainer key={post._id} post={post && post} />;
-        })}
+        newArr
+          .filter((user) =>
+            following.find(({ _id }) => user.author._id === _id)
+          )
+          .map((post) => {
+            return <PostContainer key={post._id} post={post && post} />;
+          })}
     </MainContainer>
   );
 }

@@ -9,8 +9,11 @@ import { setAccessToken } from "../helpers/token";
 import { NEW_USER } from "../helpers/mutations";
 
 export default function Register({ history }) {
+  //HOOKS
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
+
+  // MUTATIONS AND QUERIES
   const { register, handleSubmit, errors } = useForm();
   const [registerUser, { data, loading, error }] = useMutation(NEW_USER);
 
@@ -21,6 +24,8 @@ export default function Register({ history }) {
       activate(false);
     }
   }, [value]);
+
+  // COMPONENT METHODS
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -46,7 +51,9 @@ export default function Register({ history }) {
     });
   };
 
+  // ERROR HANDLING
   if (error) return error;
+  if (loading) return "Loading...";
 
   return (
     <MainContainer>

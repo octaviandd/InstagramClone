@@ -9,11 +9,14 @@ import { useQuery } from "@apollo/client";
 import SearchBar from "./search-bar";
 
 export default function Navbar({ userID }) {
-  const { data, loading, error } = useQuery(GET_USERS);
+  //HOOKS
   const [activeDropdown, activateDropdown] = useState(false);
   const [isSearchDropdownActive, setSearchDropdown] = useState(false);
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
+
+  // MUTATIONS && QUERIES
+  const { data, loading, error } = useQuery(GET_USERS);
 
   useEffect(() => {
     if (value !== "") {
@@ -29,6 +32,7 @@ export default function Navbar({ userID }) {
     }
   }, [value]);
 
+  // COMPONENT METHODS
   const handleInput = (e) => {
     setValue(e.target.value);
   };
@@ -42,6 +46,7 @@ export default function Navbar({ userID }) {
     window.location.reload(false);
   };
 
+  // ERROR HANDLINGG
   if (error) console.log(error);
   if (loading) return "Loading...";
 
@@ -154,7 +159,7 @@ export default function Navbar({ userID }) {
         {isSearchDropdownActive && (
           <SearchDropDown>
             {data &&
-              data.getUsers
+              data.results
                 .slice(0, 20)
                 .filter((user) => user.username.includes(value))
                 .map((user) => {

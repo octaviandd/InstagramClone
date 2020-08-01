@@ -8,14 +8,18 @@ import { useDropzone } from "react-dropzone";
 import { FaPlusCircle, FaTimes } from "react-icons/fa";
 
 export default function HomeNewPost() {
+  // HOOKS
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
+  const [picture, addPicture] = useState("");
+
+  // MUTATIONS && QUERIES
   const [createPost, { postData, postError, postLoading }] = useMutation(
     NEW_POST
   );
   const [uploadPicture, { data, error, loading }] = useMutation(SINGLE_UPLOAD);
-  const [picture, addPicture] = useState("");
 
+  // COMPONENT METHODS
   const onDrop = useCallback(
     ([file]) => {
       uploadPicture({ variables: { file } }).then((res) => {
@@ -24,8 +28,6 @@ export default function HomeNewPost() {
     },
     [uploadPicture]
   );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const onSubmit = async (formData) => {
     createPost({
@@ -39,6 +41,10 @@ export default function HomeNewPost() {
     setActive(!isActive);
   };
 
+  // DESTRUCTURING
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  // ERROR HANDLING
   if (error) return error;
   if (loading) return "Loading..";
 

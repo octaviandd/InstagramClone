@@ -6,18 +6,22 @@ import AWS from "aws-sdk";
 const config = require("./s3");
 const { extname } = require("path");
 const salt = 10;
-import mongoose from "mongoose";
-
-const ObjectId = mongoose.Types.ObjectId;
-
-ObjectId.prototype.valueOf = function () {
-  return this.toString();
-};
 
 const resolvers = {
   Query: {
     getMe: authenticated(async (_, __, { user, models }) => {
-      const presentUser = await models.User.findOne({ _id: user.id });
+      const presentUser = await models.User.findOne({ _id: user.id }).populate({
+        path: "following",
+        populate: {
+          path: "posts",
+          populate: {
+            path: "author",
+            path: "comments",
+            populate: { path: "author" },
+          },
+        },
+      });
+
       return presentUser;
     }),
     getUserById: authenticated(async (_, { input }, { models }) => {
@@ -35,12 +39,11 @@ const resolvers = {
         "followers"
       );
     }),
-    getFollowedUsers: authenticated(async (_, { input }, { models }) => {
-      const currentUser = await models.User.find({ _id: input }).populate(
+    getFollowedUsers: authenticated(async (_, { input }, { models, user }) => {
+      const users = await models.User.find({ _id: user.id }).populate(
         "following"
       );
-      const allUsers = await models.User.find({});
-      const userThatYouFollow = currentUser.filter(currentUser);
+      return users;
     }),
     getUserPosts: authenticated(async (_, { input }, { models }) => {
       const userPosts = await models.Post.find({}).populate("author");

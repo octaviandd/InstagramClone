@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 
 export const GET_USERS = gql`
   query GetUsers {
-    getUsers {
+    results: getUsers {
       _id
       name
       username
@@ -31,7 +31,7 @@ export const GET_USERS = gql`
 
 export const GET_USER_BY_ID = gql`
   query GetUser($input: ID!) {
-    getUserById(input: $input) {
+    results: getUserById(input: $input) {
       _id
       name
       email
@@ -59,7 +59,7 @@ export const GET_USER_BY_ID = gql`
 
 export const GET_CURRENT_USER = gql`
   query GetCurrentUser {
-    getMe {
+    results: getMe {
       _id
       name
       email
@@ -76,6 +76,26 @@ export const GET_CURRENT_USER = gql`
       }
       following {
         _id
+        username
+        posts {
+          _id
+          picture
+          description
+          likes {
+            _id
+          }
+          author {
+            _id
+          }
+          comments {
+            _id
+            content
+            author {
+              _id
+              username
+            }
+          }
+        }
       }
       followers {
         _id
@@ -86,7 +106,7 @@ export const GET_CURRENT_USER = gql`
 
 export const GET_USER_POSTS = gql`
   query GetPosts($input: ID!) {
-    getUserPosts(input: $input) {
+    results: getUserPosts(input: $input) {
       _id
       picture
       description
@@ -102,7 +122,7 @@ export const GET_USER_POSTS = gql`
 
 export const GET_ALL_POSTS = gql`
   query {
-    getAllPosts {
+    results: getAllPosts {
       picture
       _id
       description
@@ -127,7 +147,7 @@ export const GET_ALL_POSTS = gql`
 
 export const GET_POST_COMMENTS = gql`
   query GetPostComments($input: ID!) {
-    getPostComments(input: $input) {
+    results: getPostComments(input: $input) {
       _id
       content
       author {

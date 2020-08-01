@@ -14,6 +14,14 @@ export default function CommentsContainer({
   author,
   description,
 }) {
+  // HOOKS
+  const [content, setContent] = useState("");
+  const { register, handleSubmit, errors } = useForm();
+  const [isActive, activate] = useState(false);
+  const [comments, setComments] = useState(null);
+
+  // MUTATIONS && QUERIES
+
   const [
     createComment,
     { data: data2, loading: loading2, error: error2 },
@@ -23,10 +31,7 @@ export default function CommentsContainer({
     variables: { input: id },
   });
 
-  const [content, setContent] = useState("");
-  const { register, handleSubmit, errors } = useForm();
-  const [isActive, activate] = useState(false);
-  const [comments, setComments] = useState(null);
+  // COMPONENT METHODS
 
   const handleInput = (e) => {
     setContent(e.target.value);
@@ -49,6 +54,7 @@ export default function CommentsContainer({
     setContent("");
   };
 
+  // ERROR HANDLING
   if (error) console.log(error);
   if (loading) return "Loading...";
 
@@ -61,7 +67,7 @@ export default function CommentsContainer({
             <span>{description}</span>
           </div>
           {data &&
-            data.getPostComments.map((comment) => {
+            data.results.map((comment) => {
               return (
                 <Comments key={comment._id}>
                   <div>

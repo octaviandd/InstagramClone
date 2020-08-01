@@ -1,22 +1,25 @@
 /** @format */
 
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
-import { FaGithub } from "react-icons/fa";
 import { GET_CURRENT_USER, GET_USERS } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import UserContainer from "./home-friends-user-container";
+import Watermark from "../components/watermark";
 
 export default function HomeFriends() {
+  // MUTATIONS && QUERIES
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
-  const { data: data3 } = useQuery(GET_USERS);
+  const { data: data1 } = useQuery(GET_USERS);
 
+  // ERROR HANDLING
   if (error) return error;
   if (loading) return "Loading...";
 
-  const { _id, username, following } = data.getMe;
+  // DESCTRUCTURING
+  const { _id, username, following } = data.results;
 
   return (
     <MainContainer>
@@ -33,8 +36,8 @@ export default function HomeFriends() {
           <p>Suggestions For You</p>
           <a href="#">See all</a>
         </div>
-        {data3 &&
-          data3.getUsers
+        {data1 &&
+          data1.results
             .filter(
               (user) =>
                 user._id !== _id &&
@@ -47,12 +50,7 @@ export default function HomeFriends() {
               );
             })}
       </Suggestions>
-      <Watermark>
-        <p>Made by Octavian David</p>
-        <a href="http://github.com/octaviandd">
-          <FaGithub />
-        </a>
-      </Watermark>
+      <Watermark />
     </MainContainer>
   );
 }
@@ -98,25 +96,7 @@ const Suggestions = styled.div`
     }
   }
 `;
-const Watermark = styled.div`
-  background-color: #fafafa;
-  display: flex;
-  margin-top: 3rem;
-  flex-direction: column;
-  align-items: center;
-  p {
-    text-align: center;
-  }
-  a {
-    margin-top: 1rem;
-    color: black;
-    font-size: 20px;
-    svg {
-      height: 25px;
-      width: 25px;
-    }
-  }
-`;
+
 const Profile = styled.div`
   display: flex;
   align-items: center;

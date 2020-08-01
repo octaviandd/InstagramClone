@@ -8,9 +8,13 @@ import { useMutation } from "@apollo/client";
 import profileImg from "../assets/profileimg.jpg";
 
 export default function UserContainer({ user }) {
+  //HOOKS
   const [isFollowing, follow] = useState(false);
+
+  // MUTATIONS && QUERIES
   const [followUser, { data, error, loading }] = useMutation(FOLLOW_USER);
 
+  // COMPONENT METHODS
   const onButtonClick = () => {
     follow(true);
     followUser({ variables: { input: user._id } }).then((res) =>
@@ -18,6 +22,7 @@ export default function UserContainer({ user }) {
     );
   };
 
+  // ERROR HANDLING
   if (loading) return "Loading...";
   if (error) return error;
 

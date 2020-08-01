@@ -11,17 +11,18 @@ import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../helpers/token";
 import { FaTimes, FaGithub } from "react-icons/fa";
 
-//client.resetStore()
-
 export default function Login({ history }) {
+  // HOOKS
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
-  const { register, handleSubmit, errors } = useForm();
-  const [logUser, { data, loading, error }] = useMutation(LOGIN_USER);
-
   const handleInput = (e) => {
     setValue(e.target.value);
   };
+
+  // MUTATIONS && QUERIES
+
+  const { register, handleSubmit, errors } = useForm();
+  const [logUser, { data, loading, error }] = useMutation(LOGIN_USER);
 
   useEffect(() => {
     if (value !== "") {
@@ -31,6 +32,7 @@ export default function Login({ history }) {
     }
   }, [value]);
 
+  // COMPONENT METHODS
   const onSubmit = (formData) => {
     logUser({
       variables: {
@@ -47,13 +49,9 @@ export default function Login({ history }) {
     });
   };
 
-  if (error) {
-    return (
-      <div>
-        <h1>{`${error}`}</h1>
-      </div>
-    );
-  }
+  // ERROR HANDLING
+  if (loading) return "Loading...";
+  if (error) return error;
 
   return (
     <MainContainer>
