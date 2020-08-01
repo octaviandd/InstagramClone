@@ -123,11 +123,13 @@ const commentSchema = new Schema(
       type: String,
       required: true,
     },
-    likes: {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    likes: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
   },
   {
     collection: "Comments",

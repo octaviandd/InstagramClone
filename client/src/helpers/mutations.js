@@ -113,7 +113,7 @@ export const UNFOLLOW_USER = gql`
 `;
 
 export const LIKE_POST = gql`
-  mutation LikePost($input: ID!) {
+  mutation LikePost($input: NewLikeInput!) {
     likePost(input: $input) {
       _id
     }
@@ -121,7 +121,7 @@ export const LIKE_POST = gql`
 `;
 
 export const UNLIKE_POST = gql`
-  mutation UnlikePost($input: ID!) {
+  mutation UnlikePost($input: NewUnlikeInput!) {
     unlikePost(input: $input) {
       _id
     }

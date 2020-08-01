@@ -53,10 +53,10 @@ const typeDefs = gql`
     createUser(input: SignupInput!): AuthUser!
     loginUser(input: SigninInput!): AuthUser!
     createComment(input: NewCommentInput!): Comment!
-    likePost(input: ID!): Post!
+    likePost(input: NewLikeInput!): Post
     likeComment(input: ID!): Comment!
     followUser(input: ID!): User!
-    unlikePost(input: ID!): Post!
+    unlikePost(input: NewUnlikeInput!): Post
   }
 
   # USER && AUTH
@@ -107,6 +107,16 @@ const typeDefs = gql`
   input NewCommentInput {
     content: String!
     _id: ID!
+  }
+
+  input NewLikeInput {
+    userID: ID!
+    postID: ID!
+  }
+
+  input NewUnlikeInput {
+    userID: ID!
+    postID: ID!
   }
 
   # POST && COMMENT INPUT

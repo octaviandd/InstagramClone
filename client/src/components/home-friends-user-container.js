@@ -30,7 +30,9 @@ export default function UserContainer({ user }) {
           </Link>
           <Link to={`/profile/${user._id}`}>{user.username}</Link>
         </div>
-        <button onClick={() => onButtonClick()}>Follow</button>
+        <button onClick={() => onButtonClick()}>
+          {isFollowing ? `Following` : `Follow`}
+        </button>
       </div>
     </MainContainer>
   );
@@ -47,17 +49,8 @@ const MainContainer = styled.div`
       font-weight: bold;
       font-size: 12px;
       cursor: pointer;
-      ${({ active }) => active && `display:none`}
     }
 
-    button:after {
-      content: "√";
-      position: absolute;
-      left: 12.5px;
-      display: none;
-      transition: all 0.3s ease-in;
-      ${({ active }) => active && `display:block`}
-    }
     div {
       a {
         text-decoration: none;

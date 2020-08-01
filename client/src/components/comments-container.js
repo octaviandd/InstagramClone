@@ -41,9 +41,8 @@ export default function CommentsContainer({
   }, [content]);
 
   const onSubmit = (formData) => {
-    console.log(formData);
     createComment({
-      variables: { input: { content: formData.content, id: id } },
+      variables: { input: { content: formData.content, _id: id } },
     }).then((res) => {
       setComments(res);
     });
@@ -61,13 +60,13 @@ export default function CommentsContainer({
             <Link to={`/profile/${author}`}>{username}</Link>
             <span>{description}</span>
           </div>
-          {data.getPostComments &&
+          {data &&
             data.getPostComments.map((comment) => {
               return (
-                <Comments key={comment.id}>
+                <Comments key={comment._id}>
                   <div>
-                    <Link to={`/profile/${comment.author.id}`}>
-                      {comment.author.username}
+                    <Link to={`/profile/${comment.author._id}`}>
+                      <span>{comment.author.username}</span>
                     </Link>
                     <span>{comment.content}</span>
                   </div>

@@ -87,7 +87,15 @@ export const GET_CURRENT_USER = gql`
 export const GET_USER_POSTS = gql`
   query GetPosts($input: ID!) {
     getUserPosts(input: $input) {
+      _id
       picture
+      description
+      author {
+        _id
+      }
+      comments {
+        _id
+      }
     }
   }
 `;
@@ -108,6 +116,10 @@ export const GET_ALL_POSTS = gql`
       }
       comments {
         _id
+        content
+        author {
+          _id
+        }
       }
     }
   }

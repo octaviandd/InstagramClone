@@ -9,7 +9,6 @@ import { useMutation } from "@apollo/client";
 
 export default function PostContainer(post) {
   const [isLiked, likePost] = useState(false);
-  console.log(post);
 
   //MUTATIONS AND QUERIES
 
@@ -59,7 +58,7 @@ export default function PostContainer(post) {
         </div>
       </RowTow>
       <RowThree>
-        <ButtonsContainer isLiked={isLiked}>
+        <ButtonsContainer isLiked={isLiked} onClick={() => likePostMethod()}>
           <div>
             <button>
               <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
@@ -92,11 +91,14 @@ export default function PostContainer(post) {
         <LikesContainer>
           <a href="">
             <span>
-              {post.post.likes.length > 0 && `${post.post.likes.length} likes`}
+              {post.post.likes.length === 1
+                ? `${post.post.likes.length} like`
+                : `${post.post.likes.length} likes`}
             </span>
           </a>
         </LikesContainer>
         <CommentsContainer
+          postComments={post.post.comments}
           id={post.post._id}
           username={post.post.author.username}
           author={post.post.author._id}

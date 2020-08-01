@@ -6,6 +6,13 @@ import AWS from "aws-sdk";
 const config = require("./s3");
 const { extname } = require("path");
 const salt = 10;
+import mongoose from "mongoose";
+
+const ObjectId = mongoose.Types.ObjectId;
+
+ObjectId.prototype.valueOf = function () {
+  return this.toString();
+};
 
 const resolvers = {
   Query: {
@@ -43,7 +50,10 @@ const resolvers = {
       return newUsers;
     }),
     getAllPosts: authenticated(async (_, __, { models }) => {
-      const posts = await models.Post.find().populate("author");
+      const posts = await models.Post.find()
+        .populate("author")
+        .populate("comments");
+
       return posts;
     }),
     getPost: authenticated(async (_, { input }, { models }) => {
@@ -51,13 +61,15 @@ const resolvers = {
       return foundPost;
     }),
     getPostComments: authenticated(async (_, { input }, { models }) => {
-      const newComments = await models.Comment.find()
-        .populate("parentPost")
-        .populate("author");
-      const foundComments = newComments.filter(
-        (comment) => comment.parentPost._id === input
+      const allComments = await models.Comment.find({})
+        .populate("author")
+        .populate("parentPost");
+
+      const comments = allComments.filter(
+        (comment) => comment.parentPost._id.toString() === input
       );
-      return foundComments;
+
+      return comments;
     }),
   },
 
@@ -97,7 +109,6 @@ const resolvers = {
         followers: [],
         following: [],
       });
-      console.log(user);
       const token = createToken(user);
       user.save();
       return { user, token };
@@ -140,9 +151,9 @@ const resolvers = {
     createComment: authenticated(async (_, { input }, { models, user }) => {
       const parentUser = await models.User.findOne({ _id: user.id });
       const parentPost = await models.Post.findOne({
-        _id: input.id,
+        _id: input._id,
       });
-      const comment = new models.Comment({
+      const comment = await new models.Comment({
         content: input.content,
         author: parentUser,
         parentPost: parentPost,
@@ -150,7 +161,17 @@ const resolvers = {
         likes: [],
       });
 
-      comment.save();
+      await comment.save();
+
+      const findComment = await models.Comment.findOne({ _id: comment._id });
+      parentPost.updateOne(
+        { $addToSet: { comments: findComment } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) consolole.log(err);
+          return res;
+        }
+      );
       return comment;
     }),
     followUser: authenticated(async (_, { input }, { models, user }) => {
@@ -198,12 +219,11 @@ const resolvers = {
 
       return userToBeUnfollowed;
     }),
-    likePost: authenticated(async (_, { postID, userID }, { models, user }) => {
+    likePost: authenticated(async (_, { input }, { models, user }) => {
       const currentUser = await models.User.findOne({ _id: user.id });
-      const parentUser = await models.User.findOne({ _id: userID });
 
-      const postToBeLiked = models.Post.updateOne(
-        { _id: postID },
+      const postToBeLiked = await models.Post.findOneAndUpdate(
+        { _id: input.postID },
         { $addToSet: { likes: currentUser } },
         { useFindAndModify: false, new: true },
         (err, res) => {
@@ -229,15 +249,6 @@ const resolvers = {
       return postToBeUnliked;
     }),
   },
-
-  // Post: {
-  //   comments: async (parent, _, { models }) => {
-  //     console.log("hello");
-  //     const foundComments = await models.Comment.find({});
-  //     console.log(foundComments);
-  //     return foundComments;
-  //   },
-  // },
 };
 
 module.exports = resolvers;
