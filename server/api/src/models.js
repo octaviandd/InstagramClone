@@ -36,10 +36,10 @@ const userSchema = new Schema(
         required: true,
       },
     ],
-    comments: [
+    likedPosts: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Comment",
+        ref: "Post",
         required: true,
       },
     ],

@@ -108,7 +108,7 @@ const resolvers = {
         createdAt: Date.now(),
         posts: [],
         images: [],
-        comments: [],
+        likedPosts: [],
         followers: [],
         following: [],
       });
@@ -235,15 +235,33 @@ const resolvers = {
         }
       );
 
+      currentUser.updateOne(
+        { $addToSet: { likedPosts: postToBeLiked } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+
       return postToBeLiked;
     }),
     unlikePost: authenticated(async (_, { input }, { models, user }) => {
       const currentUser = await models.User.findOne({ _id: user.id });
 
-      const postToBeUnliked = models.Post.updateOne(
-        { _id: input },
+      const postToBeUnliked = await models.Post.findOneAndUpdate(
+        { _id: input.postID },
         { $pull: { likes: currentUser._id } },
-        (err, res) => {
+        { useFindAndModify: false, new: true },
+        function (err, res) {
+          if (err) console.log(err);
+          return res;
+        }
+      );
+      await currentUser.updateOne(
+        { $pull: { likedPosts: postToBeUnliked._id } },
+        { useFindAndModify: false, new: true },
+        function (err, res) {
           if (err) console.log(err);
           return res;
         }

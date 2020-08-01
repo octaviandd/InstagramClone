@@ -2,6 +2,11 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
+  enum Role {
+    OWNER
+    MEMBER
+  }
+
   type Image {
     _id: ID!
     url: String!
@@ -69,10 +74,11 @@ const typeDefs = gql`
     createdAt: String!
     age: Int!
     posts: [Post]!
-    comments: [Comment]!
+    likedPosts: [Post]!
     images: [Image]!
     followers: [User]!
     following: [User]!
+    role: Role!
   }
 
   type AuthUser {

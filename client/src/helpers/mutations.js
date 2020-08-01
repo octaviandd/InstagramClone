@@ -14,7 +14,7 @@ export const NEW_USER = gql`
           _id
         }
         createdAt
-        comments {
+        likedPosts {
           _id
         }
         posts {
@@ -60,7 +60,7 @@ export const LOGIN_USER = gql`
         posts {
           _id
         }
-        comments {
+        likedPosts {
           _id
         }
       }

@@ -16,7 +16,7 @@ export const GET_USERS = gql`
       posts {
         _id
       }
-      comments {
+      likedPosts {
         _id
       }
       followers {
@@ -44,7 +44,7 @@ export const GET_USER_BY_ID = gql`
         _id
         picture
       }
-      comments {
+      likedPosts {
         _id
       }
       following {
@@ -71,7 +71,7 @@ export const GET_CURRENT_USER = gql`
       posts {
         _id
       }
-      comments {
+      likedPosts {
         _id
       }
       following {
