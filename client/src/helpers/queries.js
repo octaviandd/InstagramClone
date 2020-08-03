@@ -10,9 +10,7 @@ export const GET_USERS = gql`
       username
       email
       createdAt
-      images {
-        _id
-      }
+      avatar
       posts {
         _id
       }
@@ -37,9 +35,7 @@ export const GET_USER_BY_ID = gql`
       email
       username
       createdAt
-      images {
-        _id
-      }
+      avatar
       posts {
         _id
         picture
@@ -65,9 +61,7 @@ export const GET_CURRENT_USER = gql`
       email
       username
       createdAt
-      images {
-        _id
-      }
+      avatar
       posts {
         _id
       }

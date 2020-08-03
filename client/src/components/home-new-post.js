@@ -1,11 +1,12 @@
 /** @format */
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import { NEW_POST, SINGLE_UPLOAD } from "../helpers/mutations";
+import { NEW_POST, SINGLE_UPLOAD, NEW_USER } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { FaPlusCircle, FaTimes } from "react-icons/fa";
+import { GET_ALL_POSTS } from "../helpers/queries";
 
 export default function HomeNewPost() {
   // HOOKS
@@ -14,9 +15,15 @@ export default function HomeNewPost() {
   const [picture, addPicture] = useState("");
 
   // MUTATIONS && QUERIES
-  const [createPost, { postData, postError, postLoading }] = useMutation(
-    NEW_POST
-  );
+  const [createPost] = useMutation(NEW_POST, {
+    update(cache, { data: { createPost } }) {
+      const data = cache.readQuery({ query: GET_ALL_POSTS });
+      cache.writeQuery({
+        query: GET_ALL_POSTS,
+        data: { results: [createPost, ...data.results] },
+      });
+    },
+  });
   const [uploadPicture, { data, error, loading }] = useMutation(SINGLE_UPLOAD);
 
   // COMPONENT METHODS

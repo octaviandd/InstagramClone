@@ -62,6 +62,7 @@ const typeDefs = gql`
     likeComment(input: ID!): Comment!
     followUser(input: ID!): User!
     unlikePost(input: NewUnlikeInput!): Post
+    changeAvatar(file: Upload!): File!
   }
 
   # USER && AUTH
@@ -73,12 +74,13 @@ const typeDefs = gql`
     username: String!
     createdAt: String!
     age: Int!
+    avatar: String!
     posts: [Post]!
     likedPosts: [Post]!
     images: [Image]!
     followers: [User]!
     following: [User]!
-    role: Role!
+    # role: Role!
   }
 
   type AuthUser {

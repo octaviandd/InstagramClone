@@ -1,19 +1,41 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import profileImg from "../assets/profileimg.jpg";
 import { GET_CURRENT_USER, GET_USER_BY_ID } from "../helpers/queries";
 import { useQuery, useMutation } from "@apollo/client";
-import { FOLLOW_USER, UNFOLLOW_USER } from "../helpers/mutations";
+import { useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
+import { FaTimes } from "react-icons/fa";
+import {
+  FOLLOW_USER,
+  UNFOLLOW_USER,
+  CHANGE_AVATAR,
+} from "../helpers/mutations";
 import Navbar from "../components/navbar";
 
 export default function Profile(props) {
   //HOOKS
   const [isFollowing, follow] = useState(false);
-  const { data, loading, error } = useQuery(GET_CURRENT_USER);
+  const [isActive, setActive] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
+  const [picture, addPicture] = useState("");
 
-  //MUTATIONS
+  //MUTATIONS && QUERIES
+  const { data, loading, error } = useQuery(GET_CURRENT_USER);
+  const { data: data2, loading: loading2, error: error2 } = useQuery(
+    GET_USER_BY_ID,
+    {
+      variables: { input: props.match.params.id },
+    }
+  );
+
+  const [
+    changeUserAvatar,
+    { data: avatarData, loading: avatarLoading, error: avatarError },
+  ] = useMutation(CHANGE_AVATAR);
+
   const [
     followUser,
     { data: data1, error: error1, loading: loading1 },
@@ -24,44 +46,91 @@ export default function Profile(props) {
     { data: data3, error: error3, loading: loading3 },
   ] = useMutation(UNFOLLOW_USER);
 
-  //QUERIES
-  const { data: data2, loading: loading2, error: error2 } = useQuery(
-    GET_USER_BY_ID,
-    {
-      variables: { input: props.match.params.id },
-    }
+  // COMPONENT METHODS
+
+  const onDrop = useCallback(
+    ([file]) => {
+      changeUserAvatar({ variables: { file } }).then((res) => {
+        addPicture(res.data.changeUserAvatar.uri);
+      });
+    },
+    [changeUserAvatar]
   );
 
-  //ERROR HANDLING + LOADING HANDLERS
-
-  if ((loading, loading1, loading2)) return "Loading...";
-  if ((error, error1, error2))
-    return `Error! ${error2.message || error1.message || error3.message}`;
-
-  //DESTRUCTURING
-
-  const { followers, following, username, posts, _id: newId } = data2.results;
-
-  // COMPONENT METHODS
+  const onSubmit = async (formData) => {
+    changeUserAvatar({
+      variables: {
+        input: {
+          picture: picture,
+        },
+      },
+    });
+    setActive(!isActive);
+  };
 
   const followTheUser = () => {
     followUser({ variables: { input: newId } }).then((res) => console.log(res));
   };
 
   const unfollowTheUser = () => {
-    console.log("FIRING");
     unfollowUser({ variables: { input: newId } }).then((res) =>
       console.log(res)
     );
   };
 
+  //DESTRUCTURING
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  //ERROR HANDLING + LOADING HANDLERS
+
+  if ((error, error1, error2))
+    return `Error! ${error2.message || error1.message || error3.message}`;
+  if ((loading, loading1, loading2)) return "Loading...";
+
+  const {
+    followers,
+    following,
+    username,
+    posts,
+    _id: newId,
+    avatar,
+  } = data2.results;
+
+  console.log(avatar);
+
   return (
     <>
       <Navbar></Navbar>
       <MainContainer>
+        {isActive && (
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            encType={"multipart/form-data"}
+          >
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the files here ...</p>
+              ) : (
+                <p>Drag 'n' drop some files here, or click to select files</p>
+              )}
+            </div>
+            <textarea
+              rows="5"
+              cols="33"
+              name="description"
+              ref={register({ required: true, minLength: 6 })}
+            />
+            <button type="submit">Submit</button>
+            <span onClick={() => setActive(!isActive)}>
+              <FaTimes />
+            </span>
+          </form>
+        )}
         <RowOne>
           <div>
-            <img src={profileImg} width="150" height="150" />
+            <img src={`${avatar}`} width="150" height="150" />
           </div>
           <div>
             <div>
@@ -85,21 +154,19 @@ export default function Profile(props) {
                   )}
                 </div>
               ) : (
-                <button>
-                  <a href="#">
-                    <svg
-                      fill="#262626"
-                      height="24"
-                      viewBox="0 0 48 48"
-                      width="24"
-                    >
-                      <path
-                        clipRule="evenodd"
-                        d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6 0-1.1.3-1.3.8l-1.1 2.2c-.2.4-.5.7-1 .8-1.6.5-3.2 1.1-4.6 1.9-.4.2-.8.3-1.2.1l-2.3-.8c-.5-.2-1.1 0-1.5.4L5.9 8.8c-.4.4-.5 1-.4 1.5l.8 2.3c.1.4.1.8-.1 1.2-.8 1.5-1.5 3-1.9 4.7-.1.4-.4.8-.8 1l-2.1 1.1c-.5.3-.8.8-.8 1.3V26c0 .6.3 1.1.8 1.3l2.1 1.1c.4.2.7.5.8 1 .5 1.6 1.1 3.2 1.9 4.7.2.4.3.8.1 1.2l-.8 2.3c-.2.5 0 1.1.4 1.5L8.8 42c.4.4 1 .5 1.5.4l2.3-.8c.4-.1.8-.1 1.2.1 1.4.8 3 1.5 4.6 1.9.4.1.8.4 1 .8l1.1 2.2c.3.5.8.8 1.3.8h4.1c.6 0 1.1-.3 1.3-.8l1.1-2.2c.2-.4.5-.7 1-.8 1.6-.5 3.2-1.1 4.6-1.9.4-.2.8-.3 1.2-.1l2.3.8c.5.2 1.1 0 1.5-.4l2.9-2.9c.4-.4.5-1 .4-1.5l-.8-2.3c-.1-.4-.1-.8.1-1.2.8-1.5 1.5-3 1.9-4.7.1-.4.4-.8.8-1l2.1-1.1c.5-.3.8-.8.8-1.3v-4.1c.4-.5.1-1.1-.4-1.3zM24 41.5c-9.7 0-17.5-7.8-17.5-17.5S14.3 6.5 24 6.5 41.5 14.3 41.5 24 33.7 41.5 24 41.5z"
-                        fillRule="evenodd"
-                      ></path>
-                    </svg>
-                  </a>
+                <button onClick={() => setActive(true)}>
+                  <svg
+                    fill="#262626"
+                    height="24"
+                    viewBox="0 0 48 48"
+                    width="24"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6 0-1.1.3-1.3.8l-1.1 2.2c-.2.4-.5.7-1 .8-1.6.5-3.2 1.1-4.6 1.9-.4.2-.8.3-1.2.1l-2.3-.8c-.5-.2-1.1 0-1.5.4L5.9 8.8c-.4.4-.5 1-.4 1.5l.8 2.3c.1.4.1.8-.1 1.2-.8 1.5-1.5 3-1.9 4.7-.1.4-.4.8-.8 1l-2.1 1.1c-.5.3-.8.8-.8 1.3V26c0 .6.3 1.1.8 1.3l2.1 1.1c.4.2.7.5.8 1 .5 1.6 1.1 3.2 1.9 4.7.2.4.3.8.1 1.2l-.8 2.3c-.2.5 0 1.1.4 1.5L8.8 42c.4.4 1 .5 1.5.4l2.3-.8c.4-.1.8-.1 1.2.1 1.4.8 3 1.5 4.6 1.9.4.1.8.4 1 .8l1.1 2.2c.3.5.8.8 1.3.8h4.1c.6 0 1.1-.3 1.3-.8l1.1-2.2c.2-.4.5-.7 1-.8 1.6-.5 3.2-1.1 4.6-1.9.4-.2.8-.3 1.2-.1l2.3.8c.5.2 1.1 0 1.5-.4l2.9-2.9c.4-.4.5-1 .4-1.5l-.8-2.3c-.1-.4-.1-.8.1-1.2.8-1.5 1.5-3 1.9-4.7.1-.4.4-.8.8-1l2.1-1.1c.5-.3.8-.8.8-1.3v-4.1c.4-.5.1-1.1-.4-1.3zM24 41.5c-9.7 0-17.5-7.8-17.5-17.5S14.3 6.5 24 6.5 41.5 14.3 41.5 24 33.7 41.5 24 41.5z"
+                      fillRule="evenodd"
+                    ></path>
+                  </svg>
                 </button>
               )}
             </div>
@@ -150,6 +217,7 @@ export default function Profile(props) {
 }
 
 const MainContainer = styled.div`
+  position: relative;
   background-color: #fafafa;
   display: flex;
   justify-content: center;

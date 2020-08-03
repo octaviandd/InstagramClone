@@ -10,9 +10,7 @@ export const NEW_USER = gql`
         name
         username
         email
-        images {
-          _id
-        }
+        avatar
         createdAt
         likedPosts {
           _id
@@ -72,6 +70,17 @@ export const LOGIN_USER = gql`
 export const SINGLE_UPLOAD = gql`
   mutation($file: Upload!) {
     singleUpload(file: $file) {
+      filename
+      mimetype
+      encoding
+      uri
+    }
+  }
+`;
+
+export const CHANGE_AVATAR = gql`
+  mutation($file: Upload!) {
+    changeAvatar(file: $file) {
       filename
       mimetype
       encoding

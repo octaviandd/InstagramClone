@@ -46,8 +46,6 @@ export default function PostContainer(post) {
   if (error || error1 || error2) return error || error1 || error2;
   if (loading || loading1 || loading2) return "Loading...";
 
-  console.log(data2.results.likedPosts.some((el) => el._id === post.post._id));
-
   return (
     <Container>
       <RowOne>

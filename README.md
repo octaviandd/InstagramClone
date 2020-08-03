@@ -19,6 +19,7 @@ Available routes:
 - `/register - Public Route`
 - `/profile/* - Private Route`
 - `/post/* - Private Route` -> Not completed
+- `/explore` -> Not completed
 
 # Technologies
 
@@ -50,6 +51,29 @@ Available routes:
 
   cd server - npm start
   cd client - npm start
+```
+
+## Functionality
+
+```
+ - createUser
+ - editUser
+ - getUser
+ - getUsers
+ - createPost
+ - getPost
+ - getPosts
+ - createComment
+ - getComment
+ - getComments
+ - likePost
+ - unlikePost
+ - likeComment
+ - unlikeComment
+ - followUser
+ - unfollowUser
+ - uploadPicture(AWS S3)
+
 ```
 
 ## Used packages and tools

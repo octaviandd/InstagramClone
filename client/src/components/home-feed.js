@@ -34,7 +34,7 @@ export default function HomeFeed() {
   if (loading) return "Loading..";
 
   //DESTRUCTURING
-  const { following } = data2.results;
+  const { following, _id: currentUserID } = data2.results;
   const postsArray = data.results;
 
   const newArr = postsArray.slice();
@@ -44,8 +44,10 @@ export default function HomeFeed() {
     <MainContainer>
       {newArr &&
         newArr
-          .filter((user) =>
-            following.find(({ _id }) => user.author._id === _id)
+          .filter(
+            (user) =>
+              following.find(({ _id }) => user.author._id === _id) ||
+              user._id !== currentUserID
           )
           .map((post) => {
             return <PostContainer key={post._id} post={post && post} />;

@@ -22,13 +22,22 @@ export default function CommentsContainer({
 
   // MUTATIONS && QUERIES
 
-  const [
-    createComment,
-    { data: data2, loading: loading2, error: error2 },
-  ] = useMutation(NEW_COMMENT);
-
   const { data, loading, error } = useQuery(GET_POST_COMMENTS, {
     variables: { input: id },
+  });
+  const [createComment] = useMutation(NEW_COMMENT, {
+    update(cache, { data: { createComment } }) {
+      const data = cache.readQuery({
+        query: GET_POST_COMMENTS,
+        variables: { input: id },
+      });
+      console.log(data);
+      cache.writeQuery({
+        query: GET_POST_COMMENTS,
+        variables: { input: id },
+        data: { results: [createComment, ...data.results] },
+      });
+    },
   });
 
   // COMPONENT METHODS

@@ -1,6 +1,6 @@
 /** @format */
 import { nanoid } from "nanoid";
-import { authenticated } from "./auth";
+import { authenticated, authorized } from "./auth";
 import bcrypt from "bcrypt";
 import AWS from "aws-sdk";
 const config = require("./s3");
@@ -12,16 +12,7 @@ const resolvers = {
     getMe: authenticated(async (_, __, { user, models }) => {
       const presentUser = await models.User.findOne({ _id: user.id }).populate({
         path: "following",
-        populate: {
-          path: "posts",
-          populate: {
-            path: "author",
-            path: "comments",
-            populate: { path: "author" },
-          },
-        },
       });
-
       return presentUser;
     }),
     getUserById: authenticated(async (_, { input }, { models }) => {
@@ -77,6 +68,25 @@ const resolvers = {
   },
 
   Mutation: {
+    changeAvatar: authenticated(async (_, { file }) => {
+      const { encoding, filename, mimetype, createReadStream } = await file;
+      const s3 = new AWS.S3(config.s3);
+
+      const { Location } = await s3
+        .upload({
+          Body: createReadStream(),
+          Key: `${nanoid()}${extname(filename)}`,
+          ContentType: mimetype,
+        })
+        .promise();
+
+      return {
+        filename,
+        mimetype,
+        encoding,
+        uri: Location,
+      };
+    }),
     singleUpload: authenticated(async (_, { file }) => {
       const { encoding, filename, mimetype, createReadStream } = await file;
       const s3 = new AWS.S3(config.s3);
@@ -106,12 +116,15 @@ const resolvers = {
         email: input.email,
         username: input.username,
         createdAt: Date.now(),
+        avatar:
+          "https://instagramcopy-octavian.s3.eu-central-1.amazonaws.com/profileimg.jpg",
         posts: [],
         images: [],
         likedPosts: [],
         followers: [],
         following: [],
       });
+
       const token = createToken(user);
       user.save();
       return { user, token };
