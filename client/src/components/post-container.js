@@ -42,15 +42,11 @@ export default function PostContainer(post) {
 
   // COMPONENT METHODS
   const likePostMethod = async () => {
-    await likePost({ variables: { input: post.post._id } }).then((res) =>
-      console.log(res)
-    );
+    await likePost({ variables: { input: post.post._id } });
   };
 
   const unlikePostMethod = async () => {
-    await unlikePost({ variables: { input: post.post._id } }).then((res) =>
-      console.log(res)
-    );
+    await unlikePost({ variables: { input: post.post._id } });
   };
 
   // ERROR HANDLING

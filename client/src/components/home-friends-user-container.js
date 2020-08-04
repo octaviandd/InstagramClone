@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FOLLOW_USER } from "../helpers/mutations";
+import { GET_USERS } from "../helpers/queries";
 import { useMutation } from "@apollo/client";
 import profileImg from "../assets/profileimg.jpg";
 
@@ -12,7 +13,16 @@ export default function UserContainer({ user }) {
   const [isFollowing, follow] = useState(false);
 
   // MUTATIONS && QUERIES
-  const [followUser, { data, error, loading }] = useMutation(FOLLOW_USER);
+  const [followUser, { data, error, loading }] = useMutation(FOLLOW_USER, {
+    update(cache, { data: { followUser } }) {
+      const data = cache.readQuery({ query: GET_USERS });
+      console.log(data);
+      cache.writeQuery({
+        query: GET_USERS,
+        data: { results: [followUser, ...data.results] },
+      });
+    },
+  });
 
   // COMPONENT METHODS
   const onButtonClick = () => {

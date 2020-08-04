@@ -68,7 +68,8 @@ const resolvers = {
   },
 
   Mutation: {
-    changeAvatar: authenticated(async (_, { file }) => {
+    changeAvatar: authenticated(async (_, { file }, { user, models }) => {
+      console.log(file);
       const { encoding, filename, mimetype, createReadStream } = await file;
       const s3 = new AWS.S3(config.s3);
 
@@ -79,6 +80,17 @@ const resolvers = {
           ContentType: mimetype,
         })
         .promise();
+
+      const currentUser = await models.User.findOneAndUpdate(
+        { _id: user.id },
+        { avatar: Location },
+        function (res, err) {
+          if (err) {
+            console.log(err);
+          }
+          return res;
+        }
+      );
 
       return {
         filename,

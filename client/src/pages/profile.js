@@ -33,15 +33,11 @@ export default function Profile(props) {
 
   const [changeAvatar] = useMutation(CHANGE_AVATAR, {
     update(cache, { data: { changeAvatar } }) {
-      const data = cache.readQuery({
-        query: GET_USER_BY_ID,
-        variables: { input: props.match.params.id },
-      });
+      const data = cache.readQuery({ query: GET_CURRENT_USER });
       console.log(data);
       cache.writeQuery({
-        query: GET_USER_BY_ID,
-        variables: { input: props.match.params.id },
-        data: { results: [changeAvatar, ...data.results] },
+        query: GET_CURRENT_USER,
+        data: { results: { avatar: changeAvatar } },
       });
     },
   });
@@ -62,14 +58,15 @@ export default function Profile(props) {
     ([file]) => {
       changeAvatar({ variables: { file } }).then((res) => {
         console.log(res);
-        addPicture(res.data.changeAvatar.uri);
+        addPicture(res.data.results.uri);
       });
     },
     [changeAvatar]
   );
 
   const onSubmit = async (formData) => {
-    changeAvatar({
+    console.log(picture);
+    await changeAvatar({
       variables: {
         input: {
           picture: picture,
@@ -125,12 +122,6 @@ export default function Profile(props) {
                 <p>Drag 'n' drop some files here, or click to select files</p>
               )}
             </div>
-            <textarea
-              rows="5"
-              cols="33"
-              name="description"
-              ref={register({ required: true, minLength: 6 })}
-            />
             <button type="submit">Submit</button>
             <span onClick={() => setActive(!isActive)}>
               <FaTimes />
