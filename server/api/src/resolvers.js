@@ -237,9 +237,8 @@ const resolvers = {
     }),
     likePost: authenticated(async (_, { input }, { models, user }) => {
       const currentUser = await models.User.findOne({ _id: user.id });
-
       const postToBeLiked = await models.Post.findOneAndUpdate(
-        { _id: input.postID },
+        { _id: input },
         { $addToSet: { likes: currentUser } },
         { useFindAndModify: false, new: true },
         (err, res) => {
@@ -263,7 +262,7 @@ const resolvers = {
       const currentUser = await models.User.findOne({ _id: user.id });
 
       const postToBeUnliked = await models.Post.findOneAndUpdate(
-        { _id: input.postID },
+        { _id: input },
         { $pull: { likes: currentUser._id } },
         { useFindAndModify: false, new: true },
         function (err, res) {

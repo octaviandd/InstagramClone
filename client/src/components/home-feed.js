@@ -25,9 +25,7 @@ export default function HomeFeed() {
   // HOOKS
 
   const { data, error, loading } = useQuery(GET_ALL_POSTS);
-  const { data: data2, error: error2, loading: loading2 } = useQuery(
-    GET_CURRENT_USER
-  );
+  const { data: data2 } = useQuery(GET_CURRENT_USER);
 
   // ERROR HANDLING
   if (error) return error;

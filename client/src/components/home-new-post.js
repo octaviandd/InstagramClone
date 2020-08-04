@@ -1,7 +1,7 @@
 /** @format */
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import { NEW_POST, SINGLE_UPLOAD, NEW_USER } from "../helpers/mutations";
+import { NEW_POST, SINGLE_UPLOAD } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
@@ -18,6 +18,7 @@ export default function HomeNewPost() {
   const [createPost] = useMutation(NEW_POST, {
     update(cache, { data: { createPost } }) {
       const data = cache.readQuery({ query: GET_ALL_POSTS });
+      console.log(data);
       cache.writeQuery({
         query: GET_ALL_POSTS,
         data: { results: [createPost, ...data.results] },
@@ -29,7 +30,19 @@ export default function HomeNewPost() {
   // COMPONENT METHODS
   const onDrop = useCallback(
     ([file]) => {
-      uploadPicture({ variables: { file } }).then((res) => {
+      uploadPicture({
+        variables: { file },
+        optimisticResponse: {
+          __typename: "Mutations",
+          singleUpload: {
+            __typename: "File",
+            filename: "astring",
+            mimetype: "astring",
+            encoding: "astring",
+            uri: "astring",
+          },
+        },
+      }).then((res) => {
         addPicture(res.data.singleUpload.uri);
       });
     },
@@ -53,7 +66,6 @@ export default function HomeNewPost() {
 
   // ERROR HANDLING
   if (error) return error;
-  if (loading) return "Loading..";
 
   return (
     <MainContainer>

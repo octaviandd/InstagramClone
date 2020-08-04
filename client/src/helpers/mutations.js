@@ -80,7 +80,7 @@ export const SINGLE_UPLOAD = gql`
 
 export const CHANGE_AVATAR = gql`
   mutation($file: Upload!) {
-    changeAvatar(file: $file) {
+    results: changeAvatar(file: $file) {
       filename
       mimetype
       encoding
@@ -122,7 +122,7 @@ export const UNFOLLOW_USER = gql`
 `;
 
 export const LIKE_POST = gql`
-  mutation LikePost($input: NewLikeInput!) {
+  mutation LikePost($input: ID!) {
     likePost(input: $input) {
       _id
     }
@@ -130,7 +130,7 @@ export const LIKE_POST = gql`
 `;
 
 export const UNLIKE_POST = gql`
-  mutation UnlikePost($input: NewUnlikeInput!) {
+  mutation UnlikePost($input: ID!) {
     unlikePost(input: $input) {
       _id
     }

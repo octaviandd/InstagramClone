@@ -31,10 +31,20 @@ export default function Profile(props) {
     }
   );
 
-  const [
-    changeUserAvatar,
-    { data: avatarData, loading: avatarLoading, error: avatarError },
-  ] = useMutation(CHANGE_AVATAR);
+  const [changeAvatar] = useMutation(CHANGE_AVATAR, {
+    update(cache, { data: { changeAvatar } }) {
+      const data = cache.readQuery({
+        query: GET_USER_BY_ID,
+        variables: { input: props.match.params.id },
+      });
+      console.log(data);
+      cache.writeQuery({
+        query: GET_USER_BY_ID,
+        variables: { input: props.match.params.id },
+        data: { results: [changeAvatar, ...data.results] },
+      });
+    },
+  });
 
   const [
     followUser,
@@ -50,15 +60,16 @@ export default function Profile(props) {
 
   const onDrop = useCallback(
     ([file]) => {
-      changeUserAvatar({ variables: { file } }).then((res) => {
-        addPicture(res.data.changeUserAvatar.uri);
+      changeAvatar({ variables: { file } }).then((res) => {
+        console.log(res);
+        addPicture(res.data.changeAvatar.uri);
       });
     },
-    [changeUserAvatar]
+    [changeAvatar]
   );
 
   const onSubmit = async (formData) => {
-    changeUserAvatar({
+    changeAvatar({
       variables: {
         input: {
           picture: picture,
@@ -96,8 +107,6 @@ export default function Profile(props) {
     _id: newId,
     avatar,
   } = data2.results;
-
-  console.log(avatar);
 
   return (
     <>
