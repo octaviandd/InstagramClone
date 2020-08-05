@@ -168,6 +168,10 @@ export const GET_POST = gql`
       _id
       picture
       createdAt
+      likes {
+        _id
+      }
+      description
       author {
         _id
         username
