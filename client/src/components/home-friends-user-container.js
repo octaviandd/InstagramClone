@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FOLLOW_USER } from "../helpers/mutations";
-import { GET_USERS } from "../helpers/queries";
+import { GET_CURRENT_USER } from "../helpers/queries";
 import { useMutation } from "@apollo/client";
-import profileImg from "../assets/profileimg.jpg";
 
 export default function UserContainer({ user }) {
   //HOOKS
@@ -15,11 +14,12 @@ export default function UserContainer({ user }) {
   // MUTATIONS && QUERIES
   const [followUser, { data, error, loading }] = useMutation(FOLLOW_USER, {
     update(cache, { data: { followUser } }) {
-      const data = cache.readQuery({ query: GET_USERS });
-      console.log(data);
+      const data = cache.readQuery({ query: GET_CURRENT_USER });
       cache.writeQuery({
-        query: GET_USERS,
-        data: { results: [followUser, ...data.results] },
+        query: GET_CURRENT_USER,
+        data: {
+          results: { following: [followUser, ...data.results.following] },
+        },
       });
     },
   });
@@ -27,9 +27,7 @@ export default function UserContainer({ user }) {
   // COMPONENT METHODS
   const onButtonClick = () => {
     follow(true);
-    followUser({ variables: { input: user._id } }).then((res) =>
-      console.log(res)
-    );
+    followUser({ variables: { input: user._id } });
   };
 
   // ERROR HANDLING
@@ -41,7 +39,7 @@ export default function UserContainer({ user }) {
       <div>
         <div>
           <Link to={`/profile/${user._id}`}>
-            <img src={profileImg}></img>
+            <img src={user.avatar}></img>
           </Link>
           <Link to={`/profile/${user._id}`}>{user.username}</Link>
         </div>
@@ -79,6 +77,7 @@ const MainContainer = styled.div`
           width: 30px;
           height: 30px;
           border-radius: 50%;
+          object-fit: cover;
         }
       }
       img {

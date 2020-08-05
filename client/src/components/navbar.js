@@ -2,18 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import profileImg from "../assets/profileimg.jpg";
 import { Link } from "react-router-dom";
-import { GET_USERS } from "../helpers/queries";
+import { GET_USERS, GET_CURRENT_USER } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import SearchBar from "./search-bar";
 
-export default function Navbar({ userID }) {
+export default function Navbar() {
   //HOOKS
   const [activeDropdown, activateDropdown] = useState(false);
   const [isSearchDropdownActive, setSearchDropdown] = useState(false);
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
+
+  const { data: data1 } = useQuery(GET_CURRENT_USER);
 
   // MUTATIONS && QUERIES
   const { data, loading, error } = useQuery(GET_USERS);
@@ -106,7 +107,7 @@ export default function Navbar({ userID }) {
           <div>
             <a onClick={() => activateDropdown(!activeDropdown)}>
               <span>
-                <img src={profileImg} alt="profile-icon" />
+                <img src={`${data1.results.avatar}`} alt="profile-icon" />
               </span>
             </a>
           </div>
@@ -115,7 +116,7 @@ export default function Navbar({ userID }) {
           <Dropdown>
             <ul>
               <li>
-                <Link to={`/profile/${userID}`}>
+                <Link to={`/profile/${data1.results._id}`}>
                   <div>
                     <span>
                       <svg
@@ -167,7 +168,7 @@ export default function Navbar({ userID }) {
                     <div key={user._id}>
                       <Link to={`/profile/${user._id}`}>
                         <div>
-                          <img src={profileImg} />
+                          <img src={user.avatar} />
                         </div>
                         <div>
                           <p>{user.username}</p>
@@ -231,6 +232,7 @@ const Icons = styled.div`
         width: 25px;
         height: 25px;
         border-radius: 50%;
+        object-fit: cover;
       }
     }
   }

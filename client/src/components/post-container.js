@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 import CommentsContainer from "../components/comments-container";
 import { LIKE_POST, UNLIKE_POST } from "../helpers/mutations";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../helpers/queries";
+import { GET_CURRENT_USER, GET_ALL_POSTS } from "../helpers/queries";
+import { timeDifference } from "../helpers/time-difference";
 
 export default function PostContainer(post) {
+  const [isOpen, openModal] = useState(false);
   //HOOKS
 
   //MUTATIONS AND QUERIES
@@ -19,6 +21,11 @@ export default function PostContainer(post) {
   const [likePost, { error, loading }] = useMutation(LIKE_POST, {
     update(cache, { data: { likePost } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
+      const data2 = cache.readQuery({ query: GET_ALL_POSTS });
+      cache.writeQuery({
+        query: GET_ALL_POSTS,
+        data: { results: { likePost, ...data2.results } },
+      });
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: {
@@ -31,6 +38,11 @@ export default function PostContainer(post) {
   const [unlikePost] = useMutation(UNLIKE_POST, {
     update(cache, { data: { unlikePost } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
+      const data2 = cache.readQuery({ query: GET_ALL_POSTS });
+      cache.writeQuery({
+        query: GET_ALL_POSTS,
+        data: { results: { likePost, ...data2.results } },
+      });
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: {
@@ -51,6 +63,8 @@ export default function PostContainer(post) {
 
   // ERROR HANDLING
 
+  const commentPostingTime = timeDifference(Date.now(), post.post.createdAt);
+
   if (error) return error;
   // if (loading || loading2) return "Loading...";
 
@@ -59,7 +73,7 @@ export default function PostContainer(post) {
       <RowOne>
         <div>
           <Link to={`profile/${post.post.author._id}`}>
-            <img src={post.post.picture} width="40" height="40" />
+            <img src={post.post.author.avatar} width="40" height="40" />
             <span>{post.post.author.username}</span>
           </Link>
         </div>
@@ -90,15 +104,17 @@ export default function PostContainer(post) {
                 </svg>
               </NotLikedButton>
             )}
-            <CommentsButton>
-              <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
-                <path
-                  clipRule="evenodd"
-                  d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
-            </CommentsButton>
+            <Link to={`post/${post.post._id}`}>
+              <CommentsButton>
+                <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
+                  <path
+                    clipRule="evenodd"
+                    d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z"
+                    fillRule="evenodd"
+                  ></path>
+                </svg>
+              </CommentsButton>
+            </Link>
             <button>
               <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
                 <path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z"></path>
@@ -130,6 +146,7 @@ export default function PostContainer(post) {
           username={post.post.author.username}
           author={post.post.author._id}
           description={post.post.description}
+          createdAt={post.post.createdAt}
         ></CommentsContainer>
       </RowThree>
     </Container>
@@ -142,6 +159,7 @@ const Container = styled.div`
   align-items: center;
   width: 100%;
   margin-top: 30px;
+  position: relative;
 `;
 
 const RowOne = styled.div`

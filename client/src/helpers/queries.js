@@ -127,12 +127,15 @@ export const GET_ALL_POSTS = gql`
       author {
         _id
         username
+        avatar
       }
       comments {
         _id
         content
         author {
           _id
+          avatar
+          username
         }
       }
     }
@@ -161,8 +164,24 @@ export const GET_POST_COMMENTS = gql`
 
 export const GET_POST = gql`
   query GetPost($input: ID!) {
-    getPost(input: $input) {
+    results: getPost(input: $input) {
       _id
+      picture
+      createdAt
+      author {
+        _id
+        username
+        avatar
+      }
+      comments {
+        _id
+        content
+        createdAt
+        author {
+          username
+          avatar
+        }
+      }
     }
   }
 `;

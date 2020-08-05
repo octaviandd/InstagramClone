@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import profileImg from "../assets/profileimg.jpg";
 import { GET_CURRENT_USER, GET_USER_BY_ID } from "../helpers/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { useDropzone } from "react-dropzone";
@@ -240,6 +239,7 @@ const RowOne = styled.div`
     margin-right: 100px;
     img {
       border-radius: 50%;
+      object-fit: cover;
     }
   }
 

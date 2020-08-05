@@ -17,8 +17,8 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <Navbar userID={data && data.results._id}></Navbar>
-      <HomeMain userID={data && data.results._id}></HomeMain>
+      <Navbar></Navbar>
+      <HomeMain></HomeMain>
     </MainContainer>
   );
 }

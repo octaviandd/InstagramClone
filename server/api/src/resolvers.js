@@ -6,6 +6,7 @@ import AWS from "aws-sdk";
 const config = require("./s3");
 const { extname } = require("path");
 const salt = 10;
+import moment from "moment";
 
 const resolvers = {
   Query: {
@@ -46,12 +47,14 @@ const resolvers = {
     getAllPosts: authenticated(async (_, __, { models }) => {
       const posts = await models.Post.find()
         .populate("author")
-        .populate("comments");
+        .populate({ path: "comments", populate: { path: "author" } });
 
       return posts;
     }),
     getPost: authenticated(async (_, { input }, { models }) => {
-      const foundPost = models.Post.findOne({ _id: input });
+      const foundPost = models.Post.findOne({ _id: input })
+        .populate("author")
+        .populate({ path: "comments", populate: { path: "author" } });
       return foundPost;
     }),
     getPostComments: authenticated(async (_, { input }, { models }) => {

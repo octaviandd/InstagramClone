@@ -2,7 +2,6 @@
 
 import React from "react";
 import styled from "styled-components";
-import profileImg from "../assets/profileimg.jpg";
 import { GET_CURRENT_USER, GET_USERS } from "../helpers/queries";
 import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
@@ -19,13 +18,13 @@ export default function HomeFriends() {
   if (loading) return "Loading...";
 
   // DESCTRUCTURING
-  const { _id, username, following } = data.results;
+  const { _id, username, following, avatar } = data.results;
 
   return (
     <MainContainer>
       <Profile>
         <Link to={`/profile/${_id}`}>
-          <img src={profileImg}></img>
+          <img src={`${avatar}`}></img>
         </Link>
         <Link to={`/profile/${_id}`}>
           <span>{username}</span>
@@ -108,6 +107,7 @@ const Profile = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   a {

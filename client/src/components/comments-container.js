@@ -7,12 +7,14 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { GET_POST_COMMENTS } from "../helpers/queries";
 import { Link } from "react-router-dom";
+import { timeDifference } from "../helpers/time-difference";
 
 export default function CommentsContainer({
   id,
   username,
   author,
   description,
+  createdAt,
 }) {
   // HOOKS
   const [content, setContent] = useState("");
@@ -63,6 +65,8 @@ export default function CommentsContainer({
     setContent("");
   };
 
+  const timer = timeDifference(Date.now(), createdAt);
+
   // ERROR HANDLING
   if (error) console.log(error);
   if (loading) return "Loading...";
@@ -104,6 +108,7 @@ export default function CommentsContainer({
               );
             })}
         </div>
+        <Timer>{timer && timer}</Timer>
         <AddCommentsContainer active={isActive}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <input
@@ -131,7 +136,7 @@ const MainContainer = styled.div`
     padding-left: 10px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 7.5px;
+    margin-bottom: 4px;
     font-size: 14px;
     line-height: 18px;
 
@@ -209,4 +214,13 @@ const Comments = styled.div`
     }
     margin-right: 15px;
   }
+`;
+
+const Timer = styled.time`
+  padding-left: 10px;
+  font-size: 10px;
+  letter-spacing: 0.2px;
+  line-height: 18px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
 `;
