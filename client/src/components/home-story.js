@@ -73,7 +73,7 @@ const MainContainer = styled.div`
 `;
 
 const Container = styled.div`
-  border: 1px solid #dbdbdb;
+  border: 1px solid #020024;
   border-radius: 3px;
   width: 100%;
   display: flex;

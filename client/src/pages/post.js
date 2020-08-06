@@ -1,35 +1,41 @@
 /** @format */
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { GET_POST, GET_CURRENT_USER, GET_ALL_POSTS } from "../helpers/queries";
+import {
+  GET_POST,
+  GET_CURRENT_USER,
+  GET_POST_COMMENTS,
+} from "../helpers/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { timeDifference } from "../helpers/time-difference";
 import Navbar from "../components/navbar";
 import { Link } from "react-router-dom";
-import { LIKE_POST, UNLIKE_POST } from "../helpers/mutations";
+import { LIKE_POST, UNLIKE_POST, NEW_COMMENT } from "../helpers/mutations";
+import { useForm } from "react-hook-form";
 
 export default function Post({
   match: {
     params: { id },
   },
 }) {
+  // HOOKS
+
+  const [content, setContent] = useState("");
+  const { register, handleSubmit, errors } = useForm();
+  const [isActive, activate] = useState(false);
+  const [comments, setComments] = useState(null);
+
+  // MUTATIONS && QUERIES
+
   const { data, loading } = useQuery(GET_POST, { variables: { input: id } });
 
   const { data: data2, loading: loading2, error2: error2 } = useQuery(
     GET_CURRENT_USER
   );
-
-  console.log(data2);
-
   const [likePost] = useMutation(LIKE_POST, {
     update(cache, { data: { likePost } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
-      const data2 = cache.readQuery({ query: GET_ALL_POSTS });
-      cache.writeQuery({
-        query: GET_ALL_POSTS,
-        data: { results: { likePost, ...data2.results } },
-      });
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: {
@@ -42,11 +48,6 @@ export default function Post({
   const [unlikePost] = useMutation(UNLIKE_POST, {
     update(cache, { data: { unlikePost } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
-      const data2 = cache.readQuery({ query: GET_ALL_POSTS });
-      cache.writeQuery({
-        query: GET_ALL_POSTS,
-        data: { results: { likePost, ...data2.results } },
-      });
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: {
@@ -56,20 +57,51 @@ export default function Post({
     },
   });
 
+  const [createComment] = useMutation(NEW_COMMENT, {
+    update(cache, { data: { createComment } }) {
+      const data = cache.readQuery({
+        query: GET_POST_COMMENTS,
+        variables: { input: id },
+      });
+      console.log(data);
+      cache.writeQuery({
+        query: GET_POST_COMMENTS,
+        variables: { input: id },
+        data: { results: [createComment, ...data.results] },
+      });
+    },
+  });
+
+  // COMPONENT METHODS
   const likePostMethod = async () => {
-    await likePost({ variables: { input: data2.results._id } });
+    await likePost({ variables: { input: id } });
   };
 
   const unlikePostMethod = async () => {
-    await unlikePost({ variables: { input: data2.results._id } });
+    await unlikePost({ variables: { input: id } });
+  };
+
+  const handleInput = (e) => {
+    setContent(e.target.value);
+  };
+
+  const onSubmit = (formData) => {
+    createComment({
+      variables: { input: { content: formData.content, _id: id } },
+    }).then((res) => {
+      setComments(res);
+    });
+    setContent("");
   };
 
   if (loading) return "Loading...";
   const timer = timeDifference(Date.now(), data.results.createdAt);
 
+  // ERROR HANDLING
+
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       <MainContainer>
         <PostModal>
           <LeftRow>
@@ -123,9 +155,7 @@ export default function Post({
             <ButtonsContainer>
               <div>
                 {data2 &&
-                data2.results.likedPosts.some(
-                  (el) => el._id === data2.results._id
-                ) ? (
+                data2.results.likedPosts.some((el) => el._id === id) ? (
                   <LikedButton onClick={() => unlikePostMethod()}>
                     <svg
                       fill="#ed4956"
@@ -148,48 +178,35 @@ export default function Post({
                     </svg>
                   </NotLikedButton>
                 )}
-                <Link to={`post/${data2.results._id}`}>
-                  <CommentsButton>
-                    <svg
-                      fill="#262626"
-                      height="24"
-                      viewBox="0 0 48 48"
-                      width="24"
-                    >
-                      <path
-                        clipRule="evenodd"
-                        d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z"
-                        fillRule="evenodd"
-                      ></path>
-                    </svg>
-                  </CommentsButton>
-                </Link>
-                <button>
-                  <svg
-                    fill="#262626"
-                    height="24"
-                    viewBox="0 0 48 48"
-                    width="24"
-                  >
-                    <path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z"></path>
-                  </svg>
-                </button>
-              </div>
-              <div>
-                <button>
-                  <svg
-                    fill="#262626"
-                    height="24"
-                    viewBox="0 0 48 48"
-                    width="24"
-                  >
-                    <path d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z"></path>
-                  </svg>
-                </button>
               </div>
             </ButtonsContainer>
-            <div></div>
-            <div></div>
+            <LikesContainer>
+              <a href="">
+                {data && data.results.likes.length > 0 && (
+                  <span>
+                    {data.results.likes.length === 1
+                      ? `${data.results.likes.length} like`
+                      : `${data.results.likes.length} likes`}
+                  </span>
+                )}
+              </a>
+            </LikesContainer>
+            <CommentsContainer>
+              <Timer style={{ marginLeft: "10px" }}>{timer && timer}</Timer>
+              <AddCommentsContainer active={isActive}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <input
+                    type="text"
+                    name="content"
+                    onChange={(e) => handleInput(e)}
+                    value={content}
+                    ref={register({ required: true, minlength: 1 })}
+                  />
+                  <span>Add a comment..</span>
+                  <button type="submit">Post</button>
+                </form>
+              </AddCommentsContainer>
+            </CommentsContainer>
           </RightRow>
         </PostModal>
       </MainContainer>
@@ -341,8 +358,8 @@ const ButtonsContainer = styled.div`
       background-color: transparent;
       border: none;
     }
-    button:nth-of-type(2) {
-      margin-left: 10px;
+    button:nth-of-type(2),
+    button:nth-of-type(1) {
       margin-right: 10px;
     }
   }
@@ -370,3 +387,52 @@ const LikedButton = styled.button`
 const NotLikedButton = styled.button``;
 
 const CommentsButton = styled.button``;
+
+const CommentsContainer = styled.div``;
+
+const AddCommentsContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #dbdbdb;
+  width: 100%;
+
+  form {
+    padding: 15px 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  input {
+    border: none;
+    font-size: 14px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  span {
+    left: 12.5px;
+    position: absolute;
+    color: #dbdbdb;
+    font-size: 14px;
+    line-height: 18px;
+    pointer-events: none;
+    ${({ active }) =>
+      active &&
+      `
+        display: none;
+      `}
+  }
+
+  button {
+    font-size: 16px;
+    background-color: transparent;
+    color: #b1defc;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+`;

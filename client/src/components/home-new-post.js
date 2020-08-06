@@ -18,7 +18,6 @@ export default function HomeNewPost() {
   const [createPost] = useMutation(NEW_POST, {
     update(cache, { data: { createPost } }) {
       const data = cache.readQuery({ query: GET_ALL_POSTS });
-      console.log(data);
       cache.writeQuery({
         query: GET_ALL_POSTS,
         data: { results: [createPost, ...data.results] },

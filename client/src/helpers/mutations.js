@@ -125,6 +125,7 @@ export const LIKE_POST = gql`
   mutation LikePost($input: ID!) {
     likePost(input: $input) {
       _id
+      createdAt
     }
   }
 `;

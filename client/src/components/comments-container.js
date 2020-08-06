@@ -76,8 +76,8 @@ export default function CommentsContainer({
       <MainContainer>
         <div>
           <div>
-            <Link to={`/profile/${author}`}>{username}</Link>
-            <span>{description}</span>
+            {username && <Link to={`/profile/${author}`}>{username}</Link>}
+            <span>{description && description}</span>
           </div>
           {data &&
             data.results.map((comment) => {
@@ -139,11 +139,12 @@ const MainContainer = styled.div`
     margin-bottom: 4px;
     font-size: 14px;
     line-height: 18px;
+    color: whitesmoke;
 
     a {
       font-weight: 800;
       text-decoration: none;
-      color: #363636;
+      color: whitesmoke;
       margin-right: 6px;
     }
   }
@@ -166,6 +167,8 @@ const AddCommentsContainer = styled.div`
   input {
     border: none;
     font-size: 14px;
+    background-color: inherit;
+    color: whitesmoke;
 
     &:focus {
       outline: none;
@@ -175,7 +178,7 @@ const AddCommentsContainer = styled.div`
   span {
     left: 12.5px;
     position: absolute;
-    color: #dbdbdb;
+    color: whitesmoke;
     font-size: 14px;
     line-height: 18px;
     pointer-events: none;
@@ -189,7 +192,7 @@ const AddCommentsContainer = styled.div`
   button {
     font-size: 16px;
     background-color: transparent;
-    color: #b1defc;
+    color: #8f94fb;
     border: none;
     font-weight: 600;
     cursor: pointer;
@@ -223,4 +226,5 @@ const Timer = styled.time`
   line-height: 18px;
   text-transform: uppercase;
   margin-bottom: 4px;
+  color: whitesmoke;
 `;

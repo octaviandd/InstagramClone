@@ -42,8 +42,6 @@ export default function Register({ history }) {
         },
       },
     }).then((res) => {
-      console.log(res);
-      console.log(res.data.createUser.token);
       setAccessToken(res.data.createUser.token);
       if (res) {
         history.push("/");
