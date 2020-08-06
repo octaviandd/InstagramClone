@@ -251,6 +251,7 @@ const resolvers = {
       return userToBeUnfollowed;
     }),
     likePost: authenticated(async (_, { input }, { models, user }) => {
+      console.log(input)
       const currentUser = await models.User.findOne({ _id: user.id });
       const postToBeLiked = await models.Post.findOneAndUpdate(
         { _id: input },
@@ -261,6 +262,8 @@ const resolvers = {
           return res;
         }
       );
+
+      
 
       currentUser.updateOne(
         { $addToSet: { likedPosts: postToBeLiked } },
