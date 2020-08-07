@@ -183,8 +183,17 @@ const MainContainerColTwo = styled.div`
   max-width: 350px;
   width: 100%;
   flex-shrink: 0;
-  padding-top: 3rem;
-  border-radius: 12px;
+  -webkit-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+  -moz-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+  box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+  border-radius: 20px;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(32, 29, 30, 1) 35%,
+    rgba(3, 25, 29, 1) 100%
+  );
 
   div {
     background: rgb(2, 0, 36);
@@ -199,13 +208,15 @@ const MainContainerColTwo = styled.div`
   }
 
   div:nth-of-type(1) {
-    border: 1px solid #dbdbdb;
     margin-bottom: 0.3rem;
-    /* border-top-left-radius: 6px;
-    border-top-right-radius: 6px; */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     form {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
       padding: 2rem 2.5rem;
       display: flex;
+      border: 0;
       flex-direction: column;
       align-items: center;
       h1 {
@@ -330,7 +341,8 @@ const MainContainerColTwo = styled.div`
   }
 
   div:nth-of-type(2) {
-    border: 1px solid #dbdbdb;
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
     margin-bottom: 0.3rem;
     p {
       padding: 20px 15px;
@@ -353,8 +365,10 @@ const MainContainerColTwo = styled.div`
       rgba(32, 29, 30, 1) 35%,
       rgba(3, 25, 29, 1) 100%
     );
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
     display: flex;
-    padding-top: 1.5rem;
+    padding-top: 3rem;
     padding-bottom: 1rem;
     flex-direction: column;
     align-items: center;

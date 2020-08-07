@@ -18,7 +18,7 @@ Available routes:
 - `/login - Public Route`
 - `/register - Public Route`
 - `/profile/* - Private Route`
-- `/post/* - Private Route` -> Not completed
+- `/post/* - Private Route`
 - `/explore` -> Not completed
 
 # Technologies

@@ -6,7 +6,6 @@ import AWS from "aws-sdk";
 const config = require("./s3");
 const { extname } = require("path");
 const salt = 10;
-import moment from "moment";
 
 const resolvers = {
   Query: {
@@ -72,7 +71,6 @@ const resolvers = {
 
   Mutation: {
     changeAvatar: authenticated(async (_, { file }, { user, models }) => {
-      console.log(file);
       const { encoding, filename, mimetype, createReadStream } = await file;
       const s3 = new AWS.S3(config.s3);
 
@@ -261,8 +259,6 @@ const resolvers = {
           return res;
         }
       );
-
-      
 
       currentUser.updateOne(
         { $addToSet: { likedPosts: postToBeLiked } },

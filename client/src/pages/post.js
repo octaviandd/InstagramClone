@@ -15,6 +15,7 @@ import { LIKE_POST, UNLIKE_POST, NEW_COMMENT } from "../helpers/mutations";
 import { useForm } from "react-hook-form";
 import UnlikedHeart from "../assets/unliked-heart";
 import Heart from "../assets/liked-heart.js";
+import Spinner from "../components/spinner";
 
 export default function Post({
   match: {
@@ -96,7 +97,7 @@ export default function Post({
     setContent("");
   };
 
-  if (loading) return "Loading...";
+  if (loading) return <Spinner />;
   const timer = timeDifference(Date.now(), data.results.createdAt);
 
   // ERROR HANDLING
@@ -217,18 +218,23 @@ const RightRow = styled.div`
   flex-direction: column;
   height: 600px;
   width: 300px;
-  background-color: #ffffff;
-  border-top: 1px solid #dbdbdb;
-  border-bottom: 1px solid #dbdbdb;
-  border-right: 1px solid #dbdbdb;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(32, 29, 30, 1) 35%,
+    rgba(3, 25, 29, 1) 100%
+  );
 `;
 
 const LeftRow = styled.div`
+  position: relative;
   img {
+    top: 0;
+    left: 0;
     height: 600px;
     width: 600px;
-    object-fit: contain;
-    border: 1px solid #dbdbdb;
+    object-fit: cover;
   }
 `;
 
@@ -238,11 +244,13 @@ const Topbar = styled.div`
   border-bottom: 1px solid #dbdbdb;
   padding: 15px 15px;
   align-items: center;
+  color: whitesmoke;
   img {
     width: 32px;
     height: 32px;
     margin-right: 12.5px;
     margin-left: 10px;
+    border-radius: 50%;
   }
 `;
 
@@ -265,7 +273,7 @@ const CommentSection = styled.div`
 
   a {
     text-decoration: none;
-    color: black;
+    color: whitesmoke;
     font-weight: 600;
     margin-right: 4px;
     word-wrap: break-word;
@@ -273,6 +281,7 @@ const CommentSection = styled.div`
 
   span {
     word-wrap: break-word;
+    color: whitesmoke;
   }
 `;
 
@@ -300,6 +309,7 @@ const PostDescription = styled.div`
       img {
         width: 32px;
         height: 32px;
+        border-radius: 50%;
       }
     }
     & > div:nth-of-type(2) {
@@ -308,10 +318,11 @@ const PostDescription = styled.div`
         word-wrap: break-word;
         margin-right: 4px;
         text-decoration: none;
-        color: black;
+        color: whitesmoke;
       }
       span {
         word-wrap: break-word;
+        color: whitesmoke;
       }
     }
   }
@@ -329,6 +340,7 @@ const Timer = styled.time`
   line-height: 18px;
   text-transform: uppercase;
   margin-bottom: 4px;
+  color: whitesmoke;
 `;
 
 const ButtonsContainer = styled.div`
@@ -395,7 +407,8 @@ const AddCommentsContainer = styled.div`
   input {
     border: none;
     font-size: 14px;
-
+    background: #0f1b1d;
+    color: whitesmoke;
     &:focus {
       outline: none;
     }
@@ -404,7 +417,7 @@ const AddCommentsContainer = styled.div`
   span {
     left: 12.5px;
     position: absolute;
-    color: #dbdbdb;
+    color: whitesmoke;
     font-size: 14px;
     line-height: 18px;
     pointer-events: none;
@@ -418,7 +431,7 @@ const AddCommentsContainer = styled.div`
   button {
     font-size: 16px;
     background-color: transparent;
-    color: #b1defc;
+    color: #8f94fb;
     border: none;
     font-weight: 600;
     cursor: pointer;

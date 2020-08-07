@@ -12,7 +12,7 @@ export default function UserContainer({ user }) {
   const [isFollowing, follow] = useState(false);
 
   // MUTATIONS && QUERIES
-  const [followUser, { data, error, loading }] = useMutation(FOLLOW_USER, {
+  const [followUser, { error, loading }] = useMutation(FOLLOW_USER, {
     update(cache, { data: { followUser } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
       cache.writeQuery({
@@ -39,7 +39,7 @@ export default function UserContainer({ user }) {
       <div>
         <div>
           <Link to={`/profile/${user._id}`}>
-            <img src={user.avatar}></img>
+            <img src={user.avatar} alt={`${user.username} avatar`}></img>
           </Link>
           <Link to={`/profile/${user._id}`}>{user.username}</Link>
         </div>

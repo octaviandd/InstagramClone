@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../helpers/token";
 import { NEW_USER } from "../helpers/mutations";
+import Spinner from "../components/spinner";
 
 export default function Register({ history }) {
   //HOOKS
@@ -51,7 +52,7 @@ export default function Register({ history }) {
 
   // ERROR HANDLING
   if (error) return error;
-  if (loading) return "Loading...";
+  if (loading) return <Spinner />;
 
   return (
     <MainContainer>
@@ -125,12 +126,12 @@ export default function Register({ history }) {
               </p>
             </div>
           </form>
+          <Redirect>
+            <p>
+              Have an account?<Link to="/login">Log In</Link>
+            </p>
+          </Redirect>
         </div>
-        <Redirect>
-          <p>
-            Have an account?<Link to="/login">Log In</Link>
-          </p>
-        </Redirect>
       </Container>
     </MainContainer>
   );
@@ -143,6 +144,7 @@ const MainContainer = styled.div`
   justify-content: center;
   grid-auto-rows: 1fr;
   width: 100%;
+  padding-top: 8rem;
 `;
 
 const Redirect = styled.div`
@@ -151,6 +153,8 @@ const Redirect = styled.div`
   display: flex;
   padding: 2rem 5rem;
   justify-content: center;
+  color: whitesmoke;
+  border-radius: 20px;
 
   a {
     text-decoration: none;
@@ -168,10 +172,22 @@ const Container = styled.div`
   flex-shrink: 0;
   min-height: 100vh;
 
+  & > div:nth-of-type(1) {
+    border-radius: 20px;
+    -webkit-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+    -moz-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+    box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+  }
+
   div {
     width: 100%;
-    border: 1px solid #dbdbdb;
-    background-color: #ffffff;
+
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(32, 29, 30, 1) 35%,
+      rgba(3, 25, 29, 1) 100%
+    );
   }
 
   form {
@@ -179,14 +195,18 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     h1 {
       font-size: 40px;
       margin-bottom: 2rem;
+      color: whitesmoke;
     }
     h4 {
       text-align: center;
       margin-bottom: 0.525rem;
       color: #8e8e8e;
+      padding-bottom: 1.6rem;
     }
 
     div {
@@ -244,7 +264,7 @@ const Container = styled.div`
     div:nth-of-type(5) {
       margin-top: 0;
       input {
-        background-color: #b2dffc;
+        background-color: #c609ec;
         font-size: 14px;
         color: #fff;
         font-weight: 600;

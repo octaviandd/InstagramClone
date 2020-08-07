@@ -7,12 +7,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { createUploadLink } from "apollo-upload-client";
 
-import {
-  ApolloClient,
-  createHttpLink,
-  InMemoryCache,
-  ApolloProvider,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createUploadLink({

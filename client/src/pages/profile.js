@@ -41,15 +41,13 @@ export default function Profile(props) {
     },
   });
 
-  const [
-    followUser,
-    { data: data1, error: error1, loading: loading1 },
-  ] = useMutation(FOLLOW_USER);
+  const [followUser, { error: error1, loading: loading1 }] = useMutation(
+    FOLLOW_USER
+  );
 
-  const [
-    unfollowUser,
-    { data: data3, error: error3, loading: loading3 },
-  ] = useMutation(UNFOLLOW_USER);
+  const [unfollowUser, { error: error3, loading: loading3 }] = useMutation(
+    UNFOLLOW_USER
+  );
 
   // COMPONENT METHODS
 

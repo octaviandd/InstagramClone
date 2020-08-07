@@ -11,8 +11,7 @@ import HomeSVG from "../assets/home-svg";
 import MessageSVG from "../assets/message-svg";
 import ExploreSVG from "../assets/explore-svg";
 import UnlikedHeart from "../assets/unliked-heart";
-import ProfileSVG from "../assets/profile-svg";
-import SettingSVG from "../assets/settings-svg";
+import SettingsDropdown from "./settings-dropdown";
 
 export default function Navbar({ id }) {
   //HOOKS
@@ -102,35 +101,7 @@ export default function Navbar({ id }) {
             </a>
           </div>
         </Icons>
-        {activeDropdown && (
-          <Dropdown>
-            <ul>
-              <li>
-                <Link to={`/profile/${id}`}>
-                  <div>
-                    <span>
-                      <ProfileSVG />
-                    </span>
-                    <span>Profile</span>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                <div>
-                  <span>
-                    <SettingSVG />
-                  </span>
-                  <span>Settings</span>
-                </div>
-              </li>
-              <li>
-                <button onClick={() => logOut()}>
-                  <div>Log Out</div>
-                </button>
-              </li>
-            </ul>
-          </Dropdown>
-        )}
+        {activeDropdown && <SettingsDropdown id={id} logOut={logOut} />}
         {isSearchDropdownActive && (
           <SearchDropDown>
             {data &&
@@ -213,59 +184,6 @@ const Icons = styled.div`
         height: 25px;
         border-radius: 50%;
         object-fit: cover;
-      }
-    }
-  }
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  right: 0px;
-  top: 63px;
-  background-color: white;
-  max-width: 200px;
-  width: 100%;
-  z-index: 999;
-  border-radius: 6px;
-  box-shadow: 0 0 5px 1px #dbdbdb;
-  ul {
-    li {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      line-height: 50px;
-      height: 50px;
-      padding-left: 10px;
-      &:hover {
-        background-color: #dbdbdb;
-      }
-
-      a {
-        text-decoration: none;
-        color: black;
-      }
-
-      div {
-        display: flex;
-        align-items: center;
-        /* margin-bottom: 17.5px; */
-      }
-      span {
-        margin-right: 15px;
-        font-weight: 400;
-      }
-    }
-
-    > li:nth-of-type(3) {
-      border-top: 1px solid #dbdbdb;
-      padding-top: 12.5px;
-      padding-bottom: 5px;
-
-      button {
-        background-color: transparent;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
       }
     }
   }
