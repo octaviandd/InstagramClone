@@ -105,7 +105,7 @@ const MainContainer = styled.div`
   align-items: center;
 
   button {
-    background: transparent;
+    color: #8f94fb;
     border: none;
     cursor: pointer;
 

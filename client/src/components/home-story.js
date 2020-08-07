@@ -91,7 +91,7 @@ const Container = styled.div`
     svg {
       width: 20px;
       height: 20px;
-      /* color: transparent; */
+      color: black;
     }
   }
 

@@ -5,21 +5,8 @@ import styled from "styled-components";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_POSTS, GET_CURRENT_USER } from "../helpers/queries";
 import PostContainer from "../components/post-container";
-
-// Method for object comparison by timeline (createdAt)
-function compare(a, b) {
-  const timeA = a.createdAt.toUpperCase();
-  const timeB = b.createdAt.toUpperCase();
-
-  let comparison = 0;
-  if (timeA > timeB) {
-    comparison = -1;
-  } else if (timeA < timeB) {
-    comparison = 1;
-  }
-  return comparison;
-}
-//
+import Spinner from "../components/spinner";
+import { compare } from "../helpers/post-order";
 
 export default function HomeFeed() {
   // HOOKS
@@ -29,7 +16,7 @@ export default function HomeFeed() {
 
   // ERROR HANDLING
   if (error) return error;
-  if (loading) return "Loading..";
+  if (loading) return <Spinner />;
 
   //DESTRUCTURING
   const { following, _id: currentUserID } = data2.results;

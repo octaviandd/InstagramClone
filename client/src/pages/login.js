@@ -10,6 +10,7 @@ import { LOGIN_USER } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../helpers/token";
 import { FaTimes, FaGithub } from "react-icons/fa";
+import Spinner from "../components/spinner";
 
 export default function Login({ history }) {
   // HOOKS
@@ -50,7 +51,7 @@ export default function Login({ history }) {
   };
 
   // ERROR HANDLING
-  if (loading) return "Loading...";
+  if (loading) return <Spinner />;
   if (error) return error;
 
   return (
@@ -132,7 +133,7 @@ export default function Login({ history }) {
 }
 
 const MainContainer = styled.div`
-  background-color: #fafafa;
+  background-color: #f6f9fc;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,15 +184,25 @@ const MainContainerColTwo = styled.div`
   width: 100%;
   flex-shrink: 0;
   padding-top: 3rem;
+  border-radius: 12px;
 
   div {
-    background-color: white;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(32, 29, 30, 1) 35%,
+      rgba(3, 25, 29, 1) 100%
+    );
+
     width: 100%;
   }
 
   div:nth-of-type(1) {
     border: 1px solid #dbdbdb;
     margin-bottom: 0.3rem;
+    /* border-top-left-radius: 6px;
+    border-top-right-radius: 6px; */
     form {
       padding: 2rem 2.5rem;
       display: flex;
@@ -200,6 +211,7 @@ const MainContainerColTwo = styled.div`
       h1 {
         font-size: 40px;
         margin-bottom: 2rem;
+        color: whitesmoke;
       }
       div {
         position: relative;
@@ -265,7 +277,7 @@ const MainContainerColTwo = styled.div`
       div:nth-of-type(3) {
         margin-top: 0;
         input {
-          background-color: #b2dffc;
+          background-color: #c609ec;
           font-size: 14px;
           color: #fff;
           font-weight: 600;
@@ -324,7 +336,7 @@ const MainContainerColTwo = styled.div`
       padding: 20px 15px;
       text-align: center;
       font-weight: 400;
-
+      color: whitesmoke;
       a {
         text-decoration: none;
         color: #0095f6;
@@ -334,17 +346,25 @@ const MainContainerColTwo = styled.div`
     }
   }
   div:nth-of-type(3) {
-    background-color: #fafafa;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(32, 29, 30, 1) 35%,
+      rgba(3, 25, 29, 1) 100%
+    );
     display: flex;
-    margin-top: 3rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
     flex-direction: column;
     align-items: center;
     p {
       text-align: center;
+      color: whitesmoke;
     }
     a {
       margin-top: 1rem;
-      color: black;
+      color: whitesmoke;
       font-size: 20px;
     }
   }
