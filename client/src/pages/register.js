@@ -138,7 +138,7 @@ export default function Register({ history }) {
 }
 
 const MainContainer = styled.div`
-  background-color: #fafafa;
+  background-color: #18191a;
   padding-top: 3rem;
   display: flex;
   justify-content: center;
@@ -148,7 +148,7 @@ const MainContainer = styled.div`
 `;
 
 const Redirect = styled.div`
-  background-color: #ffffff;
+  background: #242526;
   margin-top: 0.5rem;
   display: flex;
   padding: 2rem 5rem;
@@ -176,18 +176,12 @@ const Container = styled.div`
     border-radius: 20px;
     -webkit-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
     -moz-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
-    box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+    box-shadow: 2px 1px 12px -6px rgba(32, 29, 30, 0.2);
   }
 
   div {
     width: 100%;
-
-    background: linear-gradient(
-      90deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(32, 29, 30, 1) 35%,
-      rgba(3, 25, 29, 1) 100%
-    );
+    background: #242526;
   }
 
   form {

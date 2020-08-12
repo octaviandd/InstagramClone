@@ -23,21 +23,21 @@ const MainContainer = styled.div`
   & > span:nth-of-type(1) {
     width: 3px;
     height: 3px;
-    background-color: whitesmoke;
+    background-color: #e5e7ec;
     display: block;
     border-radius: 50%;
   }
   & > span:nth-of-type(2) {
     width: 3px;
     height: 3px;
-    background-color: whitesmoke;
+    background-color: #e5e7ec;
     display: block;
     border-radius: 50%;
   }
   & > span:nth-of-type(3) {
     width: 3px;
     height: 3px;
-    background-color: whitesmoke;
+    background-color: #e5e7ec;
     display: block;
     border-radius: 50%;
   }

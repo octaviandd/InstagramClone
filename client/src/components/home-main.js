@@ -25,7 +25,7 @@ export default function HomeMain() {
 const MainContainer = styled.div`
   display: flex;
   justify-content: center;
-  background-color: #f6f9fc;
+  background: #18191a;
   margin-top: 25px;
   min-height: 100vh;
   width: 100%;

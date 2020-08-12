@@ -133,7 +133,7 @@ export default function Login({ history }) {
 }
 
 const MainContainer = styled.div`
-  background-color: #f6f9fc;
+  background-color: #18191a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,23 +187,10 @@ const MainContainerColTwo = styled.div`
   -moz-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
   box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
   border-radius: 20px;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(32, 29, 30, 1) 35%,
-    rgba(3, 25, 29, 1) 100%
-  );
+  background: #242526;
 
   div {
-    background: rgb(2, 0, 36);
-    background: linear-gradient(
-      90deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(32, 29, 30, 1) 35%,
-      rgba(3, 25, 29, 1) 100%
-    );
-
+    background: #242526;
     width: 100%;
   }
 
@@ -358,13 +345,7 @@ const MainContainerColTwo = styled.div`
     }
   }
   div:nth-of-type(3) {
-    background: rgb(2, 0, 36);
-    background: linear-gradient(
-      90deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(32, 29, 30, 1) 35%,
-      rgba(3, 25, 29, 1) 100%
-    );
+    background: #242526;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     display: flex;

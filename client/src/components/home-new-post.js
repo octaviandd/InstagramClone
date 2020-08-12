@@ -1,5 +1,5 @@
 /** @format */
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { NEW_POST, SINGLE_UPLOAD } from "../helpers/mutations";
 import { useMutation } from "@apollo/client";
@@ -7,12 +7,24 @@ import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { FaPlusCircle, FaTimes } from "react-icons/fa";
 import { GET_ALL_POSTS } from "../helpers/queries";
+import { FcPicture } from "react-icons/fc";
 
 export default function HomeNewPost() {
   // HOOKS
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
   const [picture, addPicture] = useState("");
+  const [buttonStatus, enableButton] = useState(false);
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    if (value !== "") {
+      enableButton(true);
+    } else {
+      enableButton(false);
+    }
+    console.log(buttonStatus);
+  }, [value]);
 
   // MUTATIONS && QUERIES
   const [createPost] = useMutation(NEW_POST, {
@@ -27,6 +39,11 @@ export default function HomeNewPost() {
   const [uploadPicture, { data, error, loading }] = useMutation(SINGLE_UPLOAD);
 
   // COMPONENT METHODS
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  };
+
   const onDrop = useCallback(
     ([file]) => {
       uploadPicture({
@@ -72,26 +89,36 @@ export default function HomeNewPost() {
         <FaPlusCircle />
       </button>
       {isActive && (
-        <form onSubmit={handleSubmit(onSubmit)} encType={"multipart/form-data"}>
+        <FormModal
+          onSubmit={handleSubmit(onSubmit)}
+          encType={"multipart/form-data"}
+        >
+          <TopBar>
+            <h2>Create Post</h2>
+            <span onClick={() => setActive(!isActive)}>
+              <FaTimes />
+            </span>
+          </TopBar>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            {isDragActive ? (
-              <p>Drop the files here ...</p>
-            ) : (
-              <p>Drag 'n' drop some files here, or click to select files</p>
-            )}
+            <PictureInput>
+              <FcPicture id="dropZone" />
+              <span>Photo</span>
+            </PictureInput>
           </div>
-          <textarea
-            rows="5"
-            cols="33"
-            name="description"
-            ref={register({ required: true, minLength: 6 })}
-          />
-          <button type="submit">Submit</button>
-          <span onClick={() => setActive(!isActive)}>
-            <FaTimes />
-          </span>
-        </form>
+          <FormActions active={buttonStatus}>
+            <input
+              autoComplete="off"
+              placeholder="What's on your mind?"
+              type="text"
+              name="description"
+              ref={register({ required: true, minLength: 6 })}
+              id="textInput"
+              onChange={(e) => handleInput(e)}
+            />
+            <button type="submit">Post</button>
+          </FormActions>
+        </FormModal>
       )}
     </MainContainer>
   );
@@ -108,61 +135,134 @@ const MainContainer = styled.div`
     color: #8f94fb;
     border: none;
     cursor: pointer;
+    background-color: transparent;
 
     svg {
       width: 30px;
       height: 30px;
     }
   }
+`;
 
-  form {
-    position: fixed;
-    padding: 1rem 2rem;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    display: flex;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 540px;
-    z-index: 99999;
-    border-radius: 10px;
-    border: 1px solid #8e8e8e;
+const FormModal = styled.form`
+  position: fixed;
+  padding: 1rem 0;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  background-color: #242526;
+  display: flex;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 540px;
+  z-index: 99999;
+  border-radius: 10px;
+  border: 1px solid #242526;
 
-    textarea {
-      padding: 10px 5px;
-      border-radius: 5px;
-      border: 1px solid black;
+  #dropZone {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
+`;
 
-      &:focus {
-        outline: none;
-      }
-    }
+const TopBar = styled.div`
+  display: grid;
+  border-bottom: 1px solid #e5e7ec;
+  width: 100%;
+  position: relative;
+  padding: 1rem;
 
-    button {
-      color: #b2dffc;
-      border: 2px solid #b2dffc;
-      padding: 10px 17.5px;
-      border-radius: 5px;
-      font-size: 18px;
-      max-width: 120px;
-      width: 100%;
-      font-weight: bold;
-      margin-top: 2rem;
-      line-height: 18px;
-    }
-    span {
-      position: absolute;
-      right: 15px;
-      top: 10px;
-      cursor: pointer;
-      svg {
-        width: 18px;
-        height: 18px;
-      }
+  h2 {
+    color: #e5e7ec;
+    text-align: center;
+  }
+
+  span {
+    color: #e5e7ec;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: #e5e7ec;
     }
   }
+`;
+
+const FormActions = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  input {
+    padding: 10px 5px;
+    border-radius: 5px;
+    border: 0;
+    background-color: inherit;
+    color: #e5e7ec;
+    width: 100%;
+    height: 400px;
+    font-size: 30px;
+    text-align: center;
+
+    &:focus {
+      outline: none;
+    }
+
+    ::-webkit-input-placeholder {
+      /* Chrome/Opera/Safari */
+      font-size: 30px;
+      text-align: center;
+    }
+    ::-moz-placeholder {
+      /* Firefox 19+ */
+      font-size: 30px;
+      text-align: center;
+    }
+    :-ms-input-placeholder {
+      /* IE 10+ */
+      font-size: 30px;
+      text-align: center;
+    }
+    :-moz-placeholder {
+      /* Firefox 18- */
+      font-size: 30px;
+      text-align: center;
+    }
+  }
+
+  button {
+    color: #838384;
+    background: #3a3b3c;
+    border: 0;
+    padding: 10px 17.5px;
+    border-radius: 10px;
+    font-size: 18px;
+    width: 90%;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 2rem;
+    line-height: 18px;
+    ${({ active }) => active && `background: #8ea1e1;color: #e5e7ec;`}
+  }
+`;
+
+const PictureInput = styled.div`
+  display: flex;
+  align-items: center;
+  color: #838384;
+  width: 100%;
+  padding: 7.5px 12.5px;
+  margin-top: 25px;
+  svg {
+    padding-right: 10px;
+  }
+  background-color: #3a3b3c;
+  border-radius: 10px;
 `;

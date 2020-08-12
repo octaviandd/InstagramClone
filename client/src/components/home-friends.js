@@ -83,14 +83,14 @@ const Suggestions = styled.div`
     p {
       font-size: 14px;
       line-height: 18px;
-      color: #8f8f8f;
+      color: #e5e7ec;
       font-weight: bold;
     }
     a {
       font-size: 14px;
       line-height: 18px;
       text-decoration: none;
-      color: black;
+      color: #e5e7ec;
       font-weight: bold;
     }
   }
@@ -112,7 +112,7 @@ const Profile = styled.div`
 
   a {
     text-decoration: none;
-    color: #262626;
+    color: #e5e7ec;
     font-weight: bold;
   }
 `;

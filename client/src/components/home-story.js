@@ -67,13 +67,13 @@ const MainContainer = styled.div`
   position: relative;
   display: flex;
   flex-shrink: 0;
-  background-color: #ffffff;
+  background-color: #242526;
   height: 120px;
   margin-bottom: 25px;
 `;
 
 const Container = styled.div`
-  border: 1px solid #020024;
+  border: 1px solid #242526;
   border-radius: 3px;
   width: 100%;
   display: flex;

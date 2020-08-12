@@ -16,17 +16,20 @@ export default function Watermark() {
 }
 
 const MainContainer = styled.div`
-  background-color: #fafafa;
+  background: #242526;
   display: flex;
   margin-top: 3rem;
   flex-direction: column;
   align-items: center;
+  padding: 10px 15px;
+  border-radius: 10px;
   p {
     text-align: center;
+    color: #e5e7ec;
   }
   a {
     margin-top: 1rem;
-    color: black;
+    color: #e5e7ec;
     font-size: 20px;
     svg {
       height: 25px;

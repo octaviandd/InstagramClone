@@ -138,13 +138,15 @@ const Container = styled.div`
   border-radius: 6px;
   position: relative;
   border: none;
-  -webkit-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
-  -moz-box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
-  box-shadow: 4px 2px 23px -4px rgba(32, 29, 30, 1);
+  -webkit-box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3),
+    0 15px 12px rgba(0, 0, 0, 0.22);
+  -moz-box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3),
+    0 15px 12px rgba(0, 0, 0, 0.22);
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 `;
 
 const RowOne = styled.div`
-  background-color: #201d1e;
+  background-color: #242526;
   height: 60px;
   width: 100%;
   border-left: 1px solid #201d1e;
@@ -171,7 +173,7 @@ const RowOne = styled.div`
       height: 60px;
       align-items: center;
       text-decoration: none;
-      color: whitesmoke;
+      color: #e5e7ec;
       img {
         margin-right: 15px;
         border-radius: 50%;
@@ -189,7 +191,7 @@ const RowTow = styled.div`
   & > div {
     display: flex;
     min-height: 500px;
-    background-color: white;
+    background-color: #242526;
     border-left: 0.5px solid #201d1e;
     border-right: 0.5px solid #201d1e;
   }
@@ -201,7 +203,7 @@ const RowTow = styled.div`
 
 const RowThree = styled.div`
   display: flex;
-  background-color: #03191d;
+  background-color: #242526;
   flex-direction: column;
   align-items: center;
   width: 100%;
@@ -247,7 +249,7 @@ const LikesContainer = styled.div`
     line-height: 18px;
     font-weight: 800;
     text-decoration: none;
-    color: whitesmoke;
+    color: #e5e7ec;
   }
 `;
 

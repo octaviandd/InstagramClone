@@ -131,13 +131,7 @@ export default function Navbar({ id }) {
 }
 
 const MainContainer = styled.div`
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(32, 29, 30, 1) 35%,
-    rgba(3, 25, 29, 1) 100%
-  );
+  background: #18191a;
   border-bottom: 1px solid #dbdbdb;
   display: flex;
   align-items: stretch;

@@ -25,6 +25,6 @@ export default function Home() {
 }
 
 const MainContainer = styled.div`
-  background-color: #f6f9fc;
+  background-color: #18191a;
   min-height: 100vh;
 `;
