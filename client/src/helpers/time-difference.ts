@@ -1,6 +1,6 @@
 /** @format */
 
-export const timeDifference = (current, previous) => {
+export const timeDifference = (current: number, previous: number) => {
   var msPerMinute = 60 * 1000;
   var msPerHour = msPerMinute * 60;
   var msPerDay = msPerHour * 24;

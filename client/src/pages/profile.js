@@ -33,7 +33,6 @@ export default function Profile(props) {
   const [changeAvatar] = useMutation(CHANGE_AVATAR, {
     update(cache, { data: { changeAvatar } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
-      console.log(data);
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: { results: { avatar: changeAvatar } },

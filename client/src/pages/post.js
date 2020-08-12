@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   GET_POST,
@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import UnlikedHeart from "../assets/unliked-heart";
 import Heart from "../assets/liked-heart.js";
 import Spinner from "../components/spinner";
+import Comment from "../components/comment";
 
 export default function Post({
   match: {
@@ -23,15 +24,27 @@ export default function Post({
   },
 }) {
   // HOOKS
-
+  const [commentTimer, setCommentTimer] = useState(null);
   const [content, setContent] = useState("");
   const { register, handleSubmit, errors } = useForm();
   const [isActive, activate] = useState(false);
   const [comments, setComments] = useState(null);
 
+  useEffect(() => {
+    if (content !== "") {
+      activate(true);
+    } else {
+      activate(false);
+    }
+  }, [content]);
+
   // MUTATIONS && QUERIES
 
   const { data, loading } = useQuery(GET_POST, { variables: { input: id } });
+
+  const { data: data3 } = useQuery(GET_POST_COMMENTS, {
+    variables: { input: id },
+  });
 
   const { data: data2, loading: loading2, error2: error2 } = useQuery(
     GET_CURRENT_USER
@@ -66,7 +79,6 @@ export default function Post({
         query: GET_POST_COMMENTS,
         variables: { input: id },
       });
-      console.log(data);
       cache.writeQuery({
         query: GET_POST_COMMENTS,
         variables: { input: id },
@@ -135,24 +147,7 @@ export default function Post({
             </PostDescription>
             <CommentsList>
               {data.results.comments.map((comment) => {
-                return (
-                  <Comment key={comment._id}>
-                    <CommentLogo>
-                      <Logo src={`${comment.author.avatar}`}></Logo>
-                    </CommentLogo>
-                    <CommentSection>
-                      <div>
-                        <Link to={`${comment.author._id}`}>
-                          {comment.author.username}
-                        </Link>
-                        <span>{comment.content}</span>
-                      </div>
-                      <div>
-                        <Timer>{timer.replace("hours ago", "h")}</Timer>
-                      </div>
-                    </CommentSection>
-                  </Comment>
-                );
+                return <Comment key={comment._id} comment={comment} />;
               })}
             </CommentsList>
             <ButtonsContainer>
@@ -260,38 +255,6 @@ const CommentsList = styled.div`
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid #dbdbdb;
-`;
-
-const Comment = styled.div`
-  display: flex;
-  padding: 15px 15px;
-`;
-
-const CommentSection = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  a {
-    text-decoration: none;
-    color: whitesmoke;
-    font-weight: 600;
-    margin-right: 4px;
-    word-wrap: break-word;
-  }
-
-  span {
-    word-wrap: break-word;
-    color: whitesmoke;
-  }
-`;
-
-const CommentLogo = styled.div`
-  margin-right: 10px;
-`;
-
-const Logo = styled.img`
-  width: 32px;
-  height: 32px;
 `;
 
 const PostDescription = styled.div`

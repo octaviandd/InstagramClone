@@ -178,6 +178,7 @@ const resolvers = {
       return post;
     }),
     createComment: authenticated(async (_, { input }, { models, user }) => {
+      console.log(input);
       const parentUser = await models.User.findOne({ _id: user.id });
       const parentPost = await models.Post.findOne({
         _id: input._id,
@@ -192,6 +193,7 @@ const resolvers = {
 
       await comment.save();
 
+      console.log(comment);
       const findComment = await models.Comment.findOne({ _id: comment._id });
       parentPost.updateOne(
         { $addToSet: { comments: findComment } },

@@ -1,23 +1,23 @@
 /** @format */
 
-import React from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import CommentsContainer from "../components/comments-container";
 import { LIKE_POST, UNLIKE_POST } from "../helpers/mutations";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_CURRENT_USER, GET_ALL_POSTS } from "../helpers/queries";
-import { timeDifference } from "../helpers/time-difference";
+import { GET_CURRENT_USER } from "../helpers/queries";
 import EditDots from "../components/edit-dots";
-import Spinner from "../components/spinner";
 import Heart from "../assets/liked-heart.js";
 import UnlikedHeart from "../assets/unliked-heart";
 import CommentSVG from "../assets/comment-svg";
 import MessageSVG from "../assets/message-svg";
 import SaveSVG from "../assets/save-svg";
 
-export default function PostContainer(post) {
+export default function PostContainer({ post }) {
   //HOOKS
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
   //MUTATIONS AND QUERIES
   const { data: data2, loading: loading2, error2: error2 } = useQuery(
@@ -27,11 +27,6 @@ export default function PostContainer(post) {
   const [likePost, { error, loading }] = useMutation(LIKE_POST, {
     update(cache, { data: { likePost } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
-      const data2 = cache.readQuery({ query: GET_ALL_POSTS });
-      cache.writeQuery({
-        query: GET_ALL_POSTS,
-        data: { results: { likePost, ...data2.results } },
-      });
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: {
@@ -44,11 +39,6 @@ export default function PostContainer(post) {
   const [unlikePost] = useMutation(UNLIKE_POST, {
     update(cache, { data: { unlikePost } }) {
       const data = cache.readQuery({ query: GET_CURRENT_USER });
-      const data2 = cache.readQuery({ query: GET_ALL_POSTS });
-      cache.writeQuery({
-        query: GET_ALL_POSTS,
-        data: { results: { likePost, ...data2.results } },
-      });
       cache.writeQuery({
         query: GET_CURRENT_USER,
         data: {
@@ -60,42 +50,38 @@ export default function PostContainer(post) {
 
   // COMPONENT METHODS
   const likePostMethod = async () => {
-    await likePost({ variables: { input: post.post._id } }).then((res) =>
-      console.log(res)
-    );
+    await likePost({ variables: { input: post._id } });
   };
 
   const unlikePostMethod = async () => {
-    await unlikePost({ variables: { input: post.post._id } });
+    await unlikePost({ variables: { input: post._id } });
   };
 
   // ERROR HANDLING
 
-  const commentPostingTime = timeDifference(Date.now(), post.post.createdAt);
-
   if (error) return error;
-  if (loading || loading2) return <Spinner />;
 
   return (
     <Container>
       <RowOne>
         <div>
-          <Link to={`profile/${post.post.author._id}`}>
-            <img src={post.post.author.avatar} width="40" height="40" />
-            <span>{post.post.author.username}</span>
+          <Link to={`profile/${post && post.author._id}`}>
+            <img src={post && post.author.avatar} width="40" height="40" />
+            <span>{post && post.author.username}</span>
           </Link>
         </div>
         <EditDots />
       </RowOne>
       <RowTow>
         <div>
-          <img src={post.post.picture}></img>
+          <img src={post && post.picture}></img>
         </div>
       </RowTow>
       <RowThree>
         <ButtonsContainer>
           <div>
-            {data2.results.likedPosts.some((el) => el._id === post.post._id) ? (
+            {post &&
+            data2.results.likedPosts.some((el) => el._id === post._id) ? (
               <LikedButton onClick={() => unlikePostMethod()}>
                 <Heart />
               </LikedButton>
@@ -104,7 +90,7 @@ export default function PostContainer(post) {
                 <UnlikedHeart />
               </NotLikedButton>
             )}
-            <Link to={`post/${post.post._id}`}>
+            <Link to={`post/${post && post._id}`}>
               <CommentsButton>
                 <CommentSVG />
               </CommentsButton>
@@ -121,22 +107,22 @@ export default function PostContainer(post) {
         </ButtonsContainer>
         <LikesContainer>
           <a href="">
-            {post.post.likes.length > 0 && (
+            {post && post.likes.length > 0 && (
               <span>
-                {post.post.likes.length === 1
-                  ? `${post.post.likes.length} like`
-                  : `${post.post.likes.length} likes`}
+                {post.likes.length === 1
+                  ? `${post.likes.length} like`
+                  : `${post.likes.length} likes`}
               </span>
             )}
           </a>
         </LikesContainer>
         <CommentsContainer
-          postComments={post.post.comments}
-          id={post.post._id}
-          username={post.post.author.username}
-          author={post.post.author._id}
-          description={post.post.description}
-          createdAt={post.post.createdAt}
+          postComments={post && post.comments}
+          id={post && post._id}
+          username={post && post.author.username}
+          author={post && post.author._id}
+          description={post && post.description}
+          createdAt={post && post.createdAt}
         ></CommentsContainer>
       </RowThree>
     </Container>
