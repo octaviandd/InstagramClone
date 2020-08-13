@@ -177,6 +177,7 @@ const RowOne = styled.div`
       img {
         margin-right: 15px;
         border-radius: 50%;
+        object-fit: cover;
       }
       span {
         line-height: 60px;

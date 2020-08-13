@@ -42,18 +42,12 @@ const MainContainter = styled.div`
   position: absolute;
   right: 0px;
   top: 63px;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(32, 29, 30, 1) 35%,
-    rgba(3, 25, 29, 1) 100%
-  );
+  background-color: #242526;
   max-width: 200px;
   width: 100%;
   z-index: 999;
   border-radius: 6px;
-  box-shadow: 0 0 5px 1px #dbdbdb;
+
   ul {
     li:nth-of-type(1) {
       &:hover {

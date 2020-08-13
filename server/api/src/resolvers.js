@@ -85,6 +85,7 @@ const resolvers = {
       const currentUser = await models.User.findOneAndUpdate(
         { _id: user.id },
         { avatar: Location },
+        { useFindAndModify: false },
         function (res, err) {
           if (err) {
             console.log(err);
@@ -130,7 +131,7 @@ const resolvers = {
         username: input.username,
         createdAt: Date.now(),
         avatar:
-          "https://instagramcopy-octavian.s3.eu-central-1.amazonaws.com/profileimg.jpg",
+          "https://instagramcopy-octavian.s3.eu-central-1.amazonaws.com/44884218_345707102882519_2446069589734326272_n.jpg",
         posts: [],
         images: [],
         likedPosts: [],
@@ -178,7 +179,6 @@ const resolvers = {
       return post;
     }),
     createComment: authenticated(async (_, { input }, { models, user }) => {
-      console.log(input);
       const parentUser = await models.User.findOne({ _id: user.id });
       const parentPost = await models.Post.findOne({
         _id: input._id,
@@ -193,7 +193,6 @@ const resolvers = {
 
       await comment.save();
 
-      console.log(comment);
       const findComment = await models.Comment.findOne({ _id: comment._id });
       parentPost.updateOne(
         { $addToSet: { comments: findComment } },

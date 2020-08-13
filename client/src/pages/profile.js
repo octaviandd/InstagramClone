@@ -1,9 +1,9 @@
 /** @format */
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { GET_CURRENT_USER, GET_USER_BY_ID } from "../helpers/queries";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
@@ -20,6 +20,10 @@ export default function Profile(props) {
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
   const [picture, addPicture] = useState("");
+
+  useEffect(() => {
+    console.log("hello");
+  });
 
   //MUTATIONS && QUERIES
   const { data, loading, error } = useQuery(GET_CURRENT_USER);
@@ -52,34 +56,43 @@ export default function Profile(props) {
 
   const onDrop = useCallback(
     ([file]) => {
-      changeAvatar({ variables: { file } }).then((res) => {
-        console.log(res);
+      console.log(file);
+      changeAvatar({
+        variables: { file },
+        optimisticResponse: {
+          __typename: "Mutations",
+          singleUpload: {
+            __typename: "File",
+            filename: "astring",
+            mimetype: "astring",
+            encoding: "astring",
+            uri: "astring",
+          },
+        },
+      }).then((res) => {
         addPicture(res.data.results.uri);
       });
     },
     [changeAvatar]
   );
 
-  const onSubmit = async (formData) => {
-    console.log(picture);
-    await changeAvatar({
-      variables: {
-        input: {
-          picture: picture,
-        },
-      },
-    });
-    setActive(!isActive);
-  };
+  // const onSubmit = async (formData) => {
+  //   await changeAvatar({
+  //     variables: {
+  //       input: {
+  //         picture: picture,
+  //       },
+  //     },
+  //   });
+  //   setActive(!isActive);
+  // };
 
   const followTheUser = () => {
-    followUser({ variables: { input: newId } }).then((res) => console.log(res));
+    followUser({ variables: { input: newId } });
   };
 
   const unfollowTheUser = () => {
-    unfollowUser({ variables: { input: newId } }).then((res) =>
-      console.log(res)
-    );
+    unfollowUser({ variables: { input: newId } });
   };
 
   //DESTRUCTURING
@@ -106,10 +119,7 @@ export default function Profile(props) {
       <Navbar></Navbar>
       <MainContainer>
         {isActive && (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            encType={"multipart/form-data"}
-          >
+          <form encType={"multipart/form-data"}>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               {isDragActive ? (
@@ -197,11 +207,7 @@ export default function Profile(props) {
               {posts &&
                 posts.map((post) => {
                   return (
-                    <img
-                      key={post.picture}
-                      src={post.picture}
-                      alt={post._id}
-                    ></img>
+                    <img key={post._id} src={post.picture} alt={post._id}></img>
                   );
                 })}
             </div>

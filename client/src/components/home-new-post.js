@@ -17,15 +17,6 @@ export default function HomeNewPost() {
   const [buttonStatus, enableButton] = useState(false);
   const [value, setValue] = useState("");
 
-  useEffect(() => {
-    if (value !== "") {
-      enableButton(true);
-    } else {
-      enableButton(false);
-    }
-    console.log(buttonStatus);
-  }, [value]);
-
   // MUTATIONS && QUERIES
   const [createPost] = useMutation(NEW_POST, {
     update(cache, { data: { createPost } }) {
@@ -66,15 +57,16 @@ export default function HomeNewPost() {
   );
 
   const onSubmit = async (formData) => {
-    createPost({
+    await createPost({
       variables: {
         input: {
-          description: formData.description,
+          description: formData.description || " ",
           picture: picture,
         },
       },
     });
     setActive(!isActive);
+    addPicture("");
   };
 
   // DESTRUCTURING
@@ -106,17 +98,19 @@ export default function HomeNewPost() {
               <span>Photo</span>
             </PictureInput>
           </div>
-          <FormActions active={buttonStatus}>
+          <FormActions>
             <input
               autoComplete="off"
               placeholder="What's on your mind?"
               type="text"
               name="description"
-              ref={register({ required: true, minLength: 6 })}
+              ref={register}
               id="textInput"
               onChange={(e) => handleInput(e)}
             />
-            <button type="submit">Post</button>
+            <button type="submit" disabled={picture ? false : true}>
+              Post
+            </button>
           </FormActions>
         </FormModal>
       )}
@@ -249,7 +243,7 @@ const FormActions = styled.div`
     font-weight: bold;
     margin-top: 2rem;
     line-height: 18px;
-    ${({ active }) => active && `background: #8ea1e1;color: #e5e7ec;`}
+    ${({ disabled }) => !disabled && `background: #8ea1e1;color: #e5e7ec;`}
   }
 `;
 
