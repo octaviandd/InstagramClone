@@ -11,7 +11,7 @@ export default function HomeMain() {
   return (
     <MainContainer>
       <ContainerColOne>
-        <HomeStory></HomeStory>
+        {/* <HomeStory></HomeStory> */}
         <HomeNewPost></HomeNewPost>
         <HomeFeed></HomeFeed>
       </ContainerColOne>

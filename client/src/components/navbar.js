@@ -96,7 +96,10 @@ export default function Navbar({ id }) {
           <div>
             <a onClick={() => activateDropdown(!activeDropdown)}>
               <span>
-                <img src={`${data1.results.avatar}`} alt="profile-icon" />
+                <img
+                  src={`${data1 && data1.results.avatar}`}
+                  alt="profile-icon"
+                />
               </span>
             </a>
           </div>

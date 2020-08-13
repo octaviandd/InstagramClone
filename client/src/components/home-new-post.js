@@ -172,6 +172,7 @@ const TopBar = styled.div`
   h2 {
     color: #e5e7ec;
     text-align: center;
+    padding-bottom: 1rem;
   }
 
   span {
@@ -180,7 +181,7 @@ const TopBar = styled.div`
     cursor: pointer;
     position: absolute;
     right: 15px;
-    top: 15px;
+    top: 20px;
     svg {
       width: 18px;
       height: 18px;
