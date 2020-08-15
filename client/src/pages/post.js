@@ -116,7 +116,6 @@ export default function Post({
 
   return (
     <>
-      <Navbar />
       <MainContainer>
         <PostModal>
           <LeftRow>
@@ -198,7 +197,10 @@ export default function Post({
   );
 }
 
-const MainContainer = styled.div``;
+const MainContainer = styled.div`
+  background-color: #18191a;
+  height: 100vh;
+`;
 
 const PostModal = styled.div`
   position: absolute;
@@ -213,13 +215,7 @@ const RightRow = styled.div`
   flex-direction: column;
   height: 600px;
   width: 300px;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(32, 29, 30, 1) 35%,
-    rgba(3, 25, 29, 1) 100%
-  );
+  background: #242526;
 `;
 
 const LeftRow = styled.div`
@@ -339,7 +335,7 @@ const LikesContainer = styled.div`
     line-height: 18px;
     font-weight: 800;
     text-decoration: none;
-    color: black;
+    color: whitesmoke;
   }
 `;
 
@@ -370,7 +366,7 @@ const AddCommentsContainer = styled.div`
   input {
     border: none;
     font-size: 14px;
-    background: #0f1b1d;
+    background: #242526;
     color: whitesmoke;
     &:focus {
       outline: none;

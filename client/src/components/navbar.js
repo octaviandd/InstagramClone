@@ -13,14 +13,16 @@ import ExploreSVG from "../assets/explore-svg";
 import UnlikedHeart from "../assets/unliked-heart";
 import SettingsDropdown from "./settings-dropdown";
 
-export default function Navbar({ id }) {
+export default function Navbar() {
   //HOOKS
   const [activeDropdown, activateDropdown] = useState(false);
   const [isSearchDropdownActive, setSearchDropdown] = useState(false);
   const [isActive, activate] = useState(false);
   const [value, setValue] = useState("");
 
-  const { data: data1 } = useQuery(GET_CURRENT_USER);
+  const { data: data1, loading: loading1 } = useQuery(GET_CURRENT_USER);
+
+  console.log(data1);
 
   // MUTATIONS && QUERIES
   const { data, loading, error } = useQuery(GET_USERS);
@@ -55,7 +57,7 @@ export default function Navbar({ id }) {
 
   // ERROR HANDLINGG
   if (error) console.log(error);
-  if (loading) return <Spinner />;
+  if ((loading, loading1)) return <Spinner />;
 
   return (
     <MainContainer>
@@ -104,7 +106,9 @@ export default function Navbar({ id }) {
             </a>
           </div>
         </Icons>
-        {activeDropdown && <SettingsDropdown id={id} logOut={logOut} />}
+        {activeDropdown && (
+          <SettingsDropdown id={data1 && data1.results._id} logOut={logOut} />
+        )}
         {isSearchDropdownActive && (
           <SearchDropDown>
             {data &&

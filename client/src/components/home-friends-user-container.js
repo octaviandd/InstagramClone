@@ -71,7 +71,7 @@ const MainContainer = styled.div`
         line-height: 18px;
         font-size: 14px;
         font-weight: bold;
-        color: black;
+        color: #e5e7ec;
 
         img {
           width: 30px;

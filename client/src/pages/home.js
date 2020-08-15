@@ -18,7 +18,6 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <Navbar id={data && data.results._id}></Navbar>
       <HomeMain></HomeMain>
     </MainContainer>
   );

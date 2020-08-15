@@ -8,7 +8,6 @@ export default function Explore() {
   console.log("hee");
   return (
     <>
-      <Navbar />
       <MainContainer>
         <Container></Container>
       </MainContainer>

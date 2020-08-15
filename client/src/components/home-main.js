@@ -26,7 +26,7 @@ const MainContainer = styled.div`
   display: flex;
   justify-content: center;
   background: #18191a;
-  margin-top: 25px;
+  padding-top: 25px;
   min-height: 100vh;
   width: 100%;
   padding-left: 20px;

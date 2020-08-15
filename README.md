@@ -85,3 +85,5 @@ Available routes:
 
 ![LoginImage](./assets/loginwall.png)
 ![RegisterImage](./assets/registerwall.png)
+![ProfileImage](./assets/profilescreen.png)
+![PostImage](./assets/postscreen.png)

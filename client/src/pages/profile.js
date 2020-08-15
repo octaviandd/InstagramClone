@@ -102,7 +102,6 @@ export default function Profile(props) {
 
   return (
     <>
-      <Navbar></Navbar>
       <MainContainer>
         <RowOne>
           <div>
@@ -199,9 +198,8 @@ export default function Profile(props) {
 
 const MainContainer = styled.div`
   position: relative;
-  background-color: #242526;
+  background-color: #18191a;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   min-height: 100vh;
@@ -268,7 +266,7 @@ const RowOne = styled.div`
 
 const RowTwo = styled.div`
   padding: 25px 0px;
-  max-width: 975px;
+  max-width: 955px;
   width: 100%;
   color: #e5e7ec;
 
@@ -298,10 +296,16 @@ const RowTwo = styled.div`
   }
 
   & > div:nth-of-type(2) {
-    img {
-      object-fit: contain;
-      width: 300px;
-      height: 300px;
+    > div {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
+      grid-gap: 20px;
+      img {
+        object-fit: cover;
+        width: 300px;
+        height: 300px;
+      }
     }
   }
 `;
