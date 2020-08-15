@@ -10,7 +10,7 @@ import { GET_ALL_POSTS } from "../helpers/queries";
 import { FcPicture } from "react-icons/fc";
 
 export default function HomeNewPost() {
-  // HOOKS
+  // HOOKSgit
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
   const [picture, addPicture] = useState("");

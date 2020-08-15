@@ -8,6 +8,9 @@ import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../helpers/token";
 import { NEW_USER } from "../helpers/mutations";
 import Spinner from "../components/spinner";
+import { ErrorBox } from "../components/error-box";
+
+import { onError } from "@apollo/client/link/error";
 
 export default function Register({ history }) {
   //HOOKS
@@ -32,26 +35,30 @@ export default function Register({ history }) {
     setValue(e.target.value);
   };
 
-  const onSubmit = (formData) => {
-    registerUser({
-      variables: {
-        input: {
-          name: formData.name,
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
+  const onSubmit = async (formData) => {
+    try {
+      await registerUser({
+        variables: {
+          input: {
+            name: formData.name,
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+          },
         },
-      },
-    }).then((res) => {
-      setAccessToken(res.data.createUser.token);
-      if (res) {
-        history.push("/");
-      }
-    });
+      }).then((res) => {
+        console.log(res);
+        setAccessToken(res.data.createUser.token);
+        if (res) {
+          history.push("/");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // ERROR HANDLING
-  if (error) return error;
   if (loading) return <Spinner />;
 
   return (
@@ -74,6 +81,7 @@ export default function Register({ history }) {
                 ></input>
                 <span className="text-legend">Email</span>
                 {errors.email && <span>Invalid Email</span>}
+                {error && <span>Email already in use.</span>}
               </label>
             </div>
             <div>
@@ -139,12 +147,9 @@ export default function Register({ history }) {
 
 const MainContainer = styled.div`
   background-color: #18191a;
-  padding-top: 3rem;
-  display: flex;
-  justify-content: center;
-  grid-auto-rows: 1fr;
   width: 100%;
-  padding-top: 8rem;
+  min-height: 100vh;
+  positon: relative;
 `;
 
 const Redirect = styled.div`
@@ -170,7 +175,10 @@ const Container = styled.div`
   max-width: 350px;
   width: 100%;
   flex-shrink: 0;
-  min-height: 100vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   & > div:nth-of-type(1) {
     border-radius: 20px;

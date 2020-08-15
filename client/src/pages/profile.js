@@ -13,6 +13,7 @@ import {
   CHANGE_AVATAR,
 } from "../helpers/mutations";
 import Navbar from "../components/navbar";
+import Spinner from "../components/spinner";
 
 export default function Profile(props) {
   //HOOKS
@@ -20,10 +21,6 @@ export default function Profile(props) {
   const [isActive, setActive] = useState(false);
   const { register, handleSubmit, errors } = useForm();
   const [picture, addPicture] = useState("");
-
-  useEffect(() => {
-    console.log("hello");
-  });
 
   //MUTATIONS && QUERIES
   const { data, loading, error } = useQuery(GET_CURRENT_USER);
@@ -34,15 +31,18 @@ export default function Profile(props) {
     }
   );
 
-  const [changeAvatar] = useMutation(CHANGE_AVATAR, {
-    update(cache, { data: { changeAvatar } }) {
-      const data = cache.readQuery({ query: GET_CURRENT_USER });
-      cache.writeQuery({
-        query: GET_CURRENT_USER,
-        data: { results: { avatar: changeAvatar } },
-      });
-    },
-  });
+  const [changeAvatar, { loading: loadingAvatar }] = useMutation(
+    CHANGE_AVATAR,
+    {
+      update(cache, { data: { changeAvatar } }) {
+        const data = cache.readQuery({ query: GET_CURRENT_USER });
+        cache.writeQuery({
+          query: GET_CURRENT_USER,
+          data: { results: { avatar: changeAvatar } },
+        });
+      },
+    }
+  );
 
   const [followUser, { error: error1, loading: loading1 }] = useMutation(
     FOLLOW_USER
@@ -56,7 +56,6 @@ export default function Profile(props) {
 
   const onDrop = useCallback(
     ([file]) => {
-      console.log(file);
       changeAvatar({
         variables: { file },
         optimisticResponse: {
@@ -71,21 +70,11 @@ export default function Profile(props) {
         },
       }).then((res) => {
         addPicture(res.data.results.uri);
+        setActive(false);
       });
     },
     [changeAvatar]
   );
-
-  // const onSubmit = async (formData) => {
-  //   await changeAvatar({
-  //     variables: {
-  //       input: {
-  //         picture: picture,
-  //       },
-  //     },
-  //   });
-  //   setActive(!isActive);
-  // };
 
   const followTheUser = () => {
     followUser({ variables: { input: newId } });
@@ -101,10 +90,7 @@ export default function Profile(props) {
 
   //ERROR HANDLING + LOADING HANDLERS
 
-  if ((error, error1, error2))
-    return `Error! ${error2.message || error1.message || error3.message}`;
   if ((loading, loading1, loading2)) return "Loading...";
-
   const {
     followers,
     following,
@@ -118,25 +104,18 @@ export default function Profile(props) {
     <>
       <Navbar></Navbar>
       <MainContainer>
-        {isActive && (
-          <form encType={"multipart/form-data"}>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <p>Drag 'n' drop some files here, or click to select files</p>
-              )}
-            </div>
-            <button type="submit">Submit</button>
-            <span onClick={() => setActive(!isActive)}>
-              <FaTimes />
-            </span>
-          </form>
-        )}
         <RowOne>
           <div>
+            {isActive && (
+              <UploadButton>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <button>Upload picture</button>
+                </div>
+              </UploadButton>
+            )}
             <img src={`${avatar}`} width="150" height="150" />
+            {loadingAvatar ? <Spinner /> : null}
           </div>
           <div>
             <div>
@@ -160,7 +139,7 @@ export default function Profile(props) {
                   )}
                 </div>
               ) : (
-                <button onClick={() => setActive(true)}>
+                <button onClick={() => setActive(!isActive)}>
                   <svg
                     fill="#262626"
                     height="24"
@@ -192,7 +171,7 @@ export default function Profile(props) {
         <RowTwo>
           <div>
             <span>
-              <svg fill="#262626" height="12" viewBox="0 0 48 48" width="12">
+              <svg fill="#e5e7ec" height="12" viewBox="0 0 48 48" width="12">
                 <path
                   clipRule="evenodd"
                   d="M45 1.5H3c-.8 0-1.5.7-1.5 1.5v42c0 .8.7 1.5 1.5 1.5h42c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5zm-40.5 3h11v11h-11v-11zm0 14h11v11h-11v-11zm11 25h-11v-11h11v11zm14 0h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11zm14 28h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11z"
@@ -220,7 +199,7 @@ export default function Profile(props) {
 
 const MainContainer = styled.div`
   position: relative;
-  background-color: #fafafa;
+  background-color: #242526;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -240,6 +219,7 @@ const RowOne = styled.div`
   padding-bottom: 50px;
   & > div:nth-of-type(1) {
     margin-right: 100px;
+    position: relative;
     img {
       border-radius: 50%;
       object-fit: cover;
@@ -252,6 +232,7 @@ const RowOne = styled.div`
     justify-content: center;
     align-items: center;
     flex-grow: 4;
+    color: #e5e7ec;
     & > div:nth-of-type(1) {
       width: 100%;
       display: flex;
@@ -289,6 +270,7 @@ const RowTwo = styled.div`
   padding: 25px 0px;
   max-width: 975px;
   width: 100%;
+  color: #e5e7ec;
 
   & > div:nth-of-type(1) {
     width: 100%;
@@ -298,9 +280,9 @@ const RowTwo = styled.div`
     span {
       position: relative;
       span {
-        margin-left: 5px;
         letter-spacing: 2px;
         font-size: 14px;
+        margin-left: 5px;
       }
     }
     & > span:nth-of-type(1):after {
@@ -335,4 +317,19 @@ const UnfollowButton = styled.button`
   background-color: #fafafa;
 
   ${({ isFollowing }) => isFollowing && `display:block`}
+`;
+
+const UploadButton = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  button {
+    background-color: #18191a;
+    border-radius: 10px;
+    border: 0;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
 `;

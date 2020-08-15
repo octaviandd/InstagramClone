@@ -11,6 +11,7 @@ import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../helpers/token";
 import { FaTimes, FaGithub } from "react-icons/fa";
 import Spinner from "../components/spinner";
+import { onError } from "@apollo/client/link/error";
 
 export default function Login({ history }) {
   // HOOKS
@@ -34,25 +35,28 @@ export default function Login({ history }) {
   }, [value]);
 
   // COMPONENT METHODS
-  const onSubmit = (formData) => {
-    logUser({
-      variables: {
-        input: {
-          email: formData.email,
-          password: formData.password,
+  const onSubmit = async (formData) => {
+    try {
+      await logUser({
+        variables: {
+          input: {
+            email: formData.email,
+            password: formData.password,
+          },
         },
-      },
-    }).then((res) => {
-      setAccessToken(res.data.loginUser.token);
-      if (res) {
-        history.push("/");
-      }
-    });
+      }).then((res) => {
+        setAccessToken(res.data.loginUser.token);
+        if (res) {
+          history.push("/");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // ERROR HANDLING
   if (loading) return <Spinner />;
-  if (error) return error;
 
   return (
     <MainContainer>
@@ -100,6 +104,9 @@ export default function Login({ history }) {
                   <span className="error-icon">
                     <FaTimes />
                   </span>
+                )}
+                {error && (
+                  <span style={{ color: "white" }}>Incorrect password.</span>
                 )}
               </label>
             </div>

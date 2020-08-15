@@ -6,6 +6,7 @@ import AWS from "aws-sdk";
 const config = require("./s3");
 const { extname } = require("path");
 const salt = 10;
+import { AuthenticationError } from "apollo-server-express";
 
 const resolvers = {
   Query: {
@@ -122,7 +123,7 @@ const resolvers = {
     createUser: async (_, { input }, { models, createToken }) => {
       const existing = await models.User.findOne({ email: input.email });
       if (existing) {
-        throw new Error("User already exists.");
+        throw new AuthenticationError("User already exists");
       }
       const user = new models.User({
         name: input.name,
@@ -146,11 +147,11 @@ const resolvers = {
     loginUser: async (_, { input }, { models, createToken }) => {
       const user = await models.User.findOne({ email: input.email });
       if (!user) {
-        throw new Error("User doesn't exist");
+        throw new AuthenticationError("User doesn't exist");
       }
       const valid = await bcrypt.compare(input.password, user.password);
       if (!valid) {
-        throw new Error("Invalid password");
+        throw new AuthenticationError("Invalid password");
       }
       const token = createToken(user);
       return { user, token };
