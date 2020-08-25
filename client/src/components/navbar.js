@@ -22,8 +22,6 @@ export default function Navbar() {
 
   const { data: data1, loading: loading1 } = useQuery(GET_CURRENT_USER);
 
-  console.log(data1);
-
   // MUTATIONS && QUERIES
   const { data, loading, error } = useQuery(GET_USERS);
 

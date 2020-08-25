@@ -19,7 +19,7 @@ Available routes:
 - `/register - Public Route`
 - `/profile/* - Private Route`
 - `/post/* - Private Route`
-- `/explore` -> Not completed
+- `/explore - Private Route`
 
 # Technologies
 
@@ -83,7 +83,8 @@ Available routes:
 - terminal
 - AWS Container
 
-![LoginImage](./assets/loginwall.png)
-![RegisterImage](./assets/registerwall.png)
+![LoginImage](./assets/loginscreen.png)
+![RegisterImage](./assets/registerscreen.png)
 ![ProfileImage](./assets/profilescreen.png)
 ![PostImage](./assets/postscreen.png)
+![ExporeImage](./assets/explorescreen.png)
